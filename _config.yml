@@ -102,12 +102,12 @@ deploy:
   repository: https://github.com/sliu0827/sliu0827.github.io
   branch: master
 
-symbols_count_time:
-  symbols: true
-  time: true
-  total_symbols: true
-  total_time: true
-  exclude_codeblock: false
+#symbols_count_time:
+  # symbols: true
+  # time: true
+  # total_symbols: true
+  # total_time: true
+  # exclude_codeblock: true
 
 aplay:
     Meting: true
