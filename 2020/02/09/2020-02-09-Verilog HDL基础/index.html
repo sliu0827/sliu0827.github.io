@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"sliu0827.github.io","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Verilog HDL 语言的特点互连（connectivity）：网络数据类型表示结构实体（例如门）之间的物理连接，不能存储值，由驱动器（例如门或连续赋值语句，assign）驱动。常见类型包括wire型和tri型。 并发（concurrency）：可以有效地描述并行的硬件系统  时间（time）：定义了绝对和相对的时间度量，可综合操作符具有物理延迟 可综合：always、if-else、case">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Verilog HDL 基础">
+<meta property="og:url" content="http://sliu0827.github.io/2020/02/09/2020-02-09-Verilog%20HDL%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Shuang&#39;Blog">
+<meta property="og:description" content="Verilog HDL 语言的特点互连（connectivity）：网络数据类型表示结构实体（例如门）之间的物理连接，不能存储值，由驱动器（例如门或连续赋值语句，assign）驱动。常见类型包括wire型和tri型。 并发（concurrency）：可以有效地描述并行的硬件系统  时间（time）：定义了绝对和相对的时间度量，可综合操作符具有物理延迟 可综合：always、if-else、case">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sliu0827.github.io/source/images/RTL/0.Verilog%20HDL%E5%9F%BA%E7%A1%80/clip_image001.png">
+<meta property="og:image" content="https://sliu0827.github.io/source/images/RTL/0.Verilog%20HDL%E5%9F%BA%E7%A1%80/clip_image002.png">
+<meta property="og:image" content="https://sliu0827.github.io/source/images/RTL/0.Verilog%20HDL%E5%9F%BA%E7%A1%80/clip_image003.png">
+<meta property="og:image" content="https://sliu0827.github.io/source/images/RTL/0.Verilog%20HDL%E5%9F%BA%E7%A1%80/clip_image004.png">
+<meta property="og:image" content="https://sliu0827.github.io/source/images/RTL/0.Verilog%20HDL%E5%9F%BA%E7%A1%80/clip_image005.png">
+<meta property="og:image" content="https://sliu0827.github.io/source/images/RTL/0.Verilog%20HDL%E5%9F%BA%E7%A1%80/clip_image006.png">
+<meta property="article:published_time" content="2020-02-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-02-23T13:35:41.002Z">
+<meta property="article:author" content="Shuang liu">
+<meta property="article:tag" content="RTL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sliu0827.github.io/source/images/RTL/0.Verilog%20HDL%E5%9F%BA%E7%A1%80/clip_image001.png">
+
+<link rel="canonical" href="http://sliu0827.github.io/2020/02/09/2020-02-09-Verilog%20HDL%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Verilog HDL 基础 | Shuang'Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shuang'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-互动">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-fw fa-comments"></i>互动</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://sliu0827.github.io/2020/02/09/2020-02-09-Verilog%20HDL%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Shuang liu">
+      <meta itemprop="description" content="你好呀">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shuang'Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Verilog HDL 基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-09 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-09T00:00:00+08:00">2020-02-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-23 21:35:41" itemprop="dateModified" datetime="2020-02-23T21:35:41+08:00">2020-02-23</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span></span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>NaN:aN</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Verilog-HDL-语言的特点"><a href="#Verilog-HDL-语言的特点" class="headerlink" title="Verilog HDL 语言的特点"></a>Verilog HDL 语言的特点</h1><p><strong>互连（connectivity）</strong>：网络数据类型表示结构实体（例如门）之间的物理连接，不能存储值，由驱动器（例如门或连续赋值语句，assign）驱动。常见类型包括wire型和tri型。</p>
+<p><strong>并发</strong>（concurrency）：可以有效地描述并行的硬件系统 </p>
+<p><strong>时间</strong>（time）：定义了绝对和相对的时间度量，可综合操作符具有物理延迟</p>
+<p><strong>可综合</strong>：always、if-else、case、assgin</p>
+<p><strong>不可综合</strong>：function、for、fork-join、while</p>
+<a id="more"></a>
+
+<h1 id="常见可综合语法与硬件电路的关系"><a href="#常见可综合语法与硬件电路的关系" class="headerlink" title="常见可综合语法与硬件电路的关系"></a>常见可综合语法与硬件电路的关系</h1><h2 id="if-else相关语句的硬件结构映射及优化"><a href="#if-else相关语句的硬件结构映射及优化" class="headerlink" title="if-else相关语句的硬件结构映射及优化"></a>if-else相关语句的硬件结构映射及优化</h2><p>对应的硬件结构是多路选择器（Multiplexing Hardware）</p>
+<ul>
+<li>需要根据输入约束，小心设计：先“加”后“选”，先“选”后“加”</li>
+</ul>
+<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image001.png" alt="img" style="zoom:80%;" />
+
+<ul>
+<li><p>单if语句，无优先级的判断结构</p>
+</li>
+<li><p>多if语句，具有优先级的判断结构</p>
+<p>  最后一级选择信号具有最高优先权；<br>  具有优先级的多选择结构会消耗组合逻辑</p>
+</li>
+</ul>
+<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image002.png" alt="img" style="zoom: 150%;" />
+
+<h2 id="case相关语句的硬件结构映射及优化"><a href="#case相关语句的硬件结构映射及优化" class="headerlink" title="case相关语句的硬件结构映射及优化"></a>case相关语句的硬件结构映射及优化</h2><p>对应的硬件结构是无优先级的判断结构，与单if语句的区别在于各条件互斥，多用于指令译码电路</p>
+<h2 id="慎用latch"><a href="#慎用latch" class="headerlink" title="慎用latch"></a>慎用latch</h2><ul>
+<li><p>综合器很难解释latch，因此，除非特殊用途，一般避免引入latch。</p>
+<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image003.png" alt="img"  />
+latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制。
+</li>
+<li><p>在使能信号有效时，latch相当于通路，无效时latch保持输出数据的当前值。因此latch容易产生毛刺（glitch），DFF则不易产生毛刺。latch将静态时序分析变得极为复杂。<br> 一般的设计规则是：在绝大多数设计中避免产生latch。latch最大的危害在于不能过滤毛刺，这对于下一级电路是极其危险的，所以只要能用DFF的地方，就不用latch。</p>
+</li>
+<li><p>易引入latch的途径：使用不完备的条件判断语句</p>
+</li>
+<li><p>防止产生非目的性latch的措施： </p>
+<pre><code>使用完备的if…else语句
+  为每个输入条件设计输出操作，为case语句设置default操作
+  仔细检查综合器生成的报告，latch会以warning的形式报告</code></pre></li>
+<li><p>综合器指令，full-case和parallel-case</p>
+<p>Full-case：告诉综合器，当前case结构所列条件已完备</p>
+<p>Parallel-case：告诉DC，所有条件互斥，且并行，无优先权</p>
+</li>
+</ul>
+<h2 id="逻辑复制，均衡负载"><a href="#逻辑复制，均衡负载" class="headerlink" title="逻辑复制，均衡负载"></a>逻辑复制，均衡负载</h2><p>通过逻辑复制，降低关键信号的扇出，进而降低该信号的传播延迟，提高电路性能。</p>
+<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image004.png" alt="img " style="zoom:80%;" />
+
+<h2 id="资源共享，减小面积"><a href="#资源共享，减小面积" class="headerlink" title="资源共享，减小面积"></a>资源共享，减小面积</h2><img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image005.png" alt="img " style="zoom:80%;" />
+
+<h2 id="资源顺序重排，降低传播延时"><a href="#资源顺序重排，降低传播延时" class="headerlink" title="资源顺序重排，降低传播延时"></a>资源顺序重排，降低传播延时</h2><img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image006.png" alt="img" style="zoom:80%;" />
+
+<h2 id="同步复位与异步复位"><a href="#同步复位与异步复位" class="headerlink" title="同步复位与异步复位"></a>同步复位与异步复位</h2><h2 id="少用“：？”赋值语句"><a href="#少用“：？”赋值语句" class="headerlink" title="少用“：？”赋值语句"></a>少用“：？”赋值语句</h2><p>使用always用于逻辑运算，关于assign，仅用于信号连接，难以阅读，且多层嵌套后很难被综合其解释</p>
+<h1 id="可综合风格"><a href="#可综合风格" class="headerlink" title="可综合风格"></a>可综合风格</h1><h2 id="完整的always敏感信号列表"><a href="#完整的always敏感信号列表" class="headerlink" title="完整的always敏感信号列表"></a>完整的always敏感信号列表</h2><p>所有的组合逻辑或锁存的always结构必须有敏感信号列表。这个敏感信号列表必须包含所有的输入信号</p>
+<p><em>原因：综合过程将产生一个取决于除开敏感信号列表中所有其他值的结构，将可能在行为仿真和门级仿真间产生潜在的适配。</em></p>
+<h2 id="每个always敏感信号列表对应一个时钟"><a href="#每个always敏感信号列表对应一个时钟" class="headerlink" title="每个always敏感信号列表对应一个时钟"></a>每个always敏感信号列表对应一个时钟</h2><p>在综合过程中，每个Verilog always敏感信号列表只能对应一个时钟。</p>
+<p><em>原因：这是将每一个过程限制在单一寄存器类型的要求。</em></p>
+<h2 id="在时序电路中必须使用非阻塞赋值（-lt-），组合逻辑电路必须使用阻塞赋值（-）。"><a href="#在时序电路中必须使用非阻塞赋值（-lt-），组合逻辑电路必须使用阻塞赋值（-）。" class="headerlink" title="在时序电路中必须使用非阻塞赋值（&lt;=），组合逻辑电路必须使用阻塞赋值（=）。"></a>在时序电路中必须使用非阻塞赋值（&lt;=），组合逻辑电路必须使用阻塞赋值（=）。</h2><h1 id="模块划分"><a href="#模块划分" class="headerlink" title="模块划分"></a>模块划分</h1><h2 id="分开异步逻辑与同步逻辑"><a href="#分开异步逻辑与同步逻辑" class="headerlink" title="分开异步逻辑与同步逻辑"></a>分开异步逻辑与同步逻辑</h2><p>建议分开异步逻辑与同步逻辑</p>
+<p><em>原因：避免综合时的问题，简化约束和编码难度。</em></p>
+<h2 id="分开控制逻辑和存储器"><a href="#分开控制逻辑和存储器" class="headerlink" title="分开控制逻辑和存储器"></a>分开控制逻辑和存储器</h2><p>建议控制逻辑和存储器逻辑分成独立的模块</p>
+<p><em>原因：便于高层的存储器模块的使用和便于重新描述为不同的存储器类型。</em></p>
+<blockquote>
+<p>参考：<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener" title="芯动力--硬件加速设计方法">芯动力–硬件加速设计方法</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thank you for your accept. mua！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/wechatpay.jpg" alt="Shuang liu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/alipay.jpg" alt="Shuang liu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Shuang liu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://sliu0827.github.io/2020/02/09/2020-02-09-Verilog%20HDL%E5%9F%BA%E7%A1%80/" title="Verilog HDL 基础">http://sliu0827.github.io/2020/02/09/2020-02-09-Verilog HDL基础/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+	  
+	  <div>
+		
+		  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	  </div>
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/RTL/" rel="tag"><i class="fa fa-tag"></i> RTL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/08/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/" rel="prev" title="CMOS反相器介绍">
+      <i class="fa fa-chevron-left"></i> CMOS反相器介绍
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/" rel="next" title="CMOS反相器之动态特性">
+      CMOS反相器之动态特性 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODU0NS8yNTAzOQ"></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Verilog-HDL-语言的特点"><span class="nav-number">1.</span> <span class="nav-text">Verilog HDL 语言的特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常见可综合语法与硬件电路的关系"><span class="nav-number">2.</span> <span class="nav-text">常见可综合语法与硬件电路的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#if-else相关语句的硬件结构映射及优化"><span class="nav-number">2.1.</span> <span class="nav-text">if-else相关语句的硬件结构映射及优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#case相关语句的硬件结构映射及优化"><span class="nav-number">2.2.</span> <span class="nav-text">case相关语句的硬件结构映射及优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#慎用latch"><span class="nav-number">2.3.</span> <span class="nav-text">慎用latch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑复制，均衡负载"><span class="nav-number">2.4.</span> <span class="nav-text">逻辑复制，均衡负载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源共享，减小面积"><span class="nav-number">2.5.</span> <span class="nav-text">资源共享，减小面积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源顺序重排，降低传播延时"><span class="nav-number">2.6.</span> <span class="nav-text">资源顺序重排，降低传播延时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步复位与异步复位"><span class="nav-number">2.7.</span> <span class="nav-text">同步复位与异步复位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#少用“：？”赋值语句"><span class="nav-number">2.8.</span> <span class="nav-text">少用“：？”赋值语句</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可综合风格"><span class="nav-number">3.</span> <span class="nav-text">可综合风格</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#完整的always敏感信号列表"><span class="nav-number">3.1.</span> <span class="nav-text">完整的always敏感信号列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#每个always敏感信号列表对应一个时钟"><span class="nav-number">3.2.</span> <span class="nav-text">每个always敏感信号列表对应一个时钟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在时序电路中必须使用非阻塞赋值（-lt-），组合逻辑电路必须使用阻塞赋值（-）。"><span class="nav-number">3.3.</span> <span class="nav-text">在时序电路中必须使用非阻塞赋值（&lt;&#x3D;），组合逻辑电路必须使用阻塞赋值（&#x3D;）。</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模块划分"><span class="nav-number">4.</span> <span class="nav-text">模块划分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分开异步逻辑与同步逻辑"><span class="nav-number">4.1.</span> <span class="nav-text">分开异步逻辑与同步逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分开控制逻辑和存储器"><span class="nav-number">4.2.</span> <span class="nav-text">分开控制逻辑和存储器</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shuang liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Shuang liu</p>
+  <div class="site-description" itemprop="description">你好呀</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sliu0827" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sliu0827" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:striveleos@qq.com" title="E-Mail → mailto:striveleos@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://linux.51yip.com/" title="http:&#x2F;&#x2F;linux.51yip.com&#x2F;" rel="noopener" target="_blank">Linux命令手册</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shuang liu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">NaNm</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">NaN:aN</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script size="200" alpha="0.2" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
