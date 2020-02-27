@@ -17,28 +17,28 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"sliu0827.github.io","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="CMOS反相器的性能：动态特性 CMOS反相器的传播延时取决于它分别通过PMOS和NMOS管充放电负载电容CL所需要的时间。使CL尽可能小是实现高性能CMOS电路的关键。">
+  <meta name="description" content="CMOS反相器的性能：动态特性  CMOS反相器的传播延时取决于它分别通过PMOS和NMOS管充放电负载电容CL所需要的时间。使CL尽可能小是实现高性能CMOS电路的关键。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CMOS反相器之动态特性">
-<meta property="og:url" content="http://sliu0827.github.io/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/index.html">
+<meta property="og:url" content="http://sliu.info/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="CMOS反相器的性能：动态特性 CMOS反相器的传播延时取决于它分别通过PMOS和NMOS管充放电负载电容CL所需要的时间。使CL尽可能小是实现高性能CMOS电路的关键。">
+<meta property="og:description" content="CMOS反相器的性能：动态特性  CMOS反相器的传播延时取决于它分别通过PMOS和NMOS管充放电负载电容CL所需要的时间。使CL尽可能小是实现高性能CMOS电路的关键。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image001.png">
-<meta property="og:image" content="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/math.png">
-<meta property="og:image" content="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image002.png">
-<meta property="og:image" content="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image003.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/uP8fmyGnhQa79FV.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/la5JwvcOIGQeSk8.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/yHuY7ReGIPrv31z.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/Ur1CHIhpRgYzEmw.png">
 <meta property="article:published_time" content="2020-02-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-02-23T13:36:19.469Z">
+<meta property="article:modified_time" content="2020-02-27T14:51:00.668Z">
 <meta property="article:author" content="Shuang liu">
 <meta property="article:tag" content="数字集成电路设计基础">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image001.png">
+<meta name="twitter:image" content="https://i.loli.net/2020/02/27/uP8fmyGnhQa79FV.png">
 
-<link rel="canonical" href="http://sliu0827.github.io/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/">
+<link rel="canonical" href="http://sliu.info/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/">
 
 
 <script id="page-configurations">
@@ -197,7 +197,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://sliu0827.github.io/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/">
+    <link itemprop="mainEntityOfPage" href="http://sliu.info/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -227,8 +227,17 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-23 21:36:19" itemprop="dateModified" datetime="2020-02-23T21:36:19+08:00">2020-02-23</time>
+                <time title="修改时间：2020-02-27 22:51:00" itemprop="dateModified" datetime="2020-02-27T22:51:00+08:00">2020-02-27</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%B9%A6%E7%B1%8D%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">书籍文档</span></a>
+                </span>
+            </span>
 
           
 		  
@@ -252,18 +261,19 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="CMOS反相器的性能：动态特性"><a href="#CMOS反相器的性能：动态特性" class="headerlink" title="CMOS反相器的性能：动态特性"></a>CMOS反相器的性能：动态特性</h2><hr>
+        <p><strong>CMOS反相器的性能：动态特性</strong></p>
+<hr>
 <p>CMOS反相器的传播延时取决于它分别通过PMOS和NMOS管充放电负载电容C<sub>L</sub>所需要的时间。使C<sub>L</sub>尽可能小是实现高性能CMOS电路的关键。</p>
 <a id="more"></a>
 
-<h3 id="1-电容值分类"><a href="#1-电容值分类" class="headerlink" title="1.电容值分类"></a>1.电容值分类</h3><ul>
+<h1 id="电容值分类"><a href="#电容值分类" class="headerlink" title="电容值分类"></a>电容值分类</h1><ul>
 <li>栅漏电容C<sub>gd12</sub></li>
 <li>扩散电容C<sub>db1</sub>和C<sub>db2</sub></li>
 <li>连线电容C<sub>W</sub></li>
 <li>扇出的栅电容C<sub>g3</sub>和C<sub>g4</sub></li>
 </ul>
-<p><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image001.png" alt="img"></p>
-<h3 id="2-传播延时：一阶分析"><a href="#2-传播延时：一阶分析" class="headerlink" title="2.传播延时：一阶分析"></a>2.传播延时：一阶分析</h3><p>等效导通电阻R<sub>eq</sub>，反相器的总传播延时：t<sub>p</sub> = （t<sub>pHL</sub> + t<sub>pLH</sub>)/2，其中：<br>​    t<sub>pHL</sub>= 0.69 R<sub>eqn</sub>C<sub>L</sub><br>​    t<sub>pLH</sub>= 0.69 R<sub>eqp</sub>C<sub>L</sub></p>
+<p><img src="https://i.loli.net/2020/02/27/uP8fmyGnhQa79FV.png" alt="CMOS2.1.png"></p>
+<h1 id="传播延时：一阶分析"><a href="#传播延时：一阶分析" class="headerlink" title="传播延时：一阶分析"></a>传播延时：一阶分析</h1><p>等效导通电阻R<sub>eq</sub>，反相器的总传播延时：t<sub>p</sub> = （t<sub>pHL</sub> + t<sub>pLH</sub>)/2，其中：<br>​    t<sub>pHL</sub>= 0.69 R<sub>eqn</sub>C<sub>L</sub><br>​    t<sub>pLH</sub>= 0.69 R<sub>eqp</sub>C<sub>L</sub></p>
 <p><strong>减小门传播延时：</strong></p>
 <ul>
 <li><p>减小C<sub>L</sub>：负载电容由三个主要部分组成：内部的扩散电容、互连线电容和扇出电容。通过细致的版图设计有助于减少扩散电容和互连线电容</p>
@@ -274,11 +284,10 @@
 <li><p>提高VDD：牺牲功耗来换取性能</p>
 </li>
 </ul>
-<h3 id="3-从设计角度考虑传播延时"><a href="#3-从设计角度考虑传播延时" class="headerlink" title="3.从设计角度考虑传播延时"></a>3.从设计角度考虑传播延时</h3><p><strong>NMOS和PMOS的比</strong><br>通常要求PMOS与NMOS的宽度比在3~3.5之间，使得设计反相器具有对称的VTC，并使得t<sub>pHL</sub> =t<sub>pLH</sub>。但如果对称性和噪声容限不是主要的考虑因素，可通过减小PMOS器件的宽度来加快反相器的速度。原因是，是PMOS较宽可以改善反相器的t<sub>pLH</sub> ，但它也由于产生较大的寄生电通而使tpHL 变差。</p>
+<h1 id="从设计角度考虑传播延时"><a href="#从设计角度考虑传播延时" class="headerlink" title="从设计角度考虑传播延时"></a>从设计角度考虑传播延时</h1><p><strong>NMOS和PMOS的比</strong><br>通常要求PMOS与NMOS的宽度比在3~3.5之间，使得设计反相器具有对称的VTC，并使得t<sub>pHL</sub> =t<sub>pLH</sub>。但如果对称性和噪声容限不是主要的考虑因素，可通过减小PMOS器件的宽度来加快反相器的速度。原因是，是PMOS较宽可以改善反相器的t<sub>pLH</sub> ，但它也由于产生较大的寄生电通而使tpHL 变差。</p>
 <p><strong>考虑性能时反相器的尺寸的确定</strong></p>
 <p>负载电容划分为：C<sub>L</sub> = C<sub>int</sub> + C<sub>ext</sub>，其中 C<sub>int</sub> 即本征输出电容， C<sub>ext</sub>是外部负载电容，来自扇出和导线电容。</p>
-<p>$$<br>\begin{align<em>}<br>t_p &amp;= 0.69R_{eq}(C_{int}+C_{ext})=0.69R_{eq}C_{int}(1+C_{ext}/C_{int})\<br>&amp;= t_{p0}(1 + C_{ext}/C_{int})\<br>&amp;=  0.69(R_{ref}/S)(SCi_{ref})(1 + Cext /(SCiref))\<br>&amp;=  0.69R_{ref}Ci_{ref}(1+C_{ext}/SCi_{ref})\<br>&amp;=  t_{p0} (1 + C_{ext}/SCi_{ref})<br>\end{align</em>}<br>$$</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/math.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/la5JwvcOIGQeSk8.png" alt="CMOS2.3.png"></p>
 <p>Leads two important conclusions:</p>
 <ul>
 <li>反相器的本征延时tp0与门的尺寸无关，而只取决于工艺及方相器的版图；</li>
@@ -293,12 +302,12 @@
 <p>保持门的输入信号的上升时间小于或等于门的传播延时是很有利的。</p>
 <p><strong>存在（长）互连线时的延时</strong></p>
 <p>当门之间的距离进一步加大之后，互连线的电容和电阻就不容忽略，也使得导线延时在较长导线的总延时中总迅速占据主要地位。（延时表达式中有一个与导线长度呈线性关系和一个成平方关系的部分）</p>
-<h3 id="4-功耗、能量和能量延时"><a href="#4-功耗、能量和能量延时" class="headerlink" title="4.功耗、能量和能量延时"></a>4.功耗、能量和能量延时</h3><p><strong>动态功耗</strong></p>
+<h1 id="功耗、能量和能量延时"><a href="#功耗、能量和能量延时" class="headerlink" title="功耗、能量和能量延时"></a>功耗、能量和能量延时</h1><p><strong>动态功耗</strong></p>
 <p>反相器门开关过程中，由充放电电容引起的功耗</p>
 <p><strong>设计技术</strong><br>改变器件尺寸并降低电源电压是减小一个逻辑电路能耗的非常有效的方法；<br>在最优值之外过多地加大晶体管尺寸会付出较大的能量代价。至今许多设计仍普采用这种方法；<br>考虑能量时的最优尺寸系数小于考虑性能时的最优尺寸系数</p>
 <p><strong>直通功耗</strong><br>由于输入波形的上升和下降时间为零。开关过程中VDD和GND之间在短期内出现一条直流通路，此时NMOS和PMOS同时导通。直接通路电流引起功耗</p>
 <p><strong>设计技术</strong><br>使输出的上升/下降时间大于输入的上升/下降时间可以使短路功耗减到最小；</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image002.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/yHuY7ReGIPrv31z.png" alt="CMOS2.4.png"></p>
 <p>从全局的角度看，应该使所有信号的上升/下降时间保持在一定范围内不变。当负载电容太小时，功耗主要来自于短路电流，对于非常大的负载电容值，功耗主要是电容充电和放电产生。</p>
 <p><strong>静态功耗</strong></p>
 <p>由于泄漏电流流过位于晶体管源（或漏）与衬底之间的反相偏置的二极管结而形成的静态功耗；晶体管的亚阈值电流。</p>
@@ -308,13 +317,13 @@
 <p>当存在较大静态功耗时，使不工作的模块暂时断电以减少静态功耗。</p>
 <p><strong>综合考虑</strong></p>
 <p>CMOS反相器的总功耗可以分为三部分的和：</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image003.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/Ur1CHIhpRgYzEmw.png" alt="CMOS2.2.png"></p>
 <p>其中Pdyn为电容功耗，Pdp为直接通路功耗，Pstat为漏电功耗。</p>
 <p><strong>功耗—延时积或每次操作的能量损耗</strong></p>
 <p>衡量了开关门所需要的能量</p>
 <p><strong>能量—延时积</strong></p>
 <p>衡量电源电压（即性能）与延时之间的矛盾关系</p>
-<h3 id="5-小结"><a href="#5-小结" class="headerlink" title="5.小结"></a>5.小结</h3><ul>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><ul>
 <li>静态CMOS反相器，组合了一个上拉PMOS和一个下拉的NMOS，由于PMOS有较低的电流驱动能力，通常使它比NMOS宽。</li>
 <li>理想的电压传输特性。逻辑摆幅等于电源电压并且与晶体管尺寸无关。噪声容限接近VDD/2.稳态响应不受扇出的影响。</li>
 <li>传播延时主要由充放电负载电容CL所需要的时间决定。一阶近似为，tp=0.69CL((Reqn + Reqp)/2),使负载电容较小是实现高性能电路的最有效手段。</li>
@@ -361,7 +370,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://sliu0827.github.io/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/" title="CMOS反相器之动态特性">http://sliu0827.github.io/2020/02/10/2020-02-10-CMOS反相器之动态特性/</a>
+    <a href="http://sliu.info/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/" title="CMOS反相器之动态特性">http://sliu.info/2020/02/10/2020-02-10-CMOS反相器之动态特性/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -463,7 +472,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CMOS反相器的性能：动态特性"><span class="nav-number">1.</span> <span class="nav-text">CMOS反相器的性能：动态特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-电容值分类"><span class="nav-number">1.1.</span> <span class="nav-text">1.电容值分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-传播延时：一阶分析"><span class="nav-number">1.2.</span> <span class="nav-text">2.传播延时：一阶分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-从设计角度考虑传播延时"><span class="nav-number">1.3.</span> <span class="nav-text">3.从设计角度考虑传播延时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-功耗、能量和能量延时"><span class="nav-number">1.4.</span> <span class="nav-text">4.功耗、能量和能量延时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-小结"><span class="nav-number">1.5.</span> <span class="nav-text">5.小结</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#电容值分类"><span class="nav-number">1.</span> <span class="nav-text">电容值分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#传播延时：一阶分析"><span class="nav-number">2.</span> <span class="nav-text">传播延时：一阶分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从设计角度考虑传播延时"><span class="nav-number">3.</span> <span class="nav-text">从设计角度考虑传播延时</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#功耗、能量和能量延时"><span class="nav-number">4.</span> <span class="nav-text">功耗、能量和能量延时</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -486,7 +495,7 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -549,7 +558,7 @@
 	<!-- 添加word count,2020.02.26 -->
   <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">全站共 9.1k 字</span>
+  <span class="post-count">全站共 9k 字</span>
   </div>
 </div>
 
