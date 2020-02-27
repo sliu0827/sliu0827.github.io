@@ -2,7 +2,8 @@
 layout: post
 title: Verilog HDL 基础
 date: 2020-02-09
-
+categories:
+	- 程序设计
 tags: 
 
 	- RTL
@@ -31,7 +32,7 @@ tags:
 
 - 需要根据输入约束，小心设计：先“加”后“选”，先“选”后“加”
 
-<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image001.png" alt="img" style="zoom:80%;" />
+![RTL1.1.png](https://i.loli.net/2020/02/27/DCQPkFWzhmJA9SZ.png)
 
 - 单if语句，无优先级的判断结构
 
@@ -40,7 +41,7 @@ tags:
     最后一级选择信号具有最高优先权；
     具有优先级的多选择结构会消耗组合逻辑
 
-<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image002.png" alt="img" style="zoom: 150%;" />
+![RTL1.2.png](https://i.loli.net/2020/02/27/9tMhjpIADVRfw5W.png)
 
 ##  case相关语句的硬件结构映射及优化
 
@@ -50,7 +51,7 @@ tags:
 
 - 综合器很难解释latch，因此，除非特殊用途，一般避免引入latch。
 
-  <img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image003.png" alt="img"  />
+  ![RTL1.3.png](https://i.loli.net/2020/02/27/6GzFjdIWsUPpKye.png)
   latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制。
 
 - 在使能信号有效时，latch相当于通路，无效时latch保持输出数据的当前值。因此latch容易产生毛刺（glitch），DFF则不易产生毛刺。latch将静态时序分析变得极为复杂。
@@ -73,15 +74,15 @@ tags:
 
 通过逻辑复制，降低关键信号的扇出，进而降低该信号的传播延迟，提高电路性能。
 
-<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image004.png" alt="img " style="zoom:80%;" />
+![RTL1.4.png](https://i.loli.net/2020/02/27/pB7qAltnWrg6vK3.png)
 
 ## 资源共享，减小面积
 
-<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image005.png" alt="img " style="zoom:80%;" />
+![RTL1.5.png](https://i.loli.net/2020/02/27/FzgvMmDeUKl6BiT.png)
 
 ## 资源顺序重排，降低传播延时
 
-<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image006.png" alt="img" style="zoom:80%;" />
+![RTL1.6.png](https://i.loli.net/2020/02/27/lXg6WIJ89CjOSPH.png)
 
 ## 同步复位与异步复位
 

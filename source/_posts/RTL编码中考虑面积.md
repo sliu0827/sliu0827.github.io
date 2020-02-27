@@ -23,9 +23,7 @@ tags:
 
 对于一些定值的数据，类似操作都可以如此考虑RTL设计来节省面积。
 
-![img](https://sliu0827.github.io/source/images/RTL/2.RTL考虑面积/fig1.png)
-
- 
+![RTL3.1.png](https://i.loli.net/2020/02/27/RuKsTDMYajIzV5g.png)
 
 如果，必须使用复杂的运算符，则应考虑是否可以资源共享。尽管电路逻辑综合工具也会在综合的过程中采用资源共享的方法进行优化，但是，综合器的策略是有限的，因此，在编写RTL的时候，应该尽量考虑共享，而不是把这项工作完全留给综合工具。
 
@@ -85,7 +83,7 @@ if(y3>sum+s)
 
  
 
-![img](https://sliu0827.github.io/source/images/RTL/2.RTL考虑面积/fig2.png)
+![RTL3.2.png](https://i.loli.net/2020/02/27/snAGku5yjdZ2D8w.png)
 
  
 
@@ -93,9 +91,7 @@ if(y3>sum+s)
 
  
 
-![img](https://sliu0827.github.io/source/images/RTL/2.RTL考虑面积/fig3.png)
-
- 
+![RTL3.3.png](https://i.loli.net/2020/02/27/nkd53GgPFe8xwsH.png)
 
 主要措施：
 
@@ -137,7 +133,7 @@ if(y3>sum+s)
 
 热点：指设计中的功能需要在一个面积内占用大量的布线资源
 
-![img](https://sliu0827.github.io/source/images/RTL/2.RTL考虑面积/fig4.png)
+![RTL3.4.png](https://i.loli.net/2020/02/27/UaJBPsR8zkMGrjX.png)
 
 热点产生的原因，主要是RTL编码时使用了特定的结构，如很大的MUX。如果设计中的却是需要采用较大的MUX，可将MUX分级为多级较小的MUX。
 
