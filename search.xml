@@ -1,8 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>RTL设计指导原则</title>
+    <url>/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="RTL级设计的评判标准"><a href="#RTL级设计的评判标准" class="headerlink" title="RTL级设计的评判标准"></a>RTL级设计的评判标准</h1><p>时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配</p>
+<p> <strong>指导原则：面积与速度互换 、乒乓操作、 流水线设计</strong></p>
+ <a id="more"></a>
+
+<h1 id="面积与速度互换"><a href="#面积与速度互换" class="headerlink" title="面积与速度互换"></a>面积与速度互换</h1><p><strong>面积：</strong>一个设计所消耗的目标器件的硬件资源数量或者ASIC芯片的面积</p>
+<p><strong>速度：</strong>设计在芯片上稳定运行时所能够达到的最高频率，这个频率是有设计的时序状况决定</p>
+<p><em>时钟周期、PAD to PAD Time、Clock Setup Time、Clock Hold Time、Clock-to-Output Delay</em></p>
+<h1 id="面积与速度的平衡互换原则"><a href="#面积与速度的平衡互换原则" class="headerlink" title="面积与速度的平衡互换原则"></a>面积与速度的平衡互换原则</h1><p><strong>设计面积小与运行频率高是对立统一的矛盾体。</strong>科学的设计目标是：</p>
+<ul>
+<li><p>在满足设计时序要去（包含对设计最高频率的要求）的前提下，占用最小的芯片面积；</p>
+</li>
+<li><p>在所规定的面积下，使设计的时序余量更大，频率更高</p>
+</li>
+</ul>
+<p><strong>设计如果时序余量较大，所能跑的频率远远高于设计要求：</strong></p>
+<ul>
+<li>通过功能模块复用减少整个设计所消耗的芯片面积，用速度的优势对换面积的节约。</li>
+</ul>
+<p><strong>设计的时序要求很高，普通方法达不到设计频率：</strong></p>
+<ul>
+<li><p>可以通过将数据流串并转换；</p>
+</li>
+<li><p>并行复制多个操作模块；</p>
+</li>
+<li><p>对整个设计采取乒乓操作和串并转换的细想进行处理；</p>
+</li>
+<li><p>在芯片输出模块处，在对数进行“并串转换”</p>
+</li>
+</ul>
+<h1 id="乒乓操作"><a href="#乒乓操作" class="headerlink" title="乒乓操作"></a>乒乓操作</h1><p>“乒乓操作”是一个常常应用于数据流控制的处理技巧</p>
+<p><em>数据缓冲模块可以为常用的存储的单元：双口RAM 单口RAM FIFO</em></p>
+<p><img src="https://i.loli.net/2020/02/28/iu39eUqEYCwoOlV.png" alt="RTL4.1.png"></p>
+<blockquote>
+<p>第1个缓冲周期，将输入数据缓冲到模块1；</p>
+<p>第2个缓冲周期，通过切换输入数据流选择单元，将输入数据缓冲到模块2。同时将数据缓冲模块1缓冲的数据，通过输出数据流选择单元进行的选择送到数据流运算模块进行运算处理；</p>
+<p>第3个缓冲周期，通过输入数据流选择单元的再次切换，将输入数据缓冲到数据缓冲模块1.同时，将数据缓冲模块2缓冲的第2个周期的数据通过输出数据流选择单元的切换，送到数据流处理模块；</p>
+<p>如此循环，完成数据的输入。</p>
+</blockquote>
+<p><strong>特点：</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/AaFQlTdCLjXwqEn.png" alt="RTL4.2.png"></p>
+<p>乒乓操作的最大特点是<strong>通过“输入数据选择单元”和“输出数据选择单元”按节拍、相互配合的切换，将经过缓冲的数据流没有停顿地送到“数据流运算处理模块”进行运算与处理。</strong>把乒乓操作模块当做一个整体，站在这个模块的两端看数据，输入数据流和输出数据流都是连续不断的，没有任何停顿，因此非常适合对数据流进行流水线式处理。所以乒乓操作<strong>常常应用于流水线式算法，完成数据的无缝缓冲与处理。</strong></p>
+<p>乒乓操作的第二个优点是可以<strong>节约缓冲区空间</strong>。另外，巧妙运用乒乓操作还可以达到用低速模块处理高速数据流的效果。如视频中实例展示，通过乒乓操作实现低速模块处理高速数据的实质是：通过DPRAM这种缓存单元实现了数据流的串并转换，并行用“数据预处理模块1”和“数据预处理模块2”处理分流的数据，<strong>是面积与速度互换原则的体现！</strong></p>
+<p>通过乒乓操作实现低速模块处理高速数据的实质如下图所示。</p>
+<p><img src="https://i.loli.net/2020/02/28/kX3Fbt2cgxhCAdO.png" alt="RTL4.3.png"></p>
+<p>通过DPRAM这种缓存单元实现了数据流的串并转换，并行用“数据预处理模块1”和“数据预处理模块2”处理分流的数据，是面积与速度互换原则的体现。</p>
+<h1 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h1><p><strong>流水线的参数设计中，系统时钟取决于最慢的流水线级的延时。</strong></p>
+<p>最长的组合逻辑链 –&gt; 最大的td值 –&gt; 系统时钟频率上限 –&gt; 系统速度上限</p>
+<p><strong>组合逻辑链的并行闲置：</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/M4oCi1VAQPHOXlk.png" alt="RTL4.4.png"></p>
+<p><strong>组合逻辑链的串行闲置：</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/e8vYCUQryDxE57m.png" alt="RTL4.5.png"></p>
+<p>实例： 计算log(|a+b|)</p>
+<p>组合逻辑的延时等于加法器，求绝对值，求对数的延时之和。如若插入两级寄存器之后，组合逻辑的延时等于三者绝对值的最大值，且每个时刻三部分都在运行。对比发现，流水线的工作方式可以充分提高电路运行的频率，理想情况下 ，本例中，运行频率可以提升至原来的三倍。</p>
+<p><img src="https://i.loli.net/2020/02/28/6wUtXksvzRYJ49c.png" alt="RTL4.6.png"></p>
+<p>四级流水线结构</p>
+<p> <img src="https://i.loli.net/2020/02/28/ybFXMzDqeUkifY9.png" alt="RTL4.7.png"></p>
+<p>四级流水线比较</p>
+<p><img src="https://i.loli.net/2020/02/28/CLSYxu5qfyWVw7h.png" alt="RTL4.8.png"></p>
+<blockquote>
+<p>注：Tpipe&lt;T（因流水线单元一定比非流水线单元短）;4Tpipe&gt;T（因流水线需要插入寄存器，寄存器有延迟）</p>
+</blockquote>
+<p><strong>特点：</strong></p>
+<p>通过插入寄存器，将长的串行逻辑链分成较小的部分。当系统运算是串行的时候，利用时钟控制，使运算依照顺序接续进行。在任何给定时刻，大部分电路都在工作。</p>
+<p><strong>好处：</strong></p>
+<p>每一部分延时较小–&gt; 可使用更快的时钟</p>
+<p>大部分电路同时进行运算–&gt;可提高数据通过量</p>
+<p><strong>流水线参数设计</strong></p>
+<p>系统时钟取决于最慢的流水线级的延时</p>
+<p>流水线时钟周期 Tpipe=max{T1，T2，… ,Tm}</p>
+<p>第i级的时钟周期 Ti&gt;tff + tsu + td,i + ts,i + 1</p>
+<p>流水线分割点及级数的确定要考虑的因素包括：</p>
+<ul>
+<li>单元延迟时间及时钟频率的大小决定了数据通过速率；</li>
+<li>过多的级数不一定能产生最快的结果；</li>
+<li>太多寄存器的插入会导致芯片面积增加，布线困难，时钟偏差增加。</li>
+</ul>
+<blockquote>
+<p>参考：<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>RTL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Balance in circuit design</title>
+    <url>/2020/02/28/2020-02-28-Balance-in-circuit-design/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><em>01.EFR Scheme for Low Power SRAM；</em></p>
+<p><em>02.Chip Architecture；</em></p>
+<p><em>03.Results；</em></p>
+<p><em>04.Source Line Voltage Control Technique</em></p>
+<a id="more"></a>
+
+<p>本文主要介绍一种新的设计架构来获得更低的静态功耗，电源电压控制技术（source line voltage control techniques）。传统设计中，power line的电压为某一常数值来保证SRAM稳定工作。在此，新方法中通过控制power line电压来改善漏电状况。</p>
+<p>首先，描述了在手机低电压SRAM cell中使用的<strong>electric field relaxation（EFR）</strong>电路。<strong>采用更高的阈值电压，有助于减小SRAM cell的静态功耗</strong>。</p>
+<p>其次，描述了在移动蜂窝电话应用处理器中集成的SRAM<strong>减小漏电流的设计技术</strong>。<strong>采用较低的阈值电压，有助于获得SRAM cell更低的获取时间（low access time）</strong>。</p>
+<h1 id="EFR-Scheme-for-Low-Power-SRAM"><a href="#EFR-Scheme-for-Low-Power-SRAM" class="headerlink" title="EFR Scheme for Low Power SRAM"></a><em>EFR Scheme for Low Power SRAM</em></h1><p>EFR电路如图1所示，它能从电路级别消除泄漏电流。<strong>在保持阶段（retention mode），对于bit lines（BT and BB）用1.0V的供电替换原先1.5V的供电，同时VSSM从0提升到0.5V</strong>。</p>
+<p><img src="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png" alt="memory4.1.png"></p>
+<p>Fig. 1 Electric field relaxation scheme</p>
+<p><strong>黑色的实线箭头表示bit lines（BT and BB）从1.5V替换为1.0V的差异</strong>。这种relaxation能减小gate leakage和GIDL currents大约90%。</p>
+<p><strong>灰色的实线箭头表示负的0.5v VGS应用到transfer nMOS晶体管</strong>。负偏压能够将subthreshold leakagecurrent降到接近0。</p>
+<p><strong>圆点的箭头表示负的0.5V back-bodybias电压VBB应用到driver nMOS晶体管</strong>。这个反偏压能减小subthreshold leakage current大约90%。</p>
+<p>以上是MOS管的source电压和衬底之间电压由0变为0.5V的区别，但是，the band-to-band tunneling leakage仍然没有改善。</p>
+<p>图2给出了在25℃（Fig.2a）和90℃（Fig.2b）温度环境下，对传统设计方式和EFR设计方式的SRAM cells在最坏的工艺环境下（the worst-case process）静态泄漏电流的测试数据。每种器件类型合计了subthreshold和GIDL currents。</p>
+<p><img src="https://i.loli.net/2020/02/28/Qg7JOSoHqxdKilb.png" alt="memory4.2.png">Fig. 2 Measured SRAM cell leakagecurrent; (a) 25ıC/worst case (b) 90ıC/worst case</p>
+<p>在两个例子中，pMOS的阈值电压为1.0V，在25℃和90℃中两者的subthreshold leakage均比GIDL currents小得多。nMOS的阈值电压为0.7V，subthreshold leakage current相对于GIDLcurrent在25℃更小，但在90℃更大。cell的静态泄漏功耗在EFR设计中25℃时为16.6fA，90℃时为101.7fA，分别相比于传统设计的cell小82.5%和91.8%。</p>
+<h1 id="Chip-Architecture"><a href="#Chip-Architecture" class="headerlink" title="Chip Architecture"></a><em>Chip Architecture</em></h1><p><img src="https://i.loli.net/2020/02/28/j5faidzXmlgFVbc.png" alt="memory4.3.png">Fig.3 Circuit diagram of one mat</p>
+<p>图3展示了SRAM芯片某一簇（mat）的电路图，整个SRAM chip 有32 mats。每个mat由2048 word lines构成的256-data-bit和20-parity-bit columns组成，且每个mat被划分为4个bank。</p>
+<p>读操作的仿真时序图在Fig4中展示。该SRAM是异步的，如果地址信号不发生改变SRAM将保持retention mode，<strong>如果地址信号改变，SRAM由retention mode转换为active mode，产生一个ATD 脉冲，激活reset 操作</strong>。</p>
+<p><strong>在4.3ns的reset期间，选中的bank中memory cell的VSS line（VSSM）从0.5V下拉到0V，同时bit-line pairs（BT,and BB）从1.0V预充为1.5V</strong>。</p>
+<p>传统异步SRAM中通常是在reset time时，bit-line pair由0v预充为1.5V，在我们的EFR电路设计中，我们可以容易的在reset time期间为bit-line预充和VSSM放电。另外，由于EFR电路和asynchronous SRAM上述类似，access time不会增加。</p>
+<p><img src="https://i.loli.net/2020/02/28/8HLKbmp5lkYrAcW.png" alt="memory4.4.png"></p>
+<p>Fig. 4 Simulated waveforms for readoperation</p>
+<p><strong>随后word line（wl）激活。随着sense amplifiers的激活，选中的128 bits of data 和10 parity bits出现在local bus（LBUS）</strong>。为了减少对power supplies噪声的产生，VSSM被控制在bank level而不是在mat level。这种控制方法可以保持VSS的噪声低于32mV，这个结果在仿真中通过power supply nets可以观察得到。VSSM line由第三层金属加强来以控制VSSM从0.5到0V。在完成读操作的500us内，VSSM line非常慢的恢复到0.5V。在读操作完成的100ms内由漏电流作用，bit-line pairs容易的恢复回1.0V。因此，复位操作很难影响到动态功耗。</p>
+<h1 id="Results"><a href="#Results" class="headerlink" title="Results"></a><em>Results</em></h1><p><img src="https://i.loli.net/2020/02/28/NiBFqxsgVILSGDM.jpg" alt="memory4.5.png"></p>
+<p>Fig. 5 Photograph and features of thechip</p>
+<h1 id="Source-Line-Voltage-Control-Technique"><a href="#Source-Line-Voltage-Control-Technique" class="headerlink" title="Source Line Voltage Control Technique"></a><em>Source Line Voltage Control Technique</em></h1><p>本节描述聚焦于移动电话应用处理器的减小漏电流技术。通常，集成在应用处理器中的SRAM会使用较低的阈值电压。因此，主要的泄漏电流是subthreshold leakage current。为了减小SRAM cells在未选通状态下的泄漏电流，便提出了source line voltage control 技术，来控制powerline电压，并保持最小限度地牺牲操作稳定性。</p>
+<p><strong>SRAM的Power supply voltage控制为VDD和VSS的中间电位，中间电位电压同时减小泄露电流以及数据保持电流</strong>。中间电压的产生由一个简单的电路实现，因为如果采用复杂电路，会有额外的功耗和面积代价。<strong>这一节介绍一个简单的电压控制电路，包括电压切换选择，电阻和二极管，此电路可以降低额外的功耗和面积代价</strong>。</p>
+<p><img src="https://i.loli.net/2020/02/28/ALVXdw1abKkBSMJ.png" alt="memory4.6.png">Fig. 6 Leakage and stability vs. localpower line voltage</p>
+<p>SRAM模块必须满足其性能目标，设计能实现足够稳定的保存数据。控制VSSM的电压来减小memory cell的leakage时，更高的VSSM能减小SRAM cell leakage到一个更小的级别。另一方面，也能破坏SRAM的数据保持稳定性。这样的关系在图6中描述。为了满足low leakage 和high stability，VSSM必须被控制到能满足leakage目标的最低电压。图7展示了VSSM控制电路，<strong>PLVC1，由3个NMOSFETS组成。一个NMOSFET作为在VSSM和VSS之间的电压切换（MS1），一个作为二极管（MD1），另一个作为电阻（MR1）</strong>。MR1有一个长的栅极且保持常开。</p>
+<p><img src="https://i.loli.net/2020/02/28/CxKvrTI1EJUaH5d.png" alt="memory4.7.png"></p>
+<p>Fig. 7 VSSM controller in embedded SRAM</p>
+<p>由130nm制造工艺生产的memory，其cell的主要leakage current 是subthreshold current，很大程度受阈值电压变化的影响。例如，Vth减小100mV，subthreshold leakage增加超过十倍，而MOSFET的驱动电流仅增加10%。</p>
+<p><strong>当制造的MOSFET 阈值电压Vth波动到一个高值，memory cell的leakage会大大减小。</strong></p>
+<p><strong>因为MR1为开启状态，电流通过MR1轻微的减小。如果MR1的电流比memory cell leakage电流大，VSSM电压变低。</strong></p>
+<p><strong>当阈值电压Vth波动到较低的值，VSSM为高，但是MD1能限制VSSM上升，保持为某一电压。这样保持足够低的电压来保持存储的数据。</strong></p>
+<p>图8展示了MOSFET制造的阈值电压Vth和VSSM电压的对比。横轴展示了阈值电压Vth设计的理想值和生产制造的差异，受工艺变化而变化。当制造晶体管的阈值电压Vth低，leakage current高，VSSM 电压必须为高来减小leakage current。当制造晶体管为高，leakage current 为低，VSSM电压需要保持低来确保SRAM的retention 稳定性。</p>
+<p><img src="https://i.loli.net/2020/02/28/qeHMDoxYJZLtTGN.png" alt="memory4.8.png"></p>
+<p>Fig.8 VSSM voltage when Vth is changed</p>
+<p>虚线描绘了满足leakage 目标且最大化cell 稳定性的理想情况。如果MOSFET为worst-leakage 器件，MOSFET的阈值电压Vth低于设计值0.1V，VSSM需要高出0.3V来满足leakage目标。</p>
+<p><strong>如果voltage controller仅有power switch和diode组成，VSSM电压如图中（a）线所示</strong>，能满足leakage 目标，但是memory cell的稳定性降低。</p>
+<p><strong>如果voltage controller PLVC1由constant-voltage source 电路构成，VSSM电压如图中（b）线所示</strong>，能满足leakage 目标，且稳定性要好于线（a），但是memory cell的稳定性仍然低。</p>
+<p>因此，<strong>使用三种类型的MOSFETs，MS1，MD1和MR1，作为voltage controller，VSSM电压（图8中粗线）趋近于理想值</strong>。这些值能满足leakage目标，且保持了更高的稳定性。PLVC1能同时满足leakage目标且保持SRAM高的稳定性。</p>
+<p><img src="https://i.loli.net/2020/02/28/GkUdsolePiMtHc3.png" alt="memory4.9.png">Fig.9 Effect of leakage reduction in1-Mbit leakage-worst embedded SRAM</p>
+<p>在图9中，陈述了1-Mbit SRAM（图8） 的leakage current。使用leakage降低技术，leakage current能减少大约90%。在图10中给出了130nm SRAM 芯片模型的特征和照片信息。</p>
+<p><img src="https://i.loli.net/2020/02/28/d4pgR9kxEJUic1j.jpg" alt="memory4.10.png">Fig. 10 Photograph and features of theprototype chip</p>
+<blockquote>
+<p><em>Ref<strong>：</strong>Low Power and Reliable SRAM memory Cell and Array Design</em></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>SRAM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SRAM leakage current</title>
+    <url>/2020/02/28/2020-02-28-SRAM-leakage-current/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><em>01.Leakage Currents in an SRAM of Conventional Design；</em></p>
+<p><em>02.Gate-Tunnel Leakage and GIDL Currents</em></p>
+<a id="more"></a>
+
+
+
+<p>DRAM有较低的待机功耗，但是需要刷新操作，而SRAM则能静态的保存数据，不需要类似于刷新这样的特殊操作。因此，对于手机或移动设备中集成的SRAM芯片，我们很容易对其进行控制。此外，由于SRAM的制造工艺和CMOS工艺一样，例如移动蜂窝电话等中的应用处理器也使用SRAM作为集成的存储器。</p>
+<p>随着MOS工艺的进步，近阈值泄漏电流（subthreshold leakage current）中会增加<strong>gate-oxide tunnel leakage</strong>和<strong>gate-induced drain leakage（GIDL）currents</strong>，成为主要的泄漏电流，增加的泄漏电流同时也增加了整个SRAM cell的静态漏电流。本小节将描述SRAM array的基本泄漏功耗。</p>
+<h1 id="leakage-Currents-in-Conventional-Design"><a href="#leakage-Currents-in-Conventional-Design" class="headerlink" title="leakage Currents in Conventional Design"></a><em>leakage Currents in Conventional Design</em></h1><p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="img"> </p>
+<p><img src="https://i.loli.net/2020/02/28/zYtK3kj5GyNTQ6u.png" alt="memory3.1.png"></p>
+<p>Fig.1 Leakage currents in a technologically advanced nMOS device</p>
+<p>关于工艺进步而造成泄漏电流增加的问题，图1展示了nMos晶体管在工艺上进步产生的4种主要泄漏电流。<strong>包括gate-oxide tunnel leakage，GIDL，junction tunnel leakage以及subthreshold leakage currents.</strong></p>
+<p><strong>Subthreshold leakage是当gate为off状态时，由drain到source的沟道泄漏电流，这种状态造成了在沟道区域的微弱反型层。</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/qmrVH6kYvJ3T175.png" alt="memory3.2.png"></p>
+<p>Fig.2 Standby leakagecurrents in an advanced technology SRAM cell of conventional design</p>
+<p>图2中描述了随着工艺进步，使用传统设计方式的SRAM cell中的主要泄漏电流。在传统设计方式中，bit lines（BT，BB）和power line（VDDI）为1.5v，word line 和VSS 为0v。</p>
+<p>在整个cell中，<strong>2个gate-tunnel leakage currents，5个GIDL currents和3个subthreshold leakage currents</strong> 组成了主要的漏电流<strong>。</strong></p>
+<p><strong>使用高阈值电压的MOS器件能够直接有效的减少subthreshold leakage currents ，虽然存储单元的读电流也会减小。</strong></p>
+<p><strong>然而，通过简单的改变器件结构很难去减小tunnel leakage 和GIDL currents.</strong></p>
+<h1 id="Gate-Tunnel-Leakage-and-GIDL-Currents"><a href="#Gate-Tunnel-Leakage-and-GIDL-Currents" class="headerlink" title="Gate-Tunnel Leakage and GIDL Currents"></a><em>Gate-Tunnel Leakage and GIDL Currents</em></h1><p>这小节描述了gate-tunnel leakage 和GIDL currents。在图3中给出了<strong>gate-tunnel leakage current 随着栅压（gate voltage） 变化的曲线</strong>，同时<strong>栅氧化层厚度（Tox）作为一个参变量对比分析</strong>。</p>
+<p><strong>Tox 每增长2-°A，gate-tunnel leakagecurrent 会增长十倍</strong>。随着工艺的进步，这种电流成为了泄漏电流的主要组成。</p>
+<p>另一方面，<strong>栅电流随着栅压减小而减小，减小电压0.5v（从1.5到1.0v）能减小这种泄漏电流的95%</strong>。这是因为tunnel leakage current能随着栅氧化层的电场强度变化而简单的减小。</p>
+<p><img src="https://i.loli.net/2020/02/28/KRAyngmhox23SPE.png" alt="memory3.3.png"></p>
+<p>Fig.3 Gate-tunnel leakage current as a function of gate voltage with the thickness ofthe gate oxide (Tox) varied as a parameter</p>
+<p>图4描述了漏端电流由栅电压（VG）作用的电流曲线。<strong>实线</strong>是漏端电压（VD）为1.0V时的漏端电流曲线，<strong>虚线</strong>为1.5v时漏端电流曲线。当<strong>VG大于0v</strong>时，<strong>subthreshold leakage currents 占主导地位</strong>。当<strong>VG小于0V</strong>时<strong>，GIDL currents 占主导地位</strong>。</p>
+<p><img src="https://i.loli.net/2020/02/28/7c3LNTH5Jml6xMI.png" alt="memory3.4.png"></p>
+<p>Fig.4 GIDL and subthreshold leakage currents</p>
+<p><strong>在使用中提升阈值电压</strong>，在VG=0v时subthreshold leakage currents 相比于GIDL current的强度是可以忽略的。</p>
+<p><strong>GIDL current（IGIDL）对于电场强度F非常敏感</strong>。GIDL current 对数曲线线性反比于栅压，栅压直接影响栅氧化层下的电场强度。GIDL current的大小由栅和漏的压差（VGD）决定，VGD由1.5减小到1.0v，电场强度减小，在器件中the GIDL current减小大约90%。</p>
+<p>如果<strong>阈值电压很低，</strong>主要的泄漏电流是subthreshold leakage current。通过应用negative VGS，或者negativeVBB back-body bias voltage可以减小subthreshold leakage。具体实现电路和SRAM芯片架构下一期再接着介绍^_^</p>
+<blockquote>
+<p> Ref:Low power and reliable SRAM memory cell and array design[M]. Springer Science &amp; Business Media, 2011.</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>Memory</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RTL编码中考虑面积</title>
-    <url>/2020/02/22/RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/</url>
+    <url>/2020/02/22/2020-02-22-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>减少设计面积，意味着成本降低、功耗降低。特别是对于FPGA的设计，直接决定着FPGA的选型。</p>
 <p>为了减少设计面积，首先得估算设计使用资源的数量，例如触发器、加法器、乘法器等。其中，触发器的数量由功能决定，很难减少，其面积也比较好估计。因此，RTL设计中的组合逻辑，对应的各种操作符在使用的时候应该加以重视。例如，加减法、乘除法以及条件语句中的比较运算。</p>
 <a id="more"></a> 
@@ -11,7 +208,7 @@
 
 <h2 id="RTL编码中考虑面积"><a href="#RTL编码中考虑面积" class="headerlink" title="RTL编码中考虑面积"></a>RTL编码中考虑面积</h2><p>如以下实例中，替换判断语句后，实现了1bit逻辑门省掉了一个6bit的比较器。</p>
 <p>对于一些定值的数据，类似操作都可以如此考虑RTL设计来节省面积。</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/2.RTL%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/fig1.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/RuKsTDMYajIzV5g.png" alt="RTL3.1.png"></p>
 <p>如果，必须使用复杂的运算符，则应考虑是否可以资源共享。尽管电路逻辑综合工具也会在综合的过程中采用资源共享的方法进行优化，但是，综合器的策略是有限的，因此，在编写RTL的时候，应该尽量考虑共享，而不是把这项工作完全留给综合工具。</p>
 <p>例如：</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(y1&gt;a+b+q)</span><br><span class="line">    statement1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(y2&gt;a+b+r)</span><br><span class="line">    statement2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(y3&gt;a+b+s)</span><br></pre></td></tr></table></figure>
@@ -28,9 +225,9 @@
 <p><code>addr &lt;= addr + 32;</code> 更换为 <code>{ addr[7:5] &lt;= addr[7:5] + 1; addr[4:0] &lt;= addr[4:0] + 0}</code></p>
 <h2 id="RTL编码中考虑功耗"><a href="#RTL编码中考虑功耗" class="headerlink" title="RTL编码中考虑功耗"></a>RTL编码中考虑功耗</h2><hr>
 <p>动态功耗的计算公式可以表述为：</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/2.RTL%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/fig2.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/snAGku5yjdZ2D8w.png" alt="RTL3.2.png"></p>
 <p>在RTL设计，负载电容和工作电压是无法改变的，主要尽量降低电路的反转频率。</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/2.RTL%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/fig3.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/nkd53GgPFe8xwsH.png" alt="RTL3.3.png"></p>
 <p>主要措施：</p>
 <p>（1）门控时钟，门控时钟是电路设计最常用也是最有效的方法，在逻辑综合阶段可以让综合工具自行插入。</p>
 <p>（2）增加使能信号，使得部分电路只有在需要工作时才工作；</p>
@@ -45,7 +242,7 @@
 <p>布线（routing），旨在根据门级网表的描述实现各个单元的连接。布线是否能够顺利布通的最关键因素是布局（placement）。但是，即使最好的布局工具，还是可能出现无法布通的情况。这种情况下就需要修改RTL级设计。</p>
 <p>因此，如果可以在RTL编码 阶段考虑代码可能对布线产生的影响，就可能避免最后出现无法布通的情况。</p>
 <p>热点：指设计中的功能需要在一个面积内占用大量的布线资源</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/2.RTL%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/fig4.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/UaJBPsR8zkMGrjX.png" alt="RTL3.4.png"></p>
 <p>热点产生的原因，主要是RTL编码时使用了特定的结构，如很大的MUX。如果设计中的却是需要采用较大的MUX，可将MUX分级为多级较小的MUX。</p>
 ]]></content>
       <categories>
@@ -64,43 +261,45 @@
 <h1 id="示例1："><a href="#示例1：" class="headerlink" title="示例1："></a>示例1：</h1><p>假设b信号的延迟较大，到来较晚，那么电路应如何修改？</p>
 <p>分析代码可知，当满足条<code>sel[1]&amp;~(sel[2]|sel[3])</code>时，输出z=b。因此我们不可简单的移动<code>if(sel[1]) z=b;</code>语句的位置，否则会改变电路的功能。</p>
 <p>RTL代码：</p>
-<img src="https://sliu0827.github.io/source/images/RTL/1.RTL考虑延时/fig1.png" alt="img" style="zoom: 67%;" />
-
+<p><img src="https://i.loli.net/2020/02/27/nXhmOilRxcoPV7g.png" alt="RTL2.1.png"></p>
 <p>电路结构：</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig2.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/cyNhX6ZjsWE74vp.png" alt="RTL2.2.png"></p>
 <p>我们做如下修改：</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">always</span> @（*）<span class="keyword">begin</span></span><br><span class="line">    z = <span class="number">1'b0</span>;</span><br><span class="line">    <span class="keyword">if</span> (sel[<span class="number">0</span>]) z = a;</span><br><span class="line">    <span class="keyword">if</span> (sel[<span class="number">2</span>]) z = c;</span><br><span class="line">    <span class="keyword">if</span> (sel[<span class="number">3</span>]) z = d;</span><br><span class="line">    <span class="keyword">if</span> (sel[<span class="number">1</span>] &amp; ~(sel[<span class="number">2</span>] | sel[<span class="number">3</span>]))</span><br><span class="line">        z = b_is_late;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 
 <p>修改后电路结构为：</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig3.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/jDWPRmNnOucexqs.png" alt="RTL2.3.png"></p>
 <h1 id="示例2："><a href="#示例2：" class="headerlink" title="示例2："></a>示例2：</h1><figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> single_if_late(A,C,CTRL_is_late_arriving,Z);</span><br><span class="line"><span class="keyword">input</span> [<span class="number">6</span>:<span class="number">1</span>]A;</span><br><span class="line"><span class="keyword">input</span> [<span class="number">5</span>:<span class="number">1</span>]C;</span><br><span class="line"><span class="keyword">input</span> CTRL_is_late_arriving;</span><br><span class="line"></span><br><span class="line"><span class="keyword">output</span> Z;</span><br><span class="line"></span><br><span class="line"><span class="keyword">reg</span> Z;</span><br><span class="line"><span class="keyword">always</span> @(A <span class="keyword">or</span> C <span class="keyword">or</span> CTRL_is_late_arriving)<span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>(C[<span class="number">1</span>] == <span class="number">1'b1</span>)</span><br><span class="line">        Z = A[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(C[<span class="number">2</span>] == <span class="number">1'b0</span>)</span><br><span class="line">        Z = A[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(C[<span class="number">3</span>] == <span class="number">1'b1</span>)</span><br><span class="line">        z = A[<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(C[<span class="number">4</span>] == <span class="number">1'b1</span> &amp;&amp; CTRL_is_late_arriving == <span class="number">1'b0</span>)</span><br><span class="line">        Z = A[<span class="number">4</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(C[<span class="number">5</span>] == <span class="number">1'b0</span>)</span><br><span class="line">        Z = A[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        Z = A[<span class="number">6</span>];</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 
 <p>修改后：</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> single_if_improved(A,C,CTRL_is_late_arriving,Z);</span><br><span class="line"></span><br><span class="line"><span class="keyword">input</span> [<span class="number">6</span>:<span class="number">1</span>]A;</span><br><span class="line"><span class="keyword">input</span> [<span class="number">5</span>:<span class="number">1</span>]C;</span><br><span class="line"><span class="keyword">input</span> CTRL_is_late_arriving;</span><br><span class="line"></span><br><span class="line"><span class="keyword">output</span> Z;</span><br><span class="line"></span><br><span class="line"><span class="keyword">reg</span> Z,Z1;</span><br><span class="line"><span class="keyword">wire</span> Z2,prev_cond;</span><br><span class="line"><span class="keyword">always</span> @(A <span class="keyword">or</span> C) <span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>(C[<span class="number">1</span>] == <span class="number">1'b1</span>)</span><br><span class="line">        Z1 = A[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(C[<span class="number">2</span>] == <span class="number">1'b0</span>)</span><br><span class="line">        Z1 = A[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(C[<span class="number">3</span>] == <span class="number">1'b1</span>)</span><br><span class="line">        z1 = A[<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(C[<span class="number">5</span>] == <span class="number">1'b0</span>)</span><br><span class="line">        Z1 = A[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        Z1 = A[<span class="number">6</span>];</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assign</span> Z2 = A[<span class="number">4</span>];</span><br><span class="line"><span class="keyword">assign</span> prev_cond = (C[<span class="number">1</span>]==<span class="number">1'b1</span>)||(C[<span class="number">2</span>]==<span class="number">1'b0</span>)||(C[<span class="number">3</span>]==<span class="number">1'b1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @(C <span class="keyword">or</span> prev_cond <span class="keyword">or</span> CTRL_is_late_arriving <span class="keyword">or</span> Z1 <span class="keyword">or</span> Z2) <span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>((C[<span class="number">4</span>]==<span class="number">1'b1</span>)&amp;&amp;(CTRL_is_late_arriving==<span class="number">1'b0</span>))</span><br><span class="line">        <span class="keyword">if</span>(prev_cond) Z = Z1;</span><br><span class="line">        <span class="keyword">else</span> Z = Z2;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        Z = Z1;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 
 <p>电路结构：</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig4.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/fTqJLkVlQX9Age1.png" alt="RTL2.4.png"></p>
 <h1 id="示例3："><a href="#示例3：" class="headerlink" title="示例3："></a>示例3：</h1><figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> case_in_if_01(A,DATA_is_late_arriving,C,sel,Z);</span><br><span class="line"></span><br><span class="line"><span class="keyword">input</span> [<span class="number">8</span>:<span class="number">1</span>]A;</span><br><span class="line"><span class="keyword">input</span> DATA_is_late_arriving;</span><br><span class="line"><span class="keyword">input</span> [<span class="number">2</span>:<span class="number">0</span>]sel;</span><br><span class="line"><span class="keyword">input</span> [<span class="number">5</span>:<span class="number">1</span>]C;</span><br><span class="line"></span><br><span class="line">ouput Z;</span><br><span class="line"><span class="keyword">reg</span> Z;</span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @(sel <span class="keyword">or</span> C <span class="keyword">or</span> A <span class="keyword">or</span> DATA_is_late_arriving)<span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">if</span>(C[<span class="number">1</span>])</span><br><span class="line">        Z = A[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (C[<span class="number">2</span>] == <span class="number">1'b0</span>)</span><br><span class="line">        Z = A[<span class="number">4</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (C[<span class="number">3</span>])</span><br><span class="line">        Z = A[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (C[<span class="number">4</span>])</span><br><span class="line">        <span class="keyword">case</span>(sel)</span><br><span class="line">            <span class="number">3'b010</span>: Z = A[<span class="number">8</span>];</span><br><span class="line">            <span class="number">3'b011</span>: Z = DATA_is_late_arriving;</span><br><span class="line">            <span class="number">3'b101</span>: Z = A[<span class="number">7</span>];</span><br><span class="line">            <span class="number">3'b110</span>: Z = A[<span class="number">6</span>];</span><br><span class="line">            <span class="keyword">default</span>: Z = A[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">endcase</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (C[<span class="number">5</span>] == <span class="number">1'b0</span>)</span><br><span class="line">        Z = A[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">else</span> Z = A[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 
 <p>对应的电路结构：</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig5.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/Qoi35Jl1fr8ZmuV.png" alt="RTL2.5.png"></p>
 <p>修改后：</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig6.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/KJmbBRsLtdWIEA4.png" alt="RTL2.6.png"></p>
 <h1 id="示例4："><a href="#示例4：" class="headerlink" title="示例4："></a>示例4：</h1><p>信号CONTROL到达时间较晚，如何修改能够提高电路性能？</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig7.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/1TQw4BDJhEOeVgY.png" alt="RTL2.7.png"></p>
 <p>如下修改，过复制数据路径，将CONTROL信号放到最后，通过先加后选的方式，改善选择信号的延时。</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig8.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/B3xHm8nwjpZYi2g.png" alt="RTL2.8.png"></p>
 <p>调整后的代码：</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig9.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/OPiCJxWTQ3HsfLl.png" alt="RTL2.9.png"></p>
 <h1 id="范例5："><a href="#范例5：" class="headerlink" title="范例5："></a>范例5：</h1><p>假设A信号到来较晚，如何修改能够提高电路性能？</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig10.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/vMROrbDt7xCAVyu.png" alt="RTL2.10.png"></p>
 <p>修改方法：</p>
 <p>通过调整A信号的计算顺序，是信号A路上减少了一个加法器。</p>
-<p><img src="https://sliu0827.github.io/source/images/RTL/1.RTL%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/fig11.png" alt="fig11"></p>
+<p><img src="https://i.loli.net/2020/02/27/1jtPVSlyrZhscMD.png" alt="RTL2.11.png"></p>
 <blockquote>
 <p>参考：<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
       <tags>
         <tag>RTL</tag>
       </tags>
@@ -114,72 +313,45 @@
 
 
 <h3 id="Read-and-Write-Operatioins"><a href="#Read-and-Write-Operatioins" class="headerlink" title="Read and Write Operatioins"></a><strong>Read and Write Operatioins</strong></h3><hr>
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig1.png" alt="img"></p>
-<center>Fig.1 SRAM memory cell</center>
-图1为CMOS 6-T SRAM电路图，图2为其读写操作波形。
-
-
-
-
-
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig2.png" alt="img"></p>
-<center>Fig.2 Fundamental waveform of SRAM operation</center>
-**当写****入数据“0”(W“0”)**时，word line(WL)被激活，bit line根据输入数据值被驱动到“H”和“L”状态。存储节点的电压发生翻转，输入数据写入到数据存储节点中。 
-
-
-
+<p><img src="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png" alt="memory2.1.png"></p>
+<p>Fig.1 SRAM memory cell<br>图1为CMOS 6-T SRAM电路图，图2为其读写操作波形。</p>
+<p><img src="https://i.loli.net/2020/02/27/hypWa23on9Y6SUT.jpg" alt="memory2.2.png"></p>
+<p>Fig.2 Fundamental waveform of SRAM operation</p>
+<p><strong>当写**</strong>入数据“0”(W“0”)**时，word line(WL)被激活，bit line根据输入数据值被驱动到“H”和“L”状态。存储节点的电压发生翻转，输入数据写入到数据存储节点中。 </p>
 <p><strong>当从ce**</strong>ll中读“0”(R“0”)**时，所有bit line被预充为“H”，激活WL。原先保存在数据节点的数据使bit lines出现电压差。电压差通过灵敏放大器(sense amplifier)放大，保持的数据(retained data)被读出。</p>
 <p><strong>当写入数据“1”到cell中，**</strong>且写入失败(W “1” write failure case)**时，存储节点(N0/N1)的电压没有翻转，正确的数据没有写入cell中。在下一个读周期，不正确的数据“0”被读出。</p>
 <p><strong>当读数据“1”，**</strong>且读出失败(R1 read failure case<strong>**)</strong>时，存储节点的电压(N0/N1)发生翻转，存储节点的保持数据(retained data)被破坏。</p>
 <p>图3为SRAM memory保持数据情形，存储节点N0和N1，保持相反的状态，“H”和“L”。word line 为“L”。</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig3.png" alt="img"></p>
-<center>Fig.3 SRAM cell condition during data retention</center>
-如下图4所示，Memory cell读过程中，右边的节点N1，状态为"H"，左边的节点状态为"L"。在读之前，bit lines被预充电到"H"状态。读的过程中，word lines变为"H"状态，存取管(access MOSs)导通打开。读cell电流Iread从access MOS到“L”-state的存储节点流动，对预充的bit line放电。
-
-
-
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig4.png" alt="img"></p>
-<center>Fig.4 Read operation of SRAM cell</center>
-图5a电压波形是SRAM cell在正常读数据的过程中，每个存储节点的电压变化。正常读数据时，存储节点的电压不会发生翻转。图5b为memory cell正常操作的butterfly cruves，用来评估静态噪声裕量(SNM)。两条线之间有两个密闭空隙（space），意味着SRAM读操作的SNM是足够的。
-
-
-
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig5.png" alt="img"></p>
-<center>Fig.5 Voltage waveforms and butterfly curves during normal read operation. </center>
- <center> (a) SRAM cell nodes during normal read operation. (b) Butterfly curves to estimate SNM</center>
-**在读操作期间，由于access MOS和driver MOS之间的电阻分压**，存储节点的“L"-state被提升。**如果存储节点电压“L”-state的提升值超过了由driver MOS,DR1和loadMOS，LD1组成的反相器的逻辑中点电压，保持数据将翻转****，被破坏(6a)**。这种情况就是memory cell读失败。图6b是memory cell读数据失败对应的butterfly curves，两条曲线之间只有一个空隙，SRAM能正常读的SNM是不够的。
-
-
-
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig6.png" alt="img"></p>
-<center>Fig.6 Voltage waveforms and butterfly curves during failure read operation. </center>
-<center>  (a) SRAM cell nodes during failureread operation. (b) Butterfly curves to estimate SNM</center>
-![img](https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig7.png)
-
-<center>Fig.7 Write operation of SRAM cell</center>
-关于写操作，如图7，在写之前，左边存储节点N0是“H” state，右边存储节点N1是“L” state。当要写的数据到达bit lines时，“H” state存储节点经过access MOS放电，写操作cell电流Iwrite,在图中用实线箭头标出。当“H”电位节点被放电至“L”电位时，节点的电压此时发生翻转，写操作完成(图8)。
-
-
-
+<p><img src="https://i.loli.net/2020/02/27/ZR5cD8Ar6dQg4kG.png" alt="memory2.3.png"></p>
+<p>Fig.3 SRAM cell condition during data retention</p>
+<p>如下图4所示，Memory cell读过程中，右边的节点N1，状态为”H”，左边的节点状态为”L”。在读之前，bit lines被预充电到”H”状态。读的过程中，word lines变为”H”状态，存取管(access MOSs)导通打开。读cell电流Iread从access MOS到“L”-state的存储节点流动，对预充的bit line放电。</p>
+<p><img src="https://i.loli.net/2020/02/27/M3QP6qGIwLU9YgH.png" alt="memory2.4.png"></p>
+<p>Fig.4 Read operation of SRAM cell</p>
+<p>图5a电压波形是SRAM cell在正常读数据的过程中，每个存储节点的电压变化。正常读数据时，存储节点的电压不会发生翻转。图5b为memory cell正常操作的butterfly cruves，用来评估静态噪声裕量(SNM)。两条线之间有两个密闭空隙（space），意味着SRAM读操作的SNM是足够的。</p>
+<p><img src="https://i.loli.net/2020/02/27/hCbrwNcd1UKqRvm.png" alt="memory2.5.png"></p>
+<p>Fig.5 Voltage waveforms and butterfly curves during normal read operation.<br> (a) SRAM cell nodes during normal read operation.<br>(b) Butterfly curves to estimate SNM</p>
+<p><strong>在读操作期间，由于access MOS和driver MOS之间的电阻分压</strong>，存储节点的“L”-state被提升。<strong>如果存储节点电压“L”-state的提升值超过了由driver MOS,DR1和loadMOS，LD1组成的反相器的逻辑中点电压，保持数据将翻转**</strong>，被破坏(6a)**。这种情况就是memory cell读失败。图6b是memory cell读数据失败对应的butterfly curves，两条曲线之间只有一个空隙，SRAM能正常读的SNM是不够的。</p>
+<p><img src="https://i.loli.net/2020/02/27/YmZqEtu4s8oUaxd.png" alt="memory2.6.png"></p>
+<p>Fig.6 Voltage waveforms and butterfly curves during failure read operation.<br>(a) SRAM cell nodes during failureread operation.<br>(b) Butterfly curves to estimate SNM</p>
+<p><img src="https://i.loli.net/2020/02/27/qJ4Bnw86Dpi1TRN.png" alt="memory2.7.png"></p>
+<p>Fig.7 Write operation of SRAM cell</p>
+<p>关于写操作，如图7，在写之前，左边存储节点N0是“H” state，右边存储节点N1是“L” state。当要写的数据到达bit lines时，“H” state存储节点经过access MOS放电，写操作cell电流Iwrite,在图中用实线箭头标出。当“H”电位节点被放电至“L”电位时，节点的电压此时发生翻转，写操作完成(图8)。</p>
 <p><strong>在写的过程中，load MOS通过上拉电流Ipullup充电</strong>，如图3.7中虚线箭头所示。因此，<strong>如果load MOS充电的电流比access MOS放电电流大的话，存储节点“H”电位不会放电，节点电压不发生翻转，写操作失败(图9)</strong>。</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig8.png" alt="img"></p>
-<center>Fig.8 SRAM cell nodes during normal write operation</center>
-![img](https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig9.png)
-
-<center>Fig.9 SRAM cell nodes during failure write operation</center>
-### **Sum** 
-
-<hr>
+<p><img src="https://i.loli.net/2020/02/27/rtyBeKJo1u25UgE.png" alt="memory2.8.png"></p>
+<p>Fig.8 SRAM cell nodes during normal write operation</p>
+<p><img src="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png" alt="memory2.9.png"></p>
+<p>Fig.9 SRAM cell nodes during failure write operation</p>
+<h3 id="Sum"><a href="#Sum" class="headerlink" title="Sum"></a><strong>Sum</strong></h3><hr>
 <p><strong>在SRAM cell 中，加强读操作和写操作稳定性的设计方法是一个矛盾的关系</strong>。例如，在表1中促使读操作和写操作更稳定的方法。所以，<strong>很难同时提高读和写操作的稳定性</strong>。在所有的130nm之前的传统制造工艺中，在SRAM cell中有更大的电压工作空间，可以同时保证稳定性，不会出问题。在更近的制造工艺中，随着MOSFETs中Vth变化(variation)，电压工作空间(operation margin)减小，SRAM cell中MOSFET电流随着Vth变化而波动(fluctuated)。</p>
 <p>除此之外，Vth variations会破坏在读和写操作期间MOSFET电流的平衡。因此，在SRAM cell设计阶段，最大化SRAM cell的operatingmargin，包括读和写的margin是必不可少的。Vth是MOSFET的一个很好的参数表征，它几乎完全可以指示晶体管的性能。</p>
-<center>Table.1 Drivability change to enhancestability of each operation</center>
-![img](https://sliu0827.github.io/source/images/doc/Memory/2.SRAM_cell/fig10.png)
-
-
-
+<p>Table.1 Drivability change to enhancestability of each operation</p>
+<p><img src="https://i.loli.net/2020/02/27/9fPUMrCs7QpLxA6.png" alt="memory2.10.png"></p>
 <p>为了实现最大化的operating-margins，需要更准确的SRAM operating margins，在本书第3章中，对于受MOSFET Vth variation而影响的SRAM operating margins分析做了进一步描述，这里不再细说。</p>
 <p>[^Ref]: <em>Low power and reliable SRAM memory cell and array design[M]. Springer Science &amp; Business Media, 2011.</em></p>
 ]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
       <tags>
         <tag>Memory</tag>
       </tags>
@@ -194,35 +366,26 @@
 <a id="more"></a>
 
 <h3 id="SRAM-CELL"><a href="#SRAM-CELL" class="headerlink" title="SRAM CELL"></a>SRAM CELL</h3><hr>
+<p>Fig.1 SRAM memory cell</p>
 <p>SRAM cell由一个基本的触发器（flip-flop）单元构成，即<strong>两个交叉耦合（cross coupled）的反相器</strong>，于flip-flop的存储结点存储逻辑值“0”或“1”。</p>
 <p>最常用的SRAM cell是全部由MOS管构成的6个晶体管构成的互补逻辑电路（full CMOS 6-transistor），就SOC（system-on-chip）设计而言，由于full CMOS 6-T使用的工艺为平面CMOS工艺，便于生成制造，故最常使用。</p>
 <p>主要组成：</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/1.SRAM%E5%9F%BA%E7%A1%80/fig2.1.png" alt="fig2.1"></p>
-<center>Fig. 2.1 SRAM cell with the full CMOS 6-transistor (6-T)</center>
-**两个反相器(load MOSFET(LD0)-driver MOSFET(DR0), LD1-DR)；**
-
+<p><img src="https://i.loli.net/2020/02/27/nZwstNU3l7X1jk9.png" alt="memory1.1.png"></p>
+<p>Fig. 2.1 SRAM cell with the full CMOS 6-transistor (6-T)</p>
+<p><strong>两个反相器(load MOSFET(LD0)-driver MOSFET(DR0), LD1-DR)；</strong></p>
 <p><strong>两个导通管(access MOSFET AC0, AC1)连接到一对bit line(BT,BB)上，同时，导通管的栅端(gate)连接到word line(WL)；</strong></p>
 <p>为构成一个flip-flop，<strong>其中一个反相器的输入和输出端需要分别连接到另一个反相器的输出和输入端，也即是交叉耦合</strong>。</p>
 <h3 id="Basic-Operation-of-SRAM-Cell"><a href="#Basic-Operation-of-SRAM-Cell" class="headerlink" title="Basic Operation of SRAM Cell"></a>Basic Operation of SRAM Cell</h3><hr>
 <p>Memory的基本排列构造（array structure）如下图2.2所示，整个memory由nxm位memory cell组成。</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/1.SRAM%E5%9F%BA%E7%A1%80/fig2.2.png" alt="fig2.2"></p>
-<center>Fig. 2.2 Basic full CMOS cell array structure</center>
-SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由**word line译码器（word decoder）**根据地址数据选择一排word line(WL),纵向上bit line控制电路由**预充电电路（precharge circuit），列选择器（Column multiplexer，MUX），灵敏放大器（sense amplifier ，SA)，输出电路（output FF）和写放大器（write amplifier，SA）**构成。详细的电路结构在图2.3中。
-
-
-
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/1.SRAM%E5%9F%BA%E7%A1%80/fig2.3.png" alt="fig2.3"></p>
-<center>Fig. 2.3 Column control circuits consisting of precharge circuit, column multiplexer (mux),sense amplifier (SA), output FF, and write amplifier (WA)</center>
-下面介绍SRAM读写操作，如图2.4所示电压波形。**执行读操作需要给bit line先进行预充电（precharge），prechage电路平衡提升bit line的电位至VDD。****随后，word line置高，导通管打开，预先存储于存储节点的数据使cell产生一个小的电压变化（ΔVS）**。
-
-
-
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/1.SRAM%E5%9F%BA%E7%A1%80/fig2.4.png" alt="fig2.4"></p>
-<center>Fig. 2.4 Basic voltage waveform in read and write operation</center>
-如果存储的数据为“1”，cell存储节点N0是低电压，N1是高电压。因为DR1没有打开，另一条bit line BB保持平衡时的电压，而BT的电压值则会减小ΔVS 。
-
-
-
+<p><img src="https://i.loli.net/2020/02/27/WFMs2twxDJ1IjO9.png" alt="memory1.2.png"></p>
+<p>Fig. 2.2 Basic full CMOS cell array structure</p>
+<p>SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由<strong>word line译码器（word decoder）</strong>根据地址数据选择一排word line(WL),纵向上bit line控制电路由<strong>预充电电路（precharge circuit），列选择器（Column multiplexer，MUX），灵敏放大器（sense amplifier ，SA)，输出电路（output FF）和写放大器（write amplifier，SA）</strong>构成。详细的电路结构在图2.3中。</p>
+<p><img src="https://i.loli.net/2020/02/27/69DFvj1B7X8oMEm.png" alt="memory1.3.png"></p>
+<p>Fig. 2.3 Column control circuits consisting of precharge circuit, column multiplexer (mux),sense amplifier (SA), output FF, and write amplifier (WA)</p>
+<p>下面介绍SRAM读写操作，如图2.4所示电压波形。<strong>执行读操作需要给bit line先进行预充电（precharge），prechage电路平衡提升bit line的电位至VDD。**</strong>随后，word line置高，导通管打开，预先存储于存储节点的数据使cell产生一个小的电压变化（ΔVS）**。</p>
+<p><img src="https://i.loli.net/2020/02/27/zaXEm61eDb2NOdR.png" alt="memory1.4.png"></p>
+<p>Fig. 2.4 Basic voltage waveform in read and write operation</p>
+<p>如果存储的数据为“1”，cell存储节点N0是低电压，N1是高电压。因为DR1没有打开，另一条bit line BB保持平衡时的电压，而BT的电压值则会减小ΔVS 。</p>
 <p>通过打开Column-select line for read(YSR)信号，由bit line构成的差分信号传输到灵敏放大器（sense amplifier）的输入端(ST/SB)，经放大后又由output FF锁存输出。如果存储的数据为“0”，与此相似，只不过将会是bit line BB的电压减少。</p>
 <p><strong>执行写操作，同样也需要打开word line，在打开word line之前，将bit line电压平衡到VDD，由数据输入端过来的输入数据Din经由write amplifier（WA）传输至bit line</strong>。不同于读操作的是此时column 的选择由column-select signal for write (YSW)来控制。</p>
 <p>Bit line电压变化后，使存储节点（N1，N2）的电压翻转，从而写入数据。最后，写操作完成时word line关闭。</p>
@@ -234,20 +397,19 @@ SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由
 <p>1.N0的电压由0V增加到VDD，同时测量N1的电压，绘制N1-N0的关系；</p>
 <p>2.N1的电压由0V增加到VDD，同时测量N0的电压，绘制N0-N1的关系；</p>
 <p>3.在曲线A和曲线B（或曲线C和D）中画出最大正方形。方形中较小那个的对角线就是SNM。</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/1.SRAM%E5%9F%BA%E7%A1%80/fig2.5.png" alt="fig2.5"></p>
-<center>Fig. 2.5 Connections of the word line and a pair of bit lines to estimate the SNM</center>
-如图2.6所示，曲线A和曲线B被称作蝶形曲线“butterfly curb”，图中列出了VDD=0.6V和1.1V的情况，SRAM的工作电压越低，静态噪声裕量SNM越小。
-
-
-
+<p><img src="https://i.loli.net/2020/02/27/fikUnxgZJH63MQC.png" alt="memory1.5.png"></p>
+<p>Fig. 2.5 Connections of the word line and a pair of bit lines to estimate the SNM</p>
+<p>如图2.6所示，曲线A和曲线B被称作蝶形曲线“butterfly curb”，图中列出了VDD=0.6V和1.1V的情况，SRAM的工作电压越低，静态噪声裕量SNM越小。</p>
 <p><strong>蝶形曲线的不对称性受存储单元MOS管的阈值电压（Vth）变动影响，变化（variation）增加不对称性增加，导致SNM减小</strong>。</p>
 <p>Driver MOSFET的阈值电压（Vth）较低，会减小SNM。Driver MOS和access MOS的栅宽之比称作比例因子β。通过增加driver MOS的电流，减小access MOS的电流，从而限制了N0电压的上升值ΔVN ，<strong>因此β增大，SNM增大</strong>。一般情况下，SRAM cell中，比率β大于1.5。</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/Memory/1.SRAM%E5%9F%BA%E7%A1%80/fig2.6.png" alt="fig2.6"></p>
-<center>Fig. 2.6 Butterfly curbs are shown at VDD 0.6V and 1.1V</center>
-因为full CMOS 6-T memory 能在静态工作状态下保存数据，不需要额外的动态刷新。在读的时候，因为有电压相反的bit line信号配合输出给差分放大器，能在较短时间内获取数据。因此，SRAM在cache memory，mobile phone等等都都有应用，但SRAM cell 也需要在standby mode 下降低其保持数据所产生的功耗。
-
+<p><img src="https://i.loli.net/2020/02/27/x5yhRZagcfiNmSC.png" alt="memory1.6.png"></p>
+<p>Fig. 2.6 Butterfly curbs are shown at VDD 0.6V and 1.1V</p>
+<p>因为full CMOS 6-T memory 能在静态工作状态下保存数据，不需要额外的动态刷新。在读的时候，因为有电压相反的bit line信号配合输出给差分放大器，能在较短时间内获取数据。因此，SRAM在cache memory，mobile phone等等都都有应用，但SRAM cell 也需要在standby mode 下降低其保持数据所产生的功耗。</p>
 <p>[^Ref]: <em>Low power and reliable SRAM memory cell and array design[M]. Springer Science &amp; Business Media, 2011.</em></p>
 ]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
       <tags>
         <tag>Memory</tag>
       </tags>
@@ -255,18 +417,19 @@ SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由
   <entry>
     <title>CMOS反相器之动态特性</title>
     <url>/2020/02/10/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="CMOS反相器的性能：动态特性"><a href="#CMOS反相器的性能：动态特性" class="headerlink" title="CMOS反相器的性能：动态特性"></a>CMOS反相器的性能：动态特性</h2><hr>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>CMOS反相器的性能：动态特性</strong></p>
+<hr>
 <p>CMOS反相器的传播延时取决于它分别通过PMOS和NMOS管充放电负载电容C<sub>L</sub>所需要的时间。使C<sub>L</sub>尽可能小是实现高性能CMOS电路的关键。</p>
 <a id="more"></a>
 
-<h3 id="1-电容值分类"><a href="#1-电容值分类" class="headerlink" title="1.电容值分类"></a>1.电容值分类</h3><ul>
+<h1 id="电容值分类"><a href="#电容值分类" class="headerlink" title="电容值分类"></a>电容值分类</h1><ul>
 <li>栅漏电容C<sub>gd12</sub></li>
 <li>扩散电容C<sub>db1</sub>和C<sub>db2</sub></li>
 <li>连线电容C<sub>W</sub></li>
 <li>扇出的栅电容C<sub>g3</sub>和C<sub>g4</sub></li>
 </ul>
-<p><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image001.png" alt="img"></p>
-<h3 id="2-传播延时：一阶分析"><a href="#2-传播延时：一阶分析" class="headerlink" title="2.传播延时：一阶分析"></a>2.传播延时：一阶分析</h3><p>等效导通电阻R<sub>eq</sub>，反相器的总传播延时：t<sub>p</sub> = （t<sub>pHL</sub> + t<sub>pLH</sub>)/2，其中：<br>​    t<sub>pHL</sub>= 0.69 R<sub>eqn</sub>C<sub>L</sub><br>​    t<sub>pLH</sub>= 0.69 R<sub>eqp</sub>C<sub>L</sub></p>
+<p><img src="https://i.loli.net/2020/02/27/uP8fmyGnhQa79FV.png" alt="CMOS2.1.png"></p>
+<h1 id="传播延时：一阶分析"><a href="#传播延时：一阶分析" class="headerlink" title="传播延时：一阶分析"></a>传播延时：一阶分析</h1><p>等效导通电阻R<sub>eq</sub>，反相器的总传播延时：t<sub>p</sub> = （t<sub>pHL</sub> + t<sub>pLH</sub>)/2，其中：<br>​    t<sub>pHL</sub>= 0.69 R<sub>eqn</sub>C<sub>L</sub><br>​    t<sub>pLH</sub>= 0.69 R<sub>eqp</sub>C<sub>L</sub></p>
 <p><strong>减小门传播延时：</strong></p>
 <ul>
 <li><p>减小C<sub>L</sub>：负载电容由三个主要部分组成：内部的扩散电容、互连线电容和扇出电容。通过细致的版图设计有助于减少扩散电容和互连线电容</p>
@@ -277,11 +440,10 @@ SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由
 <li><p>提高VDD：牺牲功耗来换取性能</p>
 </li>
 </ul>
-<h3 id="3-从设计角度考虑传播延时"><a href="#3-从设计角度考虑传播延时" class="headerlink" title="3.从设计角度考虑传播延时"></a>3.从设计角度考虑传播延时</h3><p><strong>NMOS和PMOS的比</strong><br>通常要求PMOS与NMOS的宽度比在3~3.5之间，使得设计反相器具有对称的VTC，并使得t<sub>pHL</sub> =t<sub>pLH</sub>。但如果对称性和噪声容限不是主要的考虑因素，可通过减小PMOS器件的宽度来加快反相器的速度。原因是，是PMOS较宽可以改善反相器的t<sub>pLH</sub> ，但它也由于产生较大的寄生电通而使tpHL 变差。</p>
+<h1 id="从设计角度考虑传播延时"><a href="#从设计角度考虑传播延时" class="headerlink" title="从设计角度考虑传播延时"></a>从设计角度考虑传播延时</h1><p><strong>NMOS和PMOS的比</strong><br>通常要求PMOS与NMOS的宽度比在3~3.5之间，使得设计反相器具有对称的VTC，并使得t<sub>pHL</sub> =t<sub>pLH</sub>。但如果对称性和噪声容限不是主要的考虑因素，可通过减小PMOS器件的宽度来加快反相器的速度。原因是，是PMOS较宽可以改善反相器的t<sub>pLH</sub> ，但它也由于产生较大的寄生电通而使tpHL 变差。</p>
 <p><strong>考虑性能时反相器的尺寸的确定</strong></p>
 <p>负载电容划分为：C<sub>L</sub> = C<sub>int</sub> + C<sub>ext</sub>，其中 C<sub>int</sub> 即本征输出电容， C<sub>ext</sub>是外部负载电容，来自扇出和导线电容。</p>
-<p>$$<br>\begin{align<em>}<br>t_p &amp;= 0.69R_{eq}(C_{int}+C_{ext})=0.69R_{eq}C_{int}(1+C_{ext}/C_{int})\<br>&amp;= t_{p0}(1 + C_{ext}/C_{int})\<br>&amp;=  0.69(R_{ref}/S)(SCi_{ref})(1 + Cext /(SCiref))\<br>&amp;=  0.69R_{ref}Ci_{ref}(1+C_{ext}/SCi_{ref})\<br>&amp;=  t_{p0} (1 + C_{ext}/SCi_{ref})<br>\end{align</em>}<br>$$</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/math.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/la5JwvcOIGQeSk8.png" alt="CMOS2.3.png"></p>
 <p>Leads two important conclusions:</p>
 <ul>
 <li>反相器的本征延时tp0与门的尺寸无关，而只取决于工艺及方相器的版图；</li>
@@ -296,12 +458,12 @@ SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由
 <p>保持门的输入信号的上升时间小于或等于门的传播延时是很有利的。</p>
 <p><strong>存在（长）互连线时的延时</strong></p>
 <p>当门之间的距离进一步加大之后，互连线的电容和电阻就不容忽略，也使得导线延时在较长导线的总延时中总迅速占据主要地位。（延时表达式中有一个与导线长度呈线性关系和一个成平方关系的部分）</p>
-<h3 id="4-功耗、能量和能量延时"><a href="#4-功耗、能量和能量延时" class="headerlink" title="4.功耗、能量和能量延时"></a>4.功耗、能量和能量延时</h3><p><strong>动态功耗</strong></p>
+<h1 id="功耗、能量和能量延时"><a href="#功耗、能量和能量延时" class="headerlink" title="功耗、能量和能量延时"></a>功耗、能量和能量延时</h1><p><strong>动态功耗</strong></p>
 <p>反相器门开关过程中，由充放电电容引起的功耗</p>
 <p><strong>设计技术</strong><br>改变器件尺寸并降低电源电压是减小一个逻辑电路能耗的非常有效的方法；<br>在最优值之外过多地加大晶体管尺寸会付出较大的能量代价。至今许多设计仍普采用这种方法；<br>考虑能量时的最优尺寸系数小于考虑性能时的最优尺寸系数</p>
 <p><strong>直通功耗</strong><br>由于输入波形的上升和下降时间为零。开关过程中VDD和GND之间在短期内出现一条直流通路，此时NMOS和PMOS同时导通。直接通路电流引起功耗</p>
 <p><strong>设计技术</strong><br>使输出的上升/下降时间大于输入的上升/下降时间可以使短路功耗减到最小；</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image002.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/yHuY7ReGIPrv31z.png" alt="CMOS2.4.png"></p>
 <p>从全局的角度看，应该使所有信号的上升/下降时间保持在一定范围内不变。当负载电容太小时，功耗主要来自于短路电流，对于非常大的负载电容值，功耗主要是电容充电和放电产生。</p>
 <p><strong>静态功耗</strong></p>
 <p>由于泄漏电流流过位于晶体管源（或漏）与衬底之间的反相偏置的二极管结而形成的静态功耗；晶体管的亚阈值电流。</p>
@@ -311,13 +473,13 @@ SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由
 <p>当存在较大静态功耗时，使不工作的模块暂时断电以减少静态功耗。</p>
 <p><strong>综合考虑</strong></p>
 <p>CMOS反相器的总功耗可以分为三部分的和：</p>
-<p><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/clip_image003.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/02/27/Ur1CHIhpRgYzEmw.png" alt="CMOS2.2.png"></p>
 <p>其中Pdyn为电容功耗，Pdp为直接通路功耗，Pstat为漏电功耗。</p>
 <p><strong>功耗—延时积或每次操作的能量损耗</strong></p>
 <p>衡量了开关门所需要的能量</p>
 <p><strong>能量—延时积</strong></p>
 <p>衡量电源电压（即性能）与延时之间的矛盾关系</p>
-<h3 id="5-小结"><a href="#5-小结" class="headerlink" title="5.小结"></a>5.小结</h3><ul>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><ul>
 <li>静态CMOS反相器，组合了一个上拉PMOS和一个下拉的NMOS，由于PMOS有较低的电流驱动能力，通常使它比NMOS宽。</li>
 <li>理想的电压传输特性。逻辑摆幅等于电源电压并且与晶体管尺寸无关。噪声容限接近VDD/2.稳态响应不受扇出的影响。</li>
 <li>传播延时主要由充放电负载电容CL所需要的时间决定。一阶近似为，tp=0.69CL((Reqn + Reqp)/2),使负载电容较小是实现高性能电路的最有效手段。</li>
@@ -330,6 +492,9 @@ SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由
 <p>Rabaey J M, Chandrakasan A P, Nikolić B. Digital integrated circuits: a design perspective[M]. Upper Saddle River, NJ: Pearson Education, 2003.</p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
       <tags>
         <tag>数字集成电路设计基础</tag>
       </tags>
@@ -348,8 +513,7 @@ SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由
 <ul>
 <li>需要根据输入约束，小心设计：先“加”后“选”，先“选”后“加”</li>
 </ul>
-<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image001.png" alt="img" style="zoom:80%;" />
-
+<p><img src="https://i.loli.net/2020/02/27/DCQPkFWzhmJA9SZ.png" alt="RTL1.1.png"></p>
 <ul>
 <li><p>单if语句，无优先级的判断结构</p>
 </li>
@@ -357,13 +521,11 @@ SRAM具体某一位cell的确定由横向和纵向上共同选中，横向上由
 <p>  最后一级选择信号具有最高优先权；<br>  具有优先级的多选择结构会消耗组合逻辑</p>
 </li>
 </ul>
-<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image002.png" alt="img" style="zoom: 150%;" />
-
+<p><img src="https://i.loli.net/2020/02/27/9tMhjpIADVRfw5W.png" alt="RTL1.2.png"></p>
 <h2 id="case相关语句的硬件结构映射及优化"><a href="#case相关语句的硬件结构映射及优化" class="headerlink" title="case相关语句的硬件结构映射及优化"></a>case相关语句的硬件结构映射及优化</h2><p>对应的硬件结构是无优先级的判断结构，与单if语句的区别在于各条件互斥，多用于指令译码电路</p>
 <h2 id="慎用latch"><a href="#慎用latch" class="headerlink" title="慎用latch"></a>慎用latch</h2><ul>
 <li><p>综合器很难解释latch，因此，除非特殊用途，一般避免引入latch。</p>
-<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image003.png" alt="img"  />
-latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制。
+<p><img src="https://i.loli.net/2020/02/27/6GzFjdIWsUPpKye.png" alt="RTL1.3.png"><br>latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制。</p>
 </li>
 <li><p>在使能信号有效时，latch相当于通路，无效时latch保持输出数据的当前值。因此latch容易产生毛刺（glitch），DFF则不易产生毛刺。latch将静态时序分析变得极为复杂。<br> 一般的设计规则是：在绝大多数设计中避免产生latch。latch最大的危害在于不能过滤毛刺，这对于下一级电路是极其危险的，所以只要能用DFF的地方，就不用latch。</p>
 </li>
@@ -379,12 +541,9 @@ latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制
 </li>
 </ul>
 <h2 id="逻辑复制，均衡负载"><a href="#逻辑复制，均衡负载" class="headerlink" title="逻辑复制，均衡负载"></a>逻辑复制，均衡负载</h2><p>通过逻辑复制，降低关键信号的扇出，进而降低该信号的传播延迟，提高电路性能。</p>
-<img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image004.png" alt="img " style="zoom:80%;" />
-
-<h2 id="资源共享，减小面积"><a href="#资源共享，减小面积" class="headerlink" title="资源共享，减小面积"></a>资源共享，减小面积</h2><img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image005.png" alt="img " style="zoom:80%;" />
-
-<h2 id="资源顺序重排，降低传播延时"><a href="#资源顺序重排，降低传播延时" class="headerlink" title="资源顺序重排，降低传播延时"></a>资源顺序重排，降低传播延时</h2><img src="https://sliu0827.github.io/source/images/RTL/0.Verilog HDL基础/clip_image006.png" alt="img" style="zoom:80%;" />
-
+<p><img src="https://i.loli.net/2020/02/27/pB7qAltnWrg6vK3.png" alt="RTL1.4.png"></p>
+<h2 id="资源共享，减小面积"><a href="#资源共享，减小面积" class="headerlink" title="资源共享，减小面积"></a>资源共享，减小面积</h2><p><img src="https://i.loli.net/2020/02/27/FzgvMmDeUKl6BiT.png" alt="RTL1.5.png"></p>
+<h2 id="资源顺序重排，降低传播延时"><a href="#资源顺序重排，降低传播延时" class="headerlink" title="资源顺序重排，降低传播延时"></a>资源顺序重排，降低传播延时</h2><p><img src="https://i.loli.net/2020/02/27/lXg6WIJ89CjOSPH.png" alt="RTL1.6.png"></p>
 <h2 id="同步复位与异步复位"><a href="#同步复位与异步复位" class="headerlink" title="同步复位与异步复位"></a>同步复位与异步复位</h2><h2 id="少用“：？”赋值语句"><a href="#少用“：？”赋值语句" class="headerlink" title="少用“：？”赋值语句"></a>少用“：？”赋值语句</h2><p>使用always用于逻辑运算，关于assign，仅用于信号连接，难以阅读，且多层嵌套后很难被综合其解释</p>
 <h1 id="可综合风格"><a href="#可综合风格" class="headerlink" title="可综合风格"></a>可综合风格</h1><h2 id="完整的always敏感信号列表"><a href="#完整的always敏感信号列表" class="headerlink" title="完整的always敏感信号列表"></a>完整的always敏感信号列表</h2><p>所有的组合逻辑或锁存的always结构必须有敏感信号列表。这个敏感信号列表必须包含所有的输入信号</p>
 <p><em>原因：综合过程将产生一个取决于除开敏感信号列表中所有其他值的结构，将可能在行为仿真和门级仿真间产生潜在的适配。</em></p>
@@ -398,6 +557,9 @@ latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制
 <p>参考：<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener" title="芯动力--硬件加速设计方法">芯动力–硬件加速设计方法</a></p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
       <tags>
         <tag>RTL</tag>
       </tags>
@@ -405,41 +567,45 @@ latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制
   <entry>
     <title>CMOS反相器介绍</title>
     <url>/2020/02/08/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><a id="more"></a>
-
-<h3 id="0-CMOS设计指标"><a href="#0-CMOS设计指标" class="headerlink" title="0.CMOS设计指标"></a>0.CMOS设计指标</h3><h6 id="设计指标："><a href="#设计指标：" class="headerlink" title="设计指标："></a>设计指标：</h6><ul>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="CMOS设计指标"><a href="#CMOS设计指标" class="headerlink" title="CMOS设计指标"></a>CMOS设计指标</h1><p><strong>设计指标：</strong></p>
+<ul>
 <li>成本：用复杂性和面积来表示</li>
 <li>完整性和稳定性：用静态（即稳态）特性来表示</li>
 <li>性能：由动态（即瞬态）响应决定</li>
 <li>能量效率：由能耗和功耗决定</li>
 </ul>
-<h3 id="1-静态CMOS反相器"><a href="#1-静态CMOS反相器" class="headerlink" title="1.静态CMOS反相器"></a>1.静态CMOS反相器</h3><h6 id="特性："><a href="#特性：" class="headerlink" title="特性："></a>特性：</h6><ul>
+<a id="more"></a>
+
+<h1 id="静态CMOS反相器"><a href="#静态CMOS反相器" class="headerlink" title="静态CMOS反相器"></a>静态CMOS反相器</h1><p><strong>特性：</strong></p>
+<ul>
 <li>输出高电平和低电平分别为VDD和GND。没有阈值损失，通过PMOS传高电平VDD，通过NMOS传低电平GND。</li>
 <li>无比逻辑。晶体管的尺寸可采用最小尺寸。</li>
 <li>稳态时在输出和VDD或GND之间总存在一条具有有限电阻的通路。具有低输出阻抗。</li>
 <li>CMOS反相器的输入电阻极高。由于MOS管的栅实际上是一个绝缘体，因此不去任何DC（直流）输入电流。</li>
 <li>无静态功耗。稳态工作情况下电源和地线之间没有直接的通路（即此时输入和输出保持不变）。</li>
 </ul>
-<h6 id="电压传输特性（VTC）："><a href="#电压传输特性（VTC）：" class="headerlink" title="电压传输特性（VTC）："></a>电压传输特性（VTC）：</h6><p><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/fig1.png#pic_center" alt="电压传输特性" title="电压传输特性"></p>
+<p><strong>电压传输特性（VTC）：</strong></p>
+<p><img src="https://i.loli.net/2020/02/27/Vx1z9HeK3aXd67o.png" alt="CMOS1.1.png"></p>
 <ul>
-<li>PMOS的静态特性曲线可由镜像平移得到，观察两种MOS管的VTC曲线可得到CMOS反相器的传输特性<br><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/fig2.png#pic_center" alt="CMOS反相器传输特性" title="CMOS反相器传输特性"></li>
+<li>PMOS的静态特性曲线可由镜像平移得到，观察两种MOS管的VTC曲线可得到CMOS反相器的传输特性<br><img src="https://i.loli.net/2020/02/27/1vcobZewWzkRTu3.png" alt="CMOS1.2.png"></li>
 <li>瞬态特性，主要由CL决定。CL主要包括NMOS和PMOS的漏扩散电容、连线电容和扇出门的输入电容。</li>
 <li>低到高，门的响应时间由通过RP充电电容CL决定，传播延时正比于时间常数RPCL：<br>快速门设计方法：减小输出电容；减小晶体管导通电阻（加大器件的W/L）</li>
 <li>高到低，门的响应时间由电容CL通过电阻Rn对地放电决定，传播延时正比于时间常数RnCL</li>
 </ul>
-<h3 id="2-CMOS反相器稳定性的评估——静态特性"><a href="#2-CMOS反相器稳定性的评估——静态特性" class="headerlink" title="2.CMOS反相器稳定性的评估——静态特性"></a>2.CMOS反相器稳定性的评估——静态特性</h3><h6 id="开关阈值：VM定义为Vin-Vout的点。"><a href="#开关阈值：VM定义为Vin-Vout的点。" class="headerlink" title="开关阈值：VM定义为Vin=Vout的点。"></a>开关阈值：VM定义为Vin=Vout的点。</h6><p>一般希望开关阈值VM处于电压摆幅的中点（VDD/2）附近，这样可使高噪声容限和低噪声容限具有相近的值。</p>
+<h1 id="CMOS反相器稳定性的评估——静态特性"><a href="#CMOS反相器稳定性的评估——静态特性" class="headerlink" title="CMOS反相器稳定性的评估——静态特性"></a>CMOS反相器稳定性的评估——静态特性</h1><p><strong>开关阈值：VM定义为Vin=Vout的点。</strong></p>
+<p>一般希望开关阈值VM处于电压摆幅的中点（VDD/2）附近，这样可使高噪声容限和低噪声容限具有相近的值。</p>
 <ul>
-<li><p>设计技术：<br>为使得噪声容限最大并得到对称的特性，建议使PMOS比NMOS部分宽以均衡晶体管的驱动强度。<br><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/fig3.png#pic_center" alt="反相器开关阈值变化" title="反相器开关阈值变化"></p>
+<li><p>设计技术：<br>为使得噪声容限最大并得到对称的特性，建议使PMOS比NMOS部分宽以均衡晶体管的驱动强度。<br><img src="https://i.loli.net/2020/02/27/d63gQvVMnLyRUAG.png" alt="CMOS1.3.png"></p>
 </li>
 <li><p>VM对器件比值的变化不敏感<br>设计中使PMOS管的宽度小于完全对称时所要求的值是可以接受的</p>
 </li>
 <li><p>改变Wp和Wn比值的影响使VTC的过渡区平移<br>增加PMOS或NMOS宽度分别使VM移向VDD或GND。这种不对称设计在某些设计中使所期望的。</p>
 </li>
 </ul>
-<h6 id="噪声容限"><a href="#噪声容限" class="headerlink" title="噪声容限"></a>噪声容限</h6><ul>
-<li>对VTC曲线做逐段近似简化，得出VIH和VIL，推导出高电平噪声容限和低电平噪声容限：<br>NMH = VDD - VIH , NML = VIL<br><img src="https://sliu0827.github.io/source/images/doc/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/fig4.png#pic_center" alt="噪声容限" title="噪声容限"></li>
-</ul>
-<h6 id="稳定性"><a href="#稳定性" class="headerlink" title="稳定性"></a>稳定性</h6><ul>
+<p><strong>噪声容限</strong></p>
+<ul>
+<li><p>对VTC曲线做逐段近似简化，得出VIH和VIL，推导出高电平噪声容限和低电平噪声容限：<br>NMH = VDD - VIH , NML = VIL<br><img src="https://i.loli.net/2020/02/27/17zsQ6Tu9HjbrhB.png" alt="CMOS1.4.png"></p>
+</li>
 <li><p>器件参数的变化<br>静态CMOS反相器对这些变化不敏感，可以在一个很宽的工作条件下工作。</p>
 </li>
 <li><p>降低电源电压（在接近100mV的时候，门的特性变差）<br>不加区分的降低电源电压虽然对减少能耗有正面影响，但会使门的延时加大；<br>一旦电源电压和本征电压（阈值电压）变得可以比拟，DC特性对器件参数的变化会变得更加敏感；降低电源电压意味着减小信号摆幅，可以帮助减小内部噪声，但它使设计对并不减小的外部噪声源更加敏感</p>
@@ -450,6 +616,9 @@ latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制
 <p>Rabaey J M, Chandrakasan A P, Nikolić B. Digital integrated circuits: a design perspective[M]. Upper Saddle River, NJ: Pearson Education, 2003.</p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
       <tags>
         <tag>数字集成电路设计基础</tag>
       </tags>
@@ -559,6 +728,9 @@ latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制
 <p>本文转载自:<a href="http://exasic.com" target="_blank" rel="noopener" title="ExASIC">ExASIC</a></p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
       <tags>
         <tag>Linux</tag>
       </tags>
