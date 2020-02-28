@@ -20,31 +20,26 @@
     var CONFIG = {"hostname":"sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。">
+  <meta name="description" content="01.Leakage Currents in an SRAM of Conventional Design； 02.Gate-Tunnel Leakage and GIDL Currents">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SRAM_cell电学稳定性分析">
-<meta property="og:url" content="http://sliu.info/2020/02/15/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/index.html">
+<meta property="og:title" content="SRAM leakage current">
+<meta property="og:url" content="http://sliu.info/2020/02/28/2020-02-28-SRAM-leakage-current/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。">
+<meta property="og:description" content="01.Leakage Currents in an SRAM of Conventional Design； 02.Gate-Tunnel Leakage and GIDL Currents">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/hypWa23on9Y6SUT.jpg">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/ZR5cD8Ar6dQg4kG.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/M3QP6qGIwLU9YgH.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/hCbrwNcd1UKqRvm.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/YmZqEtu4s8oUaxd.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/qJ4Bnw86Dpi1TRN.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/rtyBeKJo1u25UgE.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/9fPUMrCs7QpLxA6.png">
-<meta property="article:published_time" content="2020-02-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-02-28T07:17:04.083Z">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/zYtK3kj5GyNTQ6u.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/qmrVH6kYvJ3T175.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/KRAyngmhox23SPE.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/7c3LNTH5Jml6xMI.png">
+<meta property="article:published_time" content="2020-02-28T07:31:49.000Z">
+<meta property="article:modified_time" content="2020-02-28T07:32:52.687Z">
 <meta property="article:author" content="Shuang liu">
 <meta property="article:tag" content="Memory">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png">
+<meta name="twitter:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
 
-<link rel="canonical" href="http://sliu.info/2020/02/15/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/">
+<link rel="canonical" href="http://sliu.info/2020/02/28/2020-02-28-SRAM-leakage-current/">
 
 
 <script id="page-configurations">
@@ -56,7 +51,7 @@
   };
 </script>
 
-  <title>SRAM_cell电学稳定性分析 | Shuang'Blog</title>
+  <title>SRAM leakage current | Shuang'Blog</title>
   
 
 
@@ -203,7 +198,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://sliu.info/2020/02/15/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="http://sliu.info/2020/02/28/2020-02-28-SRAM-leakage-current/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -216,7 +211,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          SRAM_cell电学稳定性分析
+          SRAM leakage current
         </h1>
 
         <div class="post-meta">
@@ -225,16 +220,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-15T00:00:00+08:00">2020-02-15</time>
+              <time title="创建时间：2020-02-28 15:31:49 / 修改时间：15:32:52" itemprop="dateCreated datePublished" datetime="2020-02-28T15:31:49+08:00">2020-02-28</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-28 15:17:04" itemprop="dateModified" datetime="2020-02-28T15:17:04+08:00">2020-02-28</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -250,13 +239,13 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 1.2k</span>
+		  </span>本文字数: 926</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
 		  <span class="post-meta-item-icon">
 			<i class="fa fa-clock-o"></i>
-		  </span>阅读时长 &asymp; 4 分钟</span>
+		  </span>阅读时长 &asymp; 3 分钟</span>
 
         </div>
       </header>
@@ -267,47 +256,39 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><em>在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。</em></p>
+        <p><em>01.Leakage Currents in an SRAM of Conventional Design；</em></p>
+<p><em>02.Gate-Tunnel Leakage and GIDL Currents</em></p>
 <a id="more"></a>
 
 
 
-<h3 id="Read-and-Write-Operatioins"><a href="#Read-and-Write-Operatioins" class="headerlink" title="Read and Write Operatioins"></a><strong>Read and Write Operatioins</strong></h3><hr>
-<p><img src="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png" alt="memory2.1.png"></p>
-<p>Fig.1 SRAM memory cell<br>图1为CMOS 6-T SRAM电路图，图2为其读写操作波形。</p>
-<p><img src="https://i.loli.net/2020/02/27/hypWa23on9Y6SUT.jpg" alt="memory2.2.png"></p>
-<p>Fig.2 Fundamental waveform of SRAM operation</p>
-<p><strong>当写**</strong>入数据“0”(W“0”)**时，word line(WL)被激活，bit line根据输入数据值被驱动到“H”和“L”状态。存储节点的电压发生翻转，输入数据写入到数据存储节点中。 </p>
-<p><strong>当从ce**</strong>ll中读“0”(R“0”)**时，所有bit line被预充为“H”，激活WL。原先保存在数据节点的数据使bit lines出现电压差。电压差通过灵敏放大器(sense amplifier)放大，保持的数据(retained data)被读出。</p>
-<p><strong>当写入数据“1”到cell中，**</strong>且写入失败(W “1” write failure case)**时，存储节点(N0/N1)的电压没有翻转，正确的数据没有写入cell中。在下一个读周期，不正确的数据“0”被读出。</p>
-<p><strong>当读数据“1”，**</strong>且读出失败(R1 read failure case<strong>**)</strong>时，存储节点的电压(N0/N1)发生翻转，存储节点的保持数据(retained data)被破坏。</p>
-<p>图3为SRAM memory保持数据情形，存储节点N0和N1，保持相反的状态，“H”和“L”。word line 为“L”。</p>
-<p><img src="https://i.loli.net/2020/02/27/ZR5cD8Ar6dQg4kG.png" alt="memory2.3.png"></p>
-<p>Fig.3 SRAM cell condition during data retention</p>
-<p>如下图4所示，Memory cell读过程中，右边的节点N1，状态为”H”，左边的节点状态为”L”。在读之前，bit lines被预充电到”H”状态。读的过程中，word lines变为”H”状态，存取管(access MOSs)导通打开。读cell电流Iread从access MOS到“L”-state的存储节点流动，对预充的bit line放电。</p>
-<p><img src="https://i.loli.net/2020/02/27/M3QP6qGIwLU9YgH.png" alt="memory2.4.png"></p>
-<p>Fig.4 Read operation of SRAM cell</p>
-<p>图5a电压波形是SRAM cell在正常读数据的过程中，每个存储节点的电压变化。正常读数据时，存储节点的电压不会发生翻转。图5b为memory cell正常操作的butterfly cruves，用来评估静态噪声裕量(SNM)。两条线之间有两个密闭空隙（space），意味着SRAM读操作的SNM是足够的。</p>
-<p><img src="https://i.loli.net/2020/02/27/hCbrwNcd1UKqRvm.png" alt="memory2.5.png"></p>
-<p>Fig.5 Voltage waveforms and butterfly curves during normal read operation.<br> (a) SRAM cell nodes during normal read operation.<br>(b) Butterfly curves to estimate SNM</p>
-<p><strong>在读操作期间，由于access MOS和driver MOS之间的电阻分压</strong>，存储节点的“L”-state被提升。<strong>如果存储节点电压“L”-state的提升值超过了由driver MOS,DR1和loadMOS，LD1组成的反相器的逻辑中点电压，保持数据将翻转**</strong>，被破坏(6a)**。这种情况就是memory cell读失败。图6b是memory cell读数据失败对应的butterfly curves，两条曲线之间只有一个空隙，SRAM能正常读的SNM是不够的。</p>
-<p><img src="https://i.loli.net/2020/02/27/YmZqEtu4s8oUaxd.png" alt="memory2.6.png"></p>
-<p>Fig.6 Voltage waveforms and butterfly curves during failure read operation.<br>(a) SRAM cell nodes during failureread operation.<br>(b) Butterfly curves to estimate SNM</p>
-<p><img src="https://i.loli.net/2020/02/27/qJ4Bnw86Dpi1TRN.png" alt="memory2.7.png"></p>
-<p>Fig.7 Write operation of SRAM cell</p>
-<p>关于写操作，如图7，在写之前，左边存储节点N0是“H” state，右边存储节点N1是“L” state。当要写的数据到达bit lines时，“H” state存储节点经过access MOS放电，写操作cell电流Iwrite,在图中用实线箭头标出。当“H”电位节点被放电至“L”电位时，节点的电压此时发生翻转，写操作完成(图8)。</p>
-<p><strong>在写的过程中，load MOS通过上拉电流Ipullup充电</strong>，如图3.7中虚线箭头所示。因此，<strong>如果load MOS充电的电流比access MOS放电电流大的话，存储节点“H”电位不会放电，节点电压不发生翻转，写操作失败(图9)</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/27/rtyBeKJo1u25UgE.png" alt="memory2.8.png"></p>
-<p>Fig.8 SRAM cell nodes during normal write operation</p>
-<p><img src="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png" alt="memory2.9.png"></p>
-<p>Fig.9 SRAM cell nodes during failure write operation</p>
-<h3 id="Sum"><a href="#Sum" class="headerlink" title="Sum"></a><strong>Sum</strong></h3><hr>
-<p><strong>在SRAM cell 中，加强读操作和写操作稳定性的设计方法是一个矛盾的关系</strong>。例如，在表1中促使读操作和写操作更稳定的方法。所以，<strong>很难同时提高读和写操作的稳定性</strong>。在所有的130nm之前的传统制造工艺中，在SRAM cell中有更大的电压工作空间，可以同时保证稳定性，不会出问题。在更近的制造工艺中，随着MOSFETs中Vth变化(variation)，电压工作空间(operation margin)减小，SRAM cell中MOSFET电流随着Vth变化而波动(fluctuated)。</p>
-<p>除此之外，Vth variations会破坏在读和写操作期间MOSFET电流的平衡。因此，在SRAM cell设计阶段，最大化SRAM cell的operatingmargin，包括读和写的margin是必不可少的。Vth是MOSFET的一个很好的参数表征，它几乎完全可以指示晶体管的性能。</p>
-<p>Table.1 Drivability change to enhancestability of each operation</p>
-<p><img src="https://i.loli.net/2020/02/27/9fPUMrCs7QpLxA6.png" alt="memory2.10.png"></p>
-<p>为了实现最大化的operating-margins，需要更准确的SRAM operating margins，在本书第3章中，对于受MOSFET Vth variation而影响的SRAM operating margins分析做了进一步描述，这里不再细说。</p>
-<p>[^Ref]: <em>Low power and reliable SRAM memory cell and array design[M]. Springer Science &amp; Business Media, 2011.</em></p>
+<p>DRAM有较低的待机功耗，但是需要刷新操作，而SRAM则能静态的保存数据，不需要类似于刷新这样的特殊操作。因此，对于手机或移动设备中集成的SRAM芯片，我们很容易对其进行控制。此外，由于SRAM的制造工艺和CMOS工艺一样，例如移动蜂窝电话等中的应用处理器也使用SRAM作为集成的存储器。</p>
+<p>随着MOS工艺的进步，近阈值泄漏电流（subthreshold leakage current）中会增加<strong>gate-oxide tunnel leakage</strong>和<strong>gate-induced drain leakage（GIDL）currents</strong>，成为主要的泄漏电流，增加的泄漏电流同时也增加了整个SRAM cell的静态漏电流。本小节将描述SRAM array的基本泄漏功耗。</p>
+<h1 id="leakage-Currents-in-Conventional-Design"><a href="#leakage-Currents-in-Conventional-Design" class="headerlink" title="leakage Currents in Conventional Design"></a><em>leakage Currents in Conventional Design</em></h1><p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="img"> </p>
+<p><img src="https://i.loli.net/2020/02/28/zYtK3kj5GyNTQ6u.png" alt="memory3.1.png"></p>
+<p>Fig.1 Leakage currents in a technologically advanced nMOS device</p>
+<p>关于工艺进步而造成泄漏电流增加的问题，图1展示了nMos晶体管在工艺上进步产生的4种主要泄漏电流。<strong>包括gate-oxide tunnel leakage，GIDL，junction tunnel leakage以及subthreshold leakage currents.</strong></p>
+<p><strong>Subthreshold leakage是当gate为off状态时，由drain到source的沟道泄漏电流，这种状态造成了在沟道区域的微弱反型层。</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/qmrVH6kYvJ3T175.png" alt="memory3.2.png"></p>
+<p>Fig.2 Standby leakagecurrents in an advanced technology SRAM cell of conventional design</p>
+<p>图2中描述了随着工艺进步，使用传统设计方式的SRAM cell中的主要泄漏电流。在传统设计方式中，bit lines（BT，BB）和power line（VDDI）为1.5v，word line 和VSS 为0v。</p>
+<p>在整个cell中，<strong>2个gate-tunnel leakage currents，5个GIDL currents和3个subthreshold leakage currents</strong> 组成了主要的漏电流<strong>。</strong></p>
+<p><strong>使用高阈值电压的MOS器件能够直接有效的减少subthreshold leakage currents ，虽然存储单元的读电流也会减小。</strong></p>
+<p><strong>然而，通过简单的改变器件结构很难去减小tunnel leakage 和GIDL currents.</strong></p>
+<h1 id="Gate-Tunnel-Leakage-and-GIDL-Currents"><a href="#Gate-Tunnel-Leakage-and-GIDL-Currents" class="headerlink" title="Gate-Tunnel Leakage and GIDL Currents"></a><em>Gate-Tunnel Leakage and GIDL Currents</em></h1><p>这小节描述了gate-tunnel leakage 和GIDL currents。在图3中给出了<strong>gate-tunnel leakage current 随着栅压（gate voltage） 变化的曲线</strong>，同时<strong>栅氧化层厚度（Tox）作为一个参变量对比分析</strong>。</p>
+<p><strong>Tox 每增长2-°A，gate-tunnel leakagecurrent 会增长十倍</strong>。随着工艺的进步，这种电流成为了泄漏电流的主要组成。</p>
+<p>另一方面，<strong>栅电流随着栅压减小而减小，减小电压0.5v（从1.5到1.0v）能减小这种泄漏电流的95%</strong>。这是因为tunnel leakage current能随着栅氧化层的电场强度变化而简单的减小。</p>
+<p><img src="https://i.loli.net/2020/02/28/KRAyngmhox23SPE.png" alt="memory3.3.png"></p>
+<p>Fig.3 Gate-tunnel leakage current as a function of gate voltage with the thickness ofthe gate oxide (Tox) varied as a parameter</p>
+<p>图4描述了漏端电流由栅电压（VG）作用的电流曲线。<strong>实线</strong>是漏端电压（VD）为1.0V时的漏端电流曲线，<strong>虚线</strong>为1.5v时漏端电流曲线。当<strong>VG大于0v</strong>时，<strong>subthreshold leakage currents 占主导地位</strong>。当<strong>VG小于0V</strong>时<strong>，GIDL currents 占主导地位</strong>。</p>
+<p><img src="https://i.loli.net/2020/02/28/7c3LNTH5Jml6xMI.png" alt="memory3.4.png"></p>
+<p>Fig.4 GIDL and subthreshold leakage currents</p>
+<p><strong>在使用中提升阈值电压</strong>，在VG=0v时subthreshold leakage currents 相比于GIDL current的强度是可以忽略的。</p>
+<p><strong>GIDL current（IGIDL）对于电场强度F非常敏感</strong>。GIDL current 对数曲线线性反比于栅压，栅压直接影响栅氧化层下的电场强度。GIDL current的大小由栅和漏的压差（VGD）决定，VGD由1.5减小到1.0v，电场强度减小，在器件中the GIDL current减小大约90%。</p>
+<p>如果<strong>阈值电压很低，</strong>主要的泄漏电流是subthreshold leakage current。通过应用negative VGS，或者negativeVBB back-body bias voltage可以减小subthreshold leakage。具体实现电路和SRAM芯片架构下一期再接着介绍^_^</p>
+<blockquote>
+<p> Ref:Low power and reliable SRAM memory cell and array design[M]. Springer Science &amp; Business Media, 2011.</p>
+</blockquote>
 
     </div>
 
@@ -343,7 +324,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://sliu.info/2020/02/15/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/" title="SRAM_cell电学稳定性分析">http://sliu.info/2020/02/15/2020-02-15-SRAM_cell电学稳定性分析/</a>
+    <a href="http://sliu.info/2020/02/28/2020-02-28-SRAM-leakage-current/" title="SRAM leakage current">http://sliu.info/2020/02/28/2020-02-28-SRAM-leakage-current/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -374,13 +355,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/02/12/2020-02-12-SRAM%E5%9F%BA%E7%A1%80/" rel="prev" title="SRAM 基础">
-      <i class="fa fa-chevron-left"></i> SRAM 基础
+    <a href="/2020/02/22/2020-02-22-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/" rel="prev" title="RTL编码中考虑面积">
+      <i class="fa fa-chevron-left"></i> RTL编码中考虑面积
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/02/20/2020-02-18-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/" rel="next" title="RTL编码中考虑延时">
-      RTL编码中考虑延时 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -445,7 +423,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Read-and-Write-Operatioins"><span class="nav-number">1.</span> <span class="nav-text">Read and Write Operatioins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sum"><span class="nav-number">2.</span> <span class="nav-text">Sum</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#leakage-Currents-in-Conventional-Design"><span class="nav-number">1.</span> <span class="nav-text">leakage Currents in Conventional Design</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gate-Tunnel-Leakage-and-GIDL-Currents"><span class="nav-number">2.</span> <span class="nav-text">Gate-Tunnel Leakage and GIDL Currents</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
