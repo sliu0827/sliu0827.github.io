@@ -1,6 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>静态时序分析(STA)基础</title>
+    <url>/2020/02/28/%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90-STA-%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="什么是静态时序分析？"><a href="#什么是静态时序分析？" class="headerlink" title="什么是静态时序分析？"></a>什么是静态时序分析？</h1><p>静态时序分析是一种不使用动态仿真，来检查电路是否满足时序约束的分析方法。</p>
+<ul>
+<li>Much faster than timing-driven，gate-level simulation</li>
+<li>Proper circuit functionality is not checked</li>
+<li>Vector generation NOT required</li>
+</ul>
+<a id="more"></a>
+
+<p><strong>STA Flow</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/X5Znv6eS2cNU1rM.png" alt="STA1.1.png"></p>
+<p><strong>STA VS Event Simulation(互补)</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/orh4VdtEMfavs9J.png" alt="STA1.2.png"></p>
+<h1 id="How-STA-Work？"><a href="#How-STA-Work？" class="headerlink" title="How STA Work？"></a>How STA Work？</h1><blockquote>
+<p>Three Steps in Static Timing Analysis</p>
+<p>1.Design is broken down into sets of timing paths；</p>
+<p>2.Delay of each path is calculated；</p>
+<p>3.Path delays are checked to see if timing constraints have been met</p>
+</blockquote>
+<p>需要准备的文件和分析结果：</p>
+<p><img src="https://i.loli.net/2020/02/28/LS5eI1m7P4MjC9i.png" alt="STA1.3.png"></p>
+<p><strong><em>Setup Time</em>-时钟边沿到来之前数据必须保持稳定的时间长度。</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/DjZ5OLVgKyCuh8I.png" alt="STA1.4.png"></p>
+<p><strong><em>Hold Time</em>-时钟边沿到来之后，输入引脚的输入数据依然要保持稳定的时间长度。</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/CvwhO3KfENjklse.png" alt="STA1.5.png"></p>
+<p><strong><em>Time Slack</em></strong></p>
+<p>Slack is the difference between the required time and the time that a signal arrives.</p>
+<ul>
+<li>Positive slack or zero means meet constraints</li>
+<li>Negative slack means violate constraint</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/28/LIZp64VMyHBn3hT.png" alt="STA1.6.png"></p>
+<p><strong><em>Speed VS. slack</em></strong></p>
+<ul>
+<li>整个同步电路系统的最大工作频率（minimum clock period）由最差逻辑路径所决定</li>
+<li>Slack 与时钟频率是息息相关的，例如clock period = 10 ns</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/28/fkuajURY9V8emA6.png" alt="STA1.7.png"></p>
+<p><strong><em>Power VS. slack</em></strong></p>
+<p>如果 positive slack 较大，可以进步减小slack，使其保持为一个大于0的值。进一步缩小功耗和设计尺寸。</p>
+<p>静态时序分析相比于逻辑综合时的时序分析区别在于，静态时序分析可以在逻辑综合、布局布线、时钟树综合每个阶段都可以进行的，越靠后延时信息分析越准确。</p>
+<blockquote>
+<p>There are 4 Types of PrimeTime paths:</p>
+<ul>
+<li><p>Input port to data pin of flip-flop(Path 1)</p>
+</li>
+<li><p>Clock pin of flip-flop to data pin of flip-flop (Path 2)</p>
+</li>
+<li><p>Clock pin of flip-flop to output port (Path 3)</p>
+</li>
+<li><p>Input port to output port (Path 4)</p>
+</li>
+</ul>
+</blockquote>
+<p><img src="https://i.loli.net/2020/02/28/7muHAlo2qieLJ4G.png" alt="STA1.8.png"></p>
+<h1 id="建立时间的检查（setup-check）"><a href="#建立时间的检查（setup-check）" class="headerlink" title="建立时间的检查（setup check）"></a>建立时间的检查（setup check）</h1><blockquote>
+<p>A setup timing check verifies the timing relationship between the clock and the data pin of a flip-flop so that the setup requirement is met.</p>
+</blockquote>
+<p>换句话说，建立时间的检查可以确保在flip-flop时钟有效沿到来时 ，数据到达flip-flop输入引脚时刻是稳定的。</p>
+<p> <img src="https://i.loli.net/2020/02/28/KeVuSCLax68nFMz.png" alt="STA1.9.png"></p>
+<p>下面举一个简单的例子，如图所示，Launch &amp; capture flip-flop使用的是同一个时钟CLKM。</p>
+<p>第一个时钟上升沿，CLKM 经Tlaunch延时到达launch flip-flop UFF0,通过该时钟沿在时刻Tlaunch + Tck2q + Tdp数据被建立。</p>
+<p>第二个时钟沿(setup is normally checked after one cycle)在时刻Tcycle + Tcapture到达capture flip-flop UFF1。</p>
+<p>以上两条路径之间的时间差别需要满足大于flip-flop的setup time，这样才能使得数据稳定的捕获到flip-flop中。</p>
+<p><img src="https://i.loli.net/2020/02/28/RAZpB7gIHcxQhvC.png" alt="STA1.10.png"></p>
+<p> <img src="https://i.loli.net/2020/02/28/eBmcAXLkiQT69Js.png" alt="STA1.11.png"></p>
+<p>The setup check can be mathematically expressed as:</p>
+<p><img src="https://i.loli.net/2020/02/28/Ss4h9WpCB5o8vmJ.png" alt="STA1.12.png"></p>
+<blockquote>
+<ul>
+<li><p>Tlaunch is the delay of the clock tree of the launch flip-flop UFF0;</p>
+</li>
+<li><p>Tdp is the delay of the combinational logic data path;</p>
+</li>
+<li><p>Tcycle is the clock period;</p>
+</li>
+<li><p>Tcapture is the delay of the clock tree for the capture flip-flop UFF1.</p>
+</li>
+</ul>
+</blockquote>
+<p>​        <strong>“<span style="color:red;"><u>  Since the setup check poses a max1 constraint, the setup check always uses the longest or the max timing path. </u> </span>For the same reason, this check is normally verified at the slow corner where the delays are the largest.”</strong></p>
+<p>[^1]: Static Timing Analysis for Nanometer Designs A Practical Approach<br>[^2]: <a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
+]]></content>
+      <tags>
+        <tag>STA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RTL设计指导原则</title>
     <url>/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="RTL级设计的评判标准"><a href="#RTL级设计的评判标准" class="headerlink" title="RTL级设计的评判标准"></a>RTL级设计的评判标准</h1><p>时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配</p>
@@ -150,6 +239,7 @@
         <category>书籍文档</category>
       </categories>
       <tags>
+        <tag>Memory</tag>
         <tag>SRAM</tag>
       </tags>
   </entry>
