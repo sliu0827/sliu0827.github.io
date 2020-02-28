@@ -20,31 +20,29 @@
     var CONFIG = {"hostname":"sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。">
+  <meta name="description" content="RTL级设计的评判标准时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配  指导原则：面积与速度互换 、乒乓操作、 流水线设计">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SRAM_cell电学稳定性分析">
-<meta property="og:url" content="http://sliu.info/2020/02/15/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/index.html">
+<meta property="og:title" content="RTL设计指导原则">
+<meta property="og:url" content="http://sliu.info/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。">
+<meta property="og:description" content="RTL级设计的评判标准时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配  指导原则：面积与速度互换 、乒乓操作、 流水线设计">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/hypWa23on9Y6SUT.jpg">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/ZR5cD8Ar6dQg4kG.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/M3QP6qGIwLU9YgH.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/hCbrwNcd1UKqRvm.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/YmZqEtu4s8oUaxd.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/qJ4Bnw86Dpi1TRN.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/rtyBeKJo1u25UgE.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/9fPUMrCs7QpLxA6.png">
-<meta property="article:published_time" content="2020-02-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-02-28T07:17:04.083Z">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/iu39eUqEYCwoOlV.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/AaFQlTdCLjXwqEn.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/kX3Fbt2cgxhCAdO.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/M4oCi1VAQPHOXlk.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/e8vYCUQryDxE57m.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/6wUtXksvzRYJ49c.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/ybFXMzDqeUkifY9.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/CLSYxu5qfyWVw7h.png">
+<meta property="article:published_time" content="2020-02-28T07:55:34.000Z">
+<meta property="article:modified_time" content="2020-02-28T08:22:31.982Z">
 <meta property="article:author" content="Shuang liu">
-<meta property="article:tag" content="Memory">
+<meta property="article:tag" content="RTL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png">
+<meta name="twitter:image" content="https://i.loli.net/2020/02/28/iu39eUqEYCwoOlV.png">
 
-<link rel="canonical" href="http://sliu.info/2020/02/15/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/">
+<link rel="canonical" href="http://sliu.info/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/">
 
 
 <script id="page-configurations">
@@ -56,7 +54,7 @@
   };
 </script>
 
-  <title>SRAM_cell电学稳定性分析 | Shuang'Blog</title>
+  <title>RTL设计指导原则 | Shuang'Blog</title>
   
 
 
@@ -203,7 +201,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://sliu.info/2020/02/15/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="http://sliu.info/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -216,7 +214,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          SRAM_cell电学稳定性分析
+          RTL设计指导原则
         </h1>
 
         <div class="post-meta">
@@ -225,23 +223,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-15T00:00:00+08:00">2020-02-15</time>
+              <time title="创建时间：2020-02-28 15:55:34 / 修改时间：16:22:31" itemprop="dateCreated datePublished" datetime="2020-02-28T15:55:34+08:00">2020-02-28</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-28 15:17:04" itemprop="dateModified" datetime="2020-02-28T15:17:04+08:00">2020-02-28</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B9%A6%E7%B1%8D%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">书籍文档</span></a>
+                  <a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">程序设计</span></a>
                 </span>
             </span>
 
@@ -250,13 +242,13 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 1.2k</span>
+		  </span>本文字数: 1.5k</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
 		  <span class="post-meta-item-icon">
 			<i class="fa fa-clock-o"></i>
-		  </span>阅读时长 &asymp; 4 分钟</span>
+		  </span>阅读时长 &asymp; 5 分钟</span>
 
         </div>
       </header>
@@ -267,47 +259,85 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><em>在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。</em></p>
-<a id="more"></a>
+        <h1 id="RTL级设计的评判标准"><a href="#RTL级设计的评判标准" class="headerlink" title="RTL级设计的评判标准"></a>RTL级设计的评判标准</h1><p>时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配</p>
+<p> <strong>指导原则：面积与速度互换 、乒乓操作、 流水线设计</strong></p>
+ <a id="more"></a>
 
-
-
-<h3 id="Read-and-Write-Operatioins"><a href="#Read-and-Write-Operatioins" class="headerlink" title="Read and Write Operatioins"></a><strong>Read and Write Operatioins</strong></h3><hr>
-<p><img src="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png" alt="memory2.1.png"></p>
-<p>Fig.1 SRAM memory cell<br>图1为CMOS 6-T SRAM电路图，图2为其读写操作波形。</p>
-<p><img src="https://i.loli.net/2020/02/27/hypWa23on9Y6SUT.jpg" alt="memory2.2.png"></p>
-<p>Fig.2 Fundamental waveform of SRAM operation</p>
-<p><strong>当写**</strong>入数据“0”(W“0”)**时，word line(WL)被激活，bit line根据输入数据值被驱动到“H”和“L”状态。存储节点的电压发生翻转，输入数据写入到数据存储节点中。 </p>
-<p><strong>当从ce**</strong>ll中读“0”(R“0”)**时，所有bit line被预充为“H”，激活WL。原先保存在数据节点的数据使bit lines出现电压差。电压差通过灵敏放大器(sense amplifier)放大，保持的数据(retained data)被读出。</p>
-<p><strong>当写入数据“1”到cell中，**</strong>且写入失败(W “1” write failure case)**时，存储节点(N0/N1)的电压没有翻转，正确的数据没有写入cell中。在下一个读周期，不正确的数据“0”被读出。</p>
-<p><strong>当读数据“1”，**</strong>且读出失败(R1 read failure case<strong>**)</strong>时，存储节点的电压(N0/N1)发生翻转，存储节点的保持数据(retained data)被破坏。</p>
-<p>图3为SRAM memory保持数据情形，存储节点N0和N1，保持相反的状态，“H”和“L”。word line 为“L”。</p>
-<p><img src="https://i.loli.net/2020/02/27/ZR5cD8Ar6dQg4kG.png" alt="memory2.3.png"></p>
-<p>Fig.3 SRAM cell condition during data retention</p>
-<p>如下图4所示，Memory cell读过程中，右边的节点N1，状态为”H”，左边的节点状态为”L”。在读之前，bit lines被预充电到”H”状态。读的过程中，word lines变为”H”状态，存取管(access MOSs)导通打开。读cell电流Iread从access MOS到“L”-state的存储节点流动，对预充的bit line放电。</p>
-<p><img src="https://i.loli.net/2020/02/27/M3QP6qGIwLU9YgH.png" alt="memory2.4.png"></p>
-<p>Fig.4 Read operation of SRAM cell</p>
-<p>图5a电压波形是SRAM cell在正常读数据的过程中，每个存储节点的电压变化。正常读数据时，存储节点的电压不会发生翻转。图5b为memory cell正常操作的butterfly cruves，用来评估静态噪声裕量(SNM)。两条线之间有两个密闭空隙（space），意味着SRAM读操作的SNM是足够的。</p>
-<p><img src="https://i.loli.net/2020/02/27/hCbrwNcd1UKqRvm.png" alt="memory2.5.png"></p>
-<p>Fig.5 Voltage waveforms and butterfly curves during normal read operation.<br> (a) SRAM cell nodes during normal read operation.<br>(b) Butterfly curves to estimate SNM</p>
-<p><strong>在读操作期间，由于access MOS和driver MOS之间的电阻分压</strong>，存储节点的“L”-state被提升。<strong>如果存储节点电压“L”-state的提升值超过了由driver MOS,DR1和loadMOS，LD1组成的反相器的逻辑中点电压，保持数据将翻转**</strong>，被破坏(6a)**。这种情况就是memory cell读失败。图6b是memory cell读数据失败对应的butterfly curves，两条曲线之间只有一个空隙，SRAM能正常读的SNM是不够的。</p>
-<p><img src="https://i.loli.net/2020/02/27/YmZqEtu4s8oUaxd.png" alt="memory2.6.png"></p>
-<p>Fig.6 Voltage waveforms and butterfly curves during failure read operation.<br>(a) SRAM cell nodes during failureread operation.<br>(b) Butterfly curves to estimate SNM</p>
-<p><img src="https://i.loli.net/2020/02/27/qJ4Bnw86Dpi1TRN.png" alt="memory2.7.png"></p>
-<p>Fig.7 Write operation of SRAM cell</p>
-<p>关于写操作，如图7，在写之前，左边存储节点N0是“H” state，右边存储节点N1是“L” state。当要写的数据到达bit lines时，“H” state存储节点经过access MOS放电，写操作cell电流Iwrite,在图中用实线箭头标出。当“H”电位节点被放电至“L”电位时，节点的电压此时发生翻转，写操作完成(图8)。</p>
-<p><strong>在写的过程中，load MOS通过上拉电流Ipullup充电</strong>，如图3.7中虚线箭头所示。因此，<strong>如果load MOS充电的电流比access MOS放电电流大的话，存储节点“H”电位不会放电，节点电压不发生翻转，写操作失败(图9)</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/27/rtyBeKJo1u25UgE.png" alt="memory2.8.png"></p>
-<p>Fig.8 SRAM cell nodes during normal write operation</p>
-<p><img src="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png" alt="memory2.9.png"></p>
-<p>Fig.9 SRAM cell nodes during failure write operation</p>
-<h3 id="Sum"><a href="#Sum" class="headerlink" title="Sum"></a><strong>Sum</strong></h3><hr>
-<p><strong>在SRAM cell 中，加强读操作和写操作稳定性的设计方法是一个矛盾的关系</strong>。例如，在表1中促使读操作和写操作更稳定的方法。所以，<strong>很难同时提高读和写操作的稳定性</strong>。在所有的130nm之前的传统制造工艺中，在SRAM cell中有更大的电压工作空间，可以同时保证稳定性，不会出问题。在更近的制造工艺中，随着MOSFETs中Vth变化(variation)，电压工作空间(operation margin)减小，SRAM cell中MOSFET电流随着Vth变化而波动(fluctuated)。</p>
-<p>除此之外，Vth variations会破坏在读和写操作期间MOSFET电流的平衡。因此，在SRAM cell设计阶段，最大化SRAM cell的operatingmargin，包括读和写的margin是必不可少的。Vth是MOSFET的一个很好的参数表征，它几乎完全可以指示晶体管的性能。</p>
-<p>Table.1 Drivability change to enhancestability of each operation</p>
-<p><img src="https://i.loli.net/2020/02/27/9fPUMrCs7QpLxA6.png" alt="memory2.10.png"></p>
-<p>为了实现最大化的operating-margins，需要更准确的SRAM operating margins，在本书第3章中，对于受MOSFET Vth variation而影响的SRAM operating margins分析做了进一步描述，这里不再细说。</p>
-<p>[^Ref]: <em>Low power and reliable SRAM memory cell and array design[M]. Springer Science &amp; Business Media, 2011.</em></p>
+<h1 id="面积与速度互换"><a href="#面积与速度互换" class="headerlink" title="面积与速度互换"></a>面积与速度互换</h1><p><strong>面积：</strong>一个设计所消耗的目标器件的硬件资源数量或者ASIC芯片的面积</p>
+<p><strong>速度：</strong>设计在芯片上稳定运行时所能够达到的最高频率，这个频率是有设计的时序状况决定</p>
+<p><em>时钟周期、PAD to PAD Time、Clock Setup Time、Clock Hold Time、Clock-to-Output Delay</em></p>
+<h1 id="面积与速度的平衡互换原则"><a href="#面积与速度的平衡互换原则" class="headerlink" title="面积与速度的平衡互换原则"></a>面积与速度的平衡互换原则</h1><p><strong>设计面积小与运行频率高是对立统一的矛盾体。</strong>科学的设计目标是：</p>
+<ul>
+<li><p>在满足设计时序要去（包含对设计最高频率的要求）的前提下，占用最小的芯片面积；</p>
+</li>
+<li><p>在所规定的面积下，使设计的时序余量更大，频率更高</p>
+</li>
+</ul>
+<p><strong>设计如果时序余量较大，所能跑的频率远远高于设计要求：</strong></p>
+<ul>
+<li>通过功能模块复用减少整个设计所消耗的芯片面积，用速度的优势对换面积的节约。</li>
+</ul>
+<p><strong>设计的时序要求很高，普通方法达不到设计频率：</strong></p>
+<ul>
+<li><p>可以通过将数据流串并转换；</p>
+</li>
+<li><p>并行复制多个操作模块；</p>
+</li>
+<li><p>对整个设计采取乒乓操作和串并转换的细想进行处理；</p>
+</li>
+<li><p>在芯片输出模块处，在对数进行“并串转换”</p>
+</li>
+</ul>
+<h1 id="乒乓操作"><a href="#乒乓操作" class="headerlink" title="乒乓操作"></a>乒乓操作</h1><p>“乒乓操作”是一个常常应用于数据流控制的处理技巧</p>
+<p><em>数据缓冲模块可以为常用的存储的单元：双口RAM 单口RAM FIFO</em></p>
+<p><img src="https://i.loli.net/2020/02/28/iu39eUqEYCwoOlV.png" alt="RTL4.1.png"></p>
+<blockquote>
+<p>第1个缓冲周期，将输入数据缓冲到模块1；</p>
+<p>第2个缓冲周期，通过切换输入数据流选择单元，将输入数据缓冲到模块2。同时将数据缓冲模块1缓冲的数据，通过输出数据流选择单元进行的选择送到数据流运算模块进行运算处理；</p>
+<p>第3个缓冲周期，通过输入数据流选择单元的再次切换，将输入数据缓冲到数据缓冲模块1.同时，将数据缓冲模块2缓冲的第2个周期的数据通过输出数据流选择单元的切换，送到数据流处理模块；</p>
+<p>如此循环，完成数据的输入。</p>
+</blockquote>
+<p><strong>特点：</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/AaFQlTdCLjXwqEn.png" alt="RTL4.2.png"></p>
+<p>乒乓操作的最大特点是<strong>通过“输入数据选择单元”和“输出数据选择单元”按节拍、相互配合的切换，将经过缓冲的数据流没有停顿地送到“数据流运算处理模块”进行运算与处理。</strong>把乒乓操作模块当做一个整体，站在这个模块的两端看数据，输入数据流和输出数据流都是连续不断的，没有任何停顿，因此非常适合对数据流进行流水线式处理。所以乒乓操作<strong>常常应用于流水线式算法，完成数据的无缝缓冲与处理。</strong></p>
+<p>乒乓操作的第二个优点是可以<strong>节约缓冲区空间</strong>。另外，巧妙运用乒乓操作还可以达到用低速模块处理高速数据流的效果。如视频中实例展示，通过乒乓操作实现低速模块处理高速数据的实质是：通过DPRAM这种缓存单元实现了数据流的串并转换，并行用“数据预处理模块1”和“数据预处理模块2”处理分流的数据，<strong>是面积与速度互换原则的体现！</strong></p>
+<p>通过乒乓操作实现低速模块处理高速数据的实质如下图所示。</p>
+<p><img src="https://i.loli.net/2020/02/28/kX3Fbt2cgxhCAdO.png" alt="RTL4.3.png"></p>
+<p>通过DPRAM这种缓存单元实现了数据流的串并转换，并行用“数据预处理模块1”和“数据预处理模块2”处理分流的数据，是面积与速度互换原则的体现。</p>
+<h1 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h1><p><strong>流水线的参数设计中，系统时钟取决于最慢的流水线级的延时。</strong></p>
+<p>最长的组合逻辑链 –&gt; 最大的td值 –&gt; 系统时钟频率上限 –&gt; 系统速度上限</p>
+<p><strong>组合逻辑链的并行闲置：</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/M4oCi1VAQPHOXlk.png" alt="RTL4.4.png"></p>
+<p><strong>组合逻辑链的串行闲置：</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/e8vYCUQryDxE57m.png" alt="RTL4.5.png"></p>
+<p>实例： 计算log(|a+b|)</p>
+<p>组合逻辑的延时等于加法器，求绝对值，求对数的延时之和。如若插入两级寄存器之后，组合逻辑的延时等于三者绝对值的最大值，且每个时刻三部分都在运行。对比发现，流水线的工作方式可以充分提高电路运行的频率，理想情况下 ，本例中，运行频率可以提升至原来的三倍。</p>
+<p><img src="https://i.loli.net/2020/02/28/6wUtXksvzRYJ49c.png" alt="RTL4.6.png"></p>
+<p>四级流水线结构</p>
+<p> <img src="https://i.loli.net/2020/02/28/ybFXMzDqeUkifY9.png" alt="RTL4.7.png"></p>
+<p>四级流水线比较</p>
+<p><img src="https://i.loli.net/2020/02/28/CLSYxu5qfyWVw7h.png" alt="RTL4.8.png"></p>
+<blockquote>
+<p>注：Tpipe&lt;T（因流水线单元一定比非流水线单元短）;4Tpipe&gt;T（因流水线需要插入寄存器，寄存器有延迟）</p>
+</blockquote>
+<p><strong>特点：</strong></p>
+<p>通过插入寄存器，将长的串行逻辑链分成较小的部分。当系统运算是串行的时候，利用时钟控制，使运算依照顺序接续进行。在任何给定时刻，大部分电路都在工作。</p>
+<p><strong>好处：</strong></p>
+<p>每一部分延时较小–&gt; 可使用更快的时钟</p>
+<p>大部分电路同时进行运算–&gt;可提高数据通过量</p>
+<p><strong>流水线参数设计</strong></p>
+<p>系统时钟取决于最慢的流水线级的延时</p>
+<p>流水线时钟周期 Tpipe=max{T1，T2，… ,Tm}</p>
+<p>第i级的时钟周期 Ti&gt;tff + tsu + td,i + ts,i + 1</p>
+<p>流水线分割点及级数的确定要考虑的因素包括：</p>
+<ul>
+<li>单元延迟时间及时钟频率的大小决定了数据通过速率；</li>
+<li>过多的级数不一定能产生最快的结果；</li>
+<li>太多寄存器的插入会导致芯片面积增加，布线困难，时钟偏差增加。</li>
+</ul>
+<blockquote>
+<p>参考：<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
+</blockquote>
 
     </div>
 
@@ -343,7 +373,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://sliu.info/2020/02/15/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/" title="SRAM_cell电学稳定性分析">http://sliu.info/2020/02/15/2020-02-15-SRAM_cell电学稳定性分析/</a>
+    <a href="http://sliu.info/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/" title="RTL设计指导原则">http://sliu.info/2020/02/28/RTL-设计指导原则/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -365,7 +395,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/Memory/" rel="tag"><i class="fa fa-tag"></i> Memory</a>
+              <a href="/tags/RTL/" rel="tag"><i class="fa fa-tag"></i> RTL</a>
           </div>
 
         
@@ -374,13 +404,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/02/12/2020-02-12-SRAM%E5%9F%BA%E7%A1%80/" rel="prev" title="SRAM 基础">
-      <i class="fa fa-chevron-left"></i> SRAM 基础
+    <a href="/2020/02/28/2020-02-28-Balance-in-circuit-design/" rel="prev" title="Balance in circuit design">
+      <i class="fa fa-chevron-left"></i> Balance in circuit design
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/02/20/2020-02-18-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/" rel="next" title="RTL编码中考虑延时">
-      RTL编码中考虑延时 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -445,7 +472,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Read-and-Write-Operatioins"><span class="nav-number">1.</span> <span class="nav-text">Read and Write Operatioins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sum"><span class="nav-number">2.</span> <span class="nav-text">Sum</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RTL级设计的评判标准"><span class="nav-number">1.</span> <span class="nav-text">RTL级设计的评判标准</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#面积与速度互换"><span class="nav-number">2.</span> <span class="nav-text">面积与速度互换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#面积与速度的平衡互换原则"><span class="nav-number">3.</span> <span class="nav-text">面积与速度的平衡互换原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#乒乓操作"><span class="nav-number">4.</span> <span class="nav-text">乒乓操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流水线"><span class="nav-number">5.</span> <span class="nav-text">流水线</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
