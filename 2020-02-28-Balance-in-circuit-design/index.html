@@ -20,25 +20,32 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="CMOS设计指标设计指标：  成本：用复杂性和面积来表示 完整性和稳定性：用静态（即稳态）特性来表示 性能：由动态（即瞬态）响应决定 能量效率：由能耗和功耗决定">
+  <meta name="description" content="01.EFR Scheme for Low Power SRAM； 02.Chip Architecture； 03.Results； 04.Source Line Voltage Control Technique">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CMOS反相器介绍">
-<meta property="og:url" content="http://www.sliu.info/2020/02/08/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:title" content="Balance in circuit design">
+<meta property="og:url" content="http://www.sliu.info/2020-02-28-Balance-in-circuit-design/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="CMOS设计指标设计指标：  成本：用复杂性和面积来表示 完整性和稳定性：用静态（即稳态）特性来表示 性能：由动态（即瞬态）响应决定 能量效率：由能耗和功耗决定">
+<meta property="og:description" content="01.EFR Scheme for Low Power SRAM； 02.Chip Architecture； 03.Results； 04.Source Line Voltage Control Technique">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/Vx1z9HeK3aXd67o.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/1vcobZewWzkRTu3.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/d63gQvVMnLyRUAG.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/17zsQ6Tu9HjbrhB.png">
-<meta property="article:published_time" content="2020-02-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-02-28T07:05:42.411Z">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/Qg7JOSoHqxdKilb.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/j5faidzXmlgFVbc.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/8HLKbmp5lkYrAcW.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/NiBFqxsgVILSGDM.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/ALVXdw1abKkBSMJ.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/CxKvrTI1EJUaH5d.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/qeHMDoxYJZLtTGN.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/GkUdsolePiMtHc3.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/d4pgR9kxEJUic1j.jpg">
+<meta property="article:published_time" content="2020-02-28T07:35:57.000Z">
+<meta property="article:modified_time" content="2020-02-28T11:00:27.306Z">
 <meta property="article:author" content="Shuang liu">
-<meta property="article:tag" content="数字集成电路设计基础">
+<meta property="article:tag" content="Memory">
+<meta property="article:tag" content="SRAM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/02/27/Vx1z9HeK3aXd67o.png">
+<meta name="twitter:image" content="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png">
 
-<link rel="canonical" href="http://www.sliu.info/2020/02/08/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/">
+<link rel="canonical" href="http://www.sliu.info/2020-02-28-Balance-in-circuit-design/">
 
 
 <script id="page-configurations">
@@ -50,7 +57,7 @@
   };
 </script>
 
-  <title>CMOS反相器介绍 | Shuang'Blog</title>
+  <title>Balance in circuit design | Shuang'Blog</title>
   
 
 
@@ -197,7 +204,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020/02/08/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/">
+    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020-02-28-Balance-in-circuit-design/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -210,7 +217,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          CMOS反相器介绍
+          Balance in circuit design
         </h1>
 
         <div class="post-meta">
@@ -219,16 +226,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-02-08 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-08T00:00:00+08:00">2020-02-08</time>
+              <time title="创建时间：2020-02-28 15:35:57 / 修改时间：19:00:27" itemprop="dateCreated datePublished" datetime="2020-02-28T15:35:57+08:00">2020-02-28</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-28 15:05:42" itemprop="dateModified" datetime="2020-02-28T15:05:42+08:00">2020-02-28</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -244,13 +245,13 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 834</span>
+		  </span>本文字数: 2k</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
 		  <span class="post-meta-item-icon">
 			<i class="fa fa-clock-o"></i>
-		  </span>阅读时长 &asymp; 2 分钟</span>
+		  </span>阅读时长 &asymp; 7 分钟</span>
 
         </div>
       </header>
@@ -261,53 +262,57 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="CMOS设计指标"><a href="#CMOS设计指标" class="headerlink" title="CMOS设计指标"></a>CMOS设计指标</h1><p><strong>设计指标：</strong></p>
-<ul>
-<li>成本：用复杂性和面积来表示</li>
-<li>完整性和稳定性：用静态（即稳态）特性来表示</li>
-<li>性能：由动态（即瞬态）响应决定</li>
-<li>能量效率：由能耗和功耗决定</li>
-</ul>
+        <p><em>01.EFR Scheme for Low Power SRAM；</em></p>
+<p><em>02.Chip Architecture；</em></p>
+<p><em>03.Results；</em></p>
+<p><em>04.Source Line Voltage Control Technique</em></p>
 <a id="more"></a>
 
-<h1 id="静态CMOS反相器"><a href="#静态CMOS反相器" class="headerlink" title="静态CMOS反相器"></a>静态CMOS反相器</h1><p><strong>特性：</strong></p>
-<ul>
-<li>输出高电平和低电平分别为VDD和GND。没有阈值损失，通过PMOS传高电平VDD，通过NMOS传低电平GND。</li>
-<li>无比逻辑。晶体管的尺寸可采用最小尺寸。</li>
-<li>稳态时在输出和VDD或GND之间总存在一条具有有限电阻的通路。具有低输出阻抗。</li>
-<li>CMOS反相器的输入电阻极高。由于MOS管的栅实际上是一个绝缘体，因此不去任何DC（直流）输入电流。</li>
-<li>无静态功耗。稳态工作情况下电源和地线之间没有直接的通路（即此时输入和输出保持不变）。</li>
-</ul>
-<p><strong>电压传输特性（VTC）：</strong></p>
-<p><img src="https://i.loli.net/2020/02/27/Vx1z9HeK3aXd67o.png" alt="CMOS1.1.png"></p>
-<ul>
-<li>PMOS的静态特性曲线可由镜像平移得到，观察两种MOS管的VTC曲线可得到CMOS反相器的传输特性<br><img src="https://i.loli.net/2020/02/27/1vcobZewWzkRTu3.png" alt="CMOS1.2.png"></li>
-<li>瞬态特性，主要由CL决定。CL主要包括NMOS和PMOS的漏扩散电容、连线电容和扇出门的输入电容。</li>
-<li>低到高，门的响应时间由通过RP充电电容CL决定，传播延时正比于时间常数RPCL：<br>快速门设计方法：减小输出电容；减小晶体管导通电阻（加大器件的W/L）</li>
-<li>高到低，门的响应时间由电容CL通过电阻Rn对地放电决定，传播延时正比于时间常数RnCL</li>
-</ul>
-<h1 id="CMOS反相器稳定性的评估——静态特性"><a href="#CMOS反相器稳定性的评估——静态特性" class="headerlink" title="CMOS反相器稳定性的评估——静态特性"></a>CMOS反相器稳定性的评估——静态特性</h1><p><strong>开关阈值：VM定义为Vin=Vout的点。</strong></p>
-<p>一般希望开关阈值VM处于电压摆幅的中点（VDD/2）附近，这样可使高噪声容限和低噪声容限具有相近的值。</p>
-<ul>
-<li><p>设计技术：<br>为使得噪声容限最大并得到对称的特性，建议使PMOS比NMOS部分宽以均衡晶体管的驱动强度。<br><img src="https://i.loli.net/2020/02/27/d63gQvVMnLyRUAG.png" alt="CMOS1.3.png"></p>
-</li>
-<li><p>VM对器件比值的变化不敏感<br>设计中使PMOS管的宽度小于完全对称时所要求的值是可以接受的</p>
-</li>
-<li><p>改变Wp和Wn比值的影响使VTC的过渡区平移<br>增加PMOS或NMOS宽度分别使VM移向VDD或GND。这种不对称设计在某些设计中使所期望的。</p>
-</li>
-</ul>
-<p><strong>噪声容限</strong></p>
-<ul>
-<li><p>对VTC曲线做逐段近似简化，得出VIH和VIL，推导出高电平噪声容限和低电平噪声容限：<br>NMH = VDD - VIH , NML = VIL<br><img src="https://i.loli.net/2020/02/27/17zsQ6Tu9HjbrhB.png" alt="CMOS1.4.png"></p>
-</li>
-<li><p>器件参数的变化<br>静态CMOS反相器对这些变化不敏感，可以在一个很宽的工作条件下工作。</p>
-</li>
-<li><p>降低电源电压（在接近100mV的时候，门的特性变差）<br>不加区分的降低电源电压虽然对减少能耗有正面影响，但会使门的延时加大；<br>一旦电源电压和本征电压（阈值电压）变得可以比拟，DC特性对器件参数的变化会变得更加敏感；降低电源电压意味着减小信号摆幅，可以帮助减小内部噪声，但它使设计对并不减小的外部噪声源更加敏感</p>
-</li>
-</ul>
-<p>参考资料：</p>
+<p>本文主要介绍一种新的设计架构来获得更低的静态功耗，电源电压控制技术（source line voltage control techniques）。传统设计中，power line的电压为某一常数值来保证SRAM稳定工作。在此，新方法中通过控制power line电压来改善漏电状况。</p>
+<p>首先，描述了在手机低电压SRAM cell中使用的<strong>electric field relaxation（EFR）</strong>电路。<strong>采用更高的阈值电压，有助于减小SRAM cell的静态功耗</strong>。</p>
+<p>其次，描述了在移动蜂窝电话应用处理器中集成的SRAM<strong>减小漏电流的设计技术</strong>。<strong>采用较低的阈值电压，有助于获得SRAM cell更低的获取时间（low access time）</strong>。</p>
+<h1 id="EFR-Scheme-for-Low-Power-SRAM"><a href="#EFR-Scheme-for-Low-Power-SRAM" class="headerlink" title="EFR Scheme for Low Power SRAM"></a><em>EFR Scheme for Low Power SRAM</em></h1><p>EFR电路如图1所示，它能从电路级别消除泄漏电流。<strong>在保持阶段（retention mode），对于bit lines（BT and BB）用1.0V的供电替换原先1.5V的供电，同时VSSM从0提升到0.5V</strong>。</p>
+<p><img src="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png" alt="memory4.1.png"></p>
+<p>Fig. 1 Electric field relaxation scheme</p>
+<p><strong>黑色的实线箭头表示bit lines（BT and BB）从1.5V替换为1.0V的差异</strong>。这种relaxation能减小gate leakage和GIDL currents大约90%。</p>
+<p><strong>灰色的实线箭头表示负的0.5v VGS应用到transfer nMOS晶体管</strong>。负偏压能够将subthreshold leakagecurrent降到接近0。</p>
+<p><strong>圆点的箭头表示负的0.5V back-bodybias电压VBB应用到driver nMOS晶体管</strong>。这个反偏压能减小subthreshold leakage current大约90%。</p>
+<p>以上是MOS管的source电压和衬底之间电压由0变为0.5V的区别，但是，the band-to-band tunneling leakage仍然没有改善。</p>
+<p>图2给出了在25℃（Fig.2a）和90℃（Fig.2b）温度环境下，对传统设计方式和EFR设计方式的SRAM cells在最坏的工艺环境下（the worst-case process）静态泄漏电流的测试数据。每种器件类型合计了subthreshold和GIDL currents。</p>
+<p><img src="https://i.loli.net/2020/02/28/Qg7JOSoHqxdKilb.png" alt="memory4.2.png">Fig. 2 Measured SRAM cell leakagecurrent; (a) 25ıC/worst case (b) 90ıC/worst case</p>
+<p>在两个例子中，pMOS的阈值电压为1.0V，在25℃和90℃中两者的subthreshold leakage均比GIDL currents小得多。nMOS的阈值电压为0.7V，subthreshold leakage current相对于GIDLcurrent在25℃更小，但在90℃更大。cell的静态泄漏功耗在EFR设计中25℃时为16.6fA，90℃时为101.7fA，分别相比于传统设计的cell小82.5%和91.8%。</p>
+<h1 id="Chip-Architecture"><a href="#Chip-Architecture" class="headerlink" title="Chip Architecture"></a><em>Chip Architecture</em></h1><p><img src="https://i.loli.net/2020/02/28/j5faidzXmlgFVbc.png" alt="memory4.3.png">Fig.3 Circuit diagram of one mat</p>
+<p>图3展示了SRAM芯片某一簇（mat）的电路图，整个SRAM chip 有32 mats。每个mat由2048 word lines构成的256-data-bit和20-parity-bit columns组成，且每个mat被划分为4个bank。</p>
+<p>读操作的仿真时序图在Fig4中展示。该SRAM是异步的，如果地址信号不发生改变SRAM将保持retention mode，<strong>如果地址信号改变，SRAM由retention mode转换为active mode，产生一个ATD 脉冲，激活reset 操作</strong>。</p>
+<p><strong>在4.3ns的reset期间，选中的bank中memory cell的VSS line（VSSM）从0.5V下拉到0V，同时bit-line pairs（BT,and BB）从1.0V预充为1.5V</strong>。</p>
+<p>传统异步SRAM中通常是在reset time时，bit-line pair由0v预充为1.5V，在我们的EFR电路设计中，我们可以容易的在reset time期间为bit-line预充和VSSM放电。另外，由于EFR电路和asynchronous SRAM上述类似，access time不会增加。</p>
+<p><img src="https://i.loli.net/2020/02/28/8HLKbmp5lkYrAcW.png" alt="memory4.4.png"></p>
+<p>Fig. 4 Simulated waveforms for readoperation</p>
+<p><strong>随后word line（wl）激活。随着sense amplifiers的激活，选中的128 bits of data 和10 parity bits出现在local bus（LBUS）</strong>。为了减少对power supplies噪声的产生，VSSM被控制在bank level而不是在mat level。这种控制方法可以保持VSS的噪声低于32mV，这个结果在仿真中通过power supply nets可以观察得到。VSSM line由第三层金属加强来以控制VSSM从0.5到0V。在完成读操作的500us内，VSSM line非常慢的恢复到0.5V。在读操作完成的100ms内由漏电流作用，bit-line pairs容易的恢复回1.0V。因此，复位操作很难影响到动态功耗。</p>
+<h1 id="Results"><a href="#Results" class="headerlink" title="Results"></a><em>Results</em></h1><p><img src="https://i.loli.net/2020/02/28/NiBFqxsgVILSGDM.jpg" alt="memory4.5.png"></p>
+<p>Fig. 5 Photograph and features of thechip</p>
+<h1 id="Source-Line-Voltage-Control-Technique"><a href="#Source-Line-Voltage-Control-Technique" class="headerlink" title="Source Line Voltage Control Technique"></a><em>Source Line Voltage Control Technique</em></h1><p>本节描述聚焦于移动电话应用处理器的减小漏电流技术。通常，集成在应用处理器中的SRAM会使用较低的阈值电压。因此，主要的泄漏电流是subthreshold leakage current。为了减小SRAM cells在未选通状态下的泄漏电流，便提出了source line voltage control 技术，来控制powerline电压，并保持最小限度地牺牲操作稳定性。</p>
+<p><strong>SRAM的Power supply voltage控制为VDD和VSS的中间电位，中间电位电压同时减小泄露电流以及数据保持电流</strong>。中间电压的产生由一个简单的电路实现，因为如果采用复杂电路，会有额外的功耗和面积代价。<strong>这一节介绍一个简单的电压控制电路，包括电压切换选择，电阻和二极管，此电路可以降低额外的功耗和面积代价</strong>。</p>
+<p><img src="https://i.loli.net/2020/02/28/ALVXdw1abKkBSMJ.png" alt="memory4.6.png">Fig. 6 Leakage and stability vs. localpower line voltage</p>
+<p>SRAM模块必须满足其性能目标，设计能实现足够稳定的保存数据。控制VSSM的电压来减小memory cell的leakage时，更高的VSSM能减小SRAM cell leakage到一个更小的级别。另一方面，也能破坏SRAM的数据保持稳定性。这样的关系在图6中描述。为了满足low leakage 和high stability，VSSM必须被控制到能满足leakage目标的最低电压。图7展示了VSSM控制电路，<strong>PLVC1，由3个NMOSFETS组成。一个NMOSFET作为在VSSM和VSS之间的电压切换（MS1），一个作为二极管（MD1），另一个作为电阻（MR1）</strong>。MR1有一个长的栅极且保持常开。</p>
+<p><img src="https://i.loli.net/2020/02/28/CxKvrTI1EJUaH5d.png" alt="memory4.7.png"></p>
+<p>Fig. 7 VSSM controller in embedded SRAM</p>
+<p>由130nm制造工艺生产的memory，其cell的主要leakage current 是subthreshold current，很大程度受阈值电压变化的影响。例如，Vth减小100mV，subthreshold leakage增加超过十倍，而MOSFET的驱动电流仅增加10%。</p>
+<p><strong>当制造的MOSFET 阈值电压Vth波动到一个高值，memory cell的leakage会大大减小。</strong></p>
+<p><strong>因为MR1为开启状态，电流通过MR1轻微的减小。如果MR1的电流比memory cell leakage电流大，VSSM电压变低。</strong></p>
+<p><strong>当阈值电压Vth波动到较低的值，VSSM为高，但是MD1能限制VSSM上升，保持为某一电压。这样保持足够低的电压来保持存储的数据。</strong></p>
+<p>图8展示了MOSFET制造的阈值电压Vth和VSSM电压的对比。横轴展示了阈值电压Vth设计的理想值和生产制造的差异，受工艺变化而变化。当制造晶体管的阈值电压Vth低，leakage current高，VSSM 电压必须为高来减小leakage current。当制造晶体管为高，leakage current 为低，VSSM电压需要保持低来确保SRAM的retention 稳定性。</p>
+<p><img src="https://i.loli.net/2020/02/28/qeHMDoxYJZLtTGN.png" alt="memory4.8.png"></p>
+<p>Fig.8 VSSM voltage when Vth is changed</p>
+<p>虚线描绘了满足leakage 目标且最大化cell 稳定性的理想情况。如果MOSFET为worst-leakage 器件，MOSFET的阈值电压Vth低于设计值0.1V，VSSM需要高出0.3V来满足leakage目标。</p>
+<p><strong>如果voltage controller仅有power switch和diode组成，VSSM电压如图中（a）线所示</strong>，能满足leakage 目标，但是memory cell的稳定性降低。</p>
+<p><strong>如果voltage controller PLVC1由constant-voltage source 电路构成，VSSM电压如图中（b）线所示</strong>，能满足leakage 目标，且稳定性要好于线（a），但是memory cell的稳定性仍然低。</p>
+<p>因此，<strong>使用三种类型的MOSFETs，MS1，MD1和MR1，作为voltage controller，VSSM电压（图8中粗线）趋近于理想值</strong>。这些值能满足leakage目标，且保持了更高的稳定性。PLVC1能同时满足leakage目标且保持SRAM高的稳定性。</p>
+<p><img src="https://i.loli.net/2020/02/28/GkUdsolePiMtHc3.png" alt="memory4.9.png">Fig.9 Effect of leakage reduction in1-Mbit leakage-worst embedded SRAM</p>
+<p>在图9中，陈述了1-Mbit SRAM（图8） 的leakage current。使用leakage降低技术，leakage current能减少大约90%。在图10中给出了130nm SRAM 芯片模型的特征和照片信息。</p>
+<p><img src="https://i.loli.net/2020/02/28/d4pgR9kxEJUic1j.jpg" alt="memory4.10.png">Fig. 10 Photograph and features of theprototype chip</p>
 <blockquote>
-<p>Rabaey J M, Chandrakasan A P, Nikolić B. Digital integrated circuits: a design perspective[M]. Upper Saddle River, NJ: Pearson Education, 2003.</p>
+<p><em>Ref<strong>：</strong>Low Power and Reliable SRAM memory Cell and Array Design</em></p>
 </blockquote>
 
     </div>
@@ -344,7 +349,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.sliu.info/2020/02/08/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/" title="CMOS反相器介绍">http://www.sliu.info/2020/02/08/2020-02-08-CMOS反相器介绍/</a>
+    <a href="http://www.sliu.info/2020-02-28-Balance-in-circuit-design/" title="Balance in circuit design">http://www.sliu.info/2020-02-28-Balance-in-circuit-design/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -366,7 +371,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/%E6%95%B0%E5%AD%97%E9%9B%86%E6%88%90%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80/" rel="tag"><i class="fa fa-tag"></i> 数字集成电路设计基础</a>
+              <a href="/tags/Memory/" rel="tag"><i class="fa fa-tag"></i> Memory</a>
+              <a href="/tags/SRAM/" rel="tag"><i class="fa fa-tag"></i> SRAM</a>
           </div>
 
         
@@ -375,12 +381,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/02/07/2020-02-07-sed%E5%AE%9E%E4%BE%8B/" rel="prev" title="sed实例">
-      <i class="fa fa-chevron-left"></i> sed实例
+    <a href="/2020-02-28-SRAM-leakage-current/" rel="prev" title="SRAM leakage current">
+      <i class="fa fa-chevron-left"></i> SRAM leakage current
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/02/09/2020-02-09-Verilog%20HDL%E5%9F%BA%E7%A1%80/" rel="next" title="Verilog HDL 基础">
-      Verilog HDL 基础 <i class="fa fa-chevron-right"></i>
+    <a href="/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/" rel="next" title="RTL设计指导原则">
+      RTL设计指导原则 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -446,7 +452,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CMOS设计指标"><span class="nav-number">1.</span> <span class="nav-text">CMOS设计指标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#静态CMOS反相器"><span class="nav-number">2.</span> <span class="nav-text">静态CMOS反相器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CMOS反相器稳定性的评估——静态特性"><span class="nav-number">3.</span> <span class="nav-text">CMOS反相器稳定性的评估——静态特性</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EFR-Scheme-for-Low-Power-SRAM"><span class="nav-number">1.</span> <span class="nav-text">EFR Scheme for Low Power SRAM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Chip-Architecture"><span class="nav-number">2.</span> <span class="nav-text">Chip Architecture</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Results"><span class="nav-number">3.</span> <span class="nav-text">Results</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Source-Line-Voltage-Control-Technique"><span class="nav-number">4.</span> <span class="nav-text">Source Line Voltage Control Technique</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

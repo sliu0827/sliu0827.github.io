@@ -20,32 +20,31 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="01.EFR Scheme for Low Power SRAM； 02.Chip Architecture； 03.Results； 04.Source Line Voltage Control Technique">
+  <meta name="description" content="在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Balance in circuit design">
-<meta property="og:url" content="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/index.html">
+<meta property="og:title" content="SRAM_cell电学稳定性分析">
+<meta property="og:url" content="http://www.sliu.info/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="01.EFR Scheme for Low Power SRAM； 02.Chip Architecture； 03.Results； 04.Source Line Voltage Control Technique">
+<meta property="og:description" content="在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/Qg7JOSoHqxdKilb.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/j5faidzXmlgFVbc.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/8HLKbmp5lkYrAcW.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/NiBFqxsgVILSGDM.jpg">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/ALVXdw1abKkBSMJ.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/CxKvrTI1EJUaH5d.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/qeHMDoxYJZLtTGN.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/GkUdsolePiMtHc3.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/d4pgR9kxEJUic1j.jpg">
-<meta property="article:published_time" content="2020-02-28T07:35:57.000Z">
-<meta property="article:modified_time" content="2020-02-28T11:00:27.306Z">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/hypWa23on9Y6SUT.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/ZR5cD8Ar6dQg4kG.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/M3QP6qGIwLU9YgH.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/hCbrwNcd1UKqRvm.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/YmZqEtu4s8oUaxd.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/qJ4Bnw86Dpi1TRN.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/rtyBeKJo1u25UgE.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/27/9fPUMrCs7QpLxA6.png">
+<meta property="article:published_time" content="2020-02-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-02-28T07:17:04.083Z">
 <meta property="article:author" content="Shuang liu">
 <meta property="article:tag" content="Memory">
-<meta property="article:tag" content="SRAM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png">
+<meta name="twitter:image" content="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png">
 
-<link rel="canonical" href="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/">
+<link rel="canonical" href="http://www.sliu.info/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/">
 
 
 <script id="page-configurations">
@@ -57,7 +56,7 @@
   };
 </script>
 
-  <title>Balance in circuit design | Shuang'Blog</title>
+  <title>SRAM_cell电学稳定性分析 | Shuang'Blog</title>
   
 
 
@@ -204,7 +203,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/">
+    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -217,7 +216,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Balance in circuit design
+          SRAM_cell电学稳定性分析
         </h1>
 
         <div class="post-meta">
@@ -226,10 +225,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-02-28 15:35:57 / 修改时间：19:00:27" itemprop="dateCreated datePublished" datetime="2020-02-28T15:35:57+08:00">2020-02-28</time>
+              <time title="创建时间：2020-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-15T00:00:00+08:00">2020-02-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-28 15:17:04" itemprop="dateModified" datetime="2020-02-28T15:17:04+08:00">2020-02-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -245,13 +250,13 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 2k</span>
+		  </span>本文字数: 1.2k</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
 		  <span class="post-meta-item-icon">
 			<i class="fa fa-clock-o"></i>
-		  </span>阅读时长 &asymp; 7 分钟</span>
+		  </span>阅读时长 &asymp; 4 分钟</span>
 
         </div>
       </header>
@@ -262,58 +267,47 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><em>01.EFR Scheme for Low Power SRAM；</em></p>
-<p><em>02.Chip Architecture；</em></p>
-<p><em>03.Results；</em></p>
-<p><em>04.Source Line Voltage Control Technique</em></p>
+        <p><em>在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。</em></p>
 <a id="more"></a>
 
-<p>本文主要介绍一种新的设计架构来获得更低的静态功耗，电源电压控制技术（source line voltage control techniques）。传统设计中，power line的电压为某一常数值来保证SRAM稳定工作。在此，新方法中通过控制power line电压来改善漏电状况。</p>
-<p>首先，描述了在手机低电压SRAM cell中使用的<strong>electric field relaxation（EFR）</strong>电路。<strong>采用更高的阈值电压，有助于减小SRAM cell的静态功耗</strong>。</p>
-<p>其次，描述了在移动蜂窝电话应用处理器中集成的SRAM<strong>减小漏电流的设计技术</strong>。<strong>采用较低的阈值电压，有助于获得SRAM cell更低的获取时间（low access time）</strong>。</p>
-<h1 id="EFR-Scheme-for-Low-Power-SRAM"><a href="#EFR-Scheme-for-Low-Power-SRAM" class="headerlink" title="EFR Scheme for Low Power SRAM"></a><em>EFR Scheme for Low Power SRAM</em></h1><p>EFR电路如图1所示，它能从电路级别消除泄漏电流。<strong>在保持阶段（retention mode），对于bit lines（BT and BB）用1.0V的供电替换原先1.5V的供电，同时VSSM从0提升到0.5V</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png" alt="memory4.1.png"></p>
-<p>Fig. 1 Electric field relaxation scheme</p>
-<p><strong>黑色的实线箭头表示bit lines（BT and BB）从1.5V替换为1.0V的差异</strong>。这种relaxation能减小gate leakage和GIDL currents大约90%。</p>
-<p><strong>灰色的实线箭头表示负的0.5v VGS应用到transfer nMOS晶体管</strong>。负偏压能够将subthreshold leakagecurrent降到接近0。</p>
-<p><strong>圆点的箭头表示负的0.5V back-bodybias电压VBB应用到driver nMOS晶体管</strong>。这个反偏压能减小subthreshold leakage current大约90%。</p>
-<p>以上是MOS管的source电压和衬底之间电压由0变为0.5V的区别，但是，the band-to-band tunneling leakage仍然没有改善。</p>
-<p>图2给出了在25℃（Fig.2a）和90℃（Fig.2b）温度环境下，对传统设计方式和EFR设计方式的SRAM cells在最坏的工艺环境下（the worst-case process）静态泄漏电流的测试数据。每种器件类型合计了subthreshold和GIDL currents。</p>
-<p><img src="https://i.loli.net/2020/02/28/Qg7JOSoHqxdKilb.png" alt="memory4.2.png">Fig. 2 Measured SRAM cell leakagecurrent; (a) 25ıC/worst case (b) 90ıC/worst case</p>
-<p>在两个例子中，pMOS的阈值电压为1.0V，在25℃和90℃中两者的subthreshold leakage均比GIDL currents小得多。nMOS的阈值电压为0.7V，subthreshold leakage current相对于GIDLcurrent在25℃更小，但在90℃更大。cell的静态泄漏功耗在EFR设计中25℃时为16.6fA，90℃时为101.7fA，分别相比于传统设计的cell小82.5%和91.8%。</p>
-<h1 id="Chip-Architecture"><a href="#Chip-Architecture" class="headerlink" title="Chip Architecture"></a><em>Chip Architecture</em></h1><p><img src="https://i.loli.net/2020/02/28/j5faidzXmlgFVbc.png" alt="memory4.3.png">Fig.3 Circuit diagram of one mat</p>
-<p>图3展示了SRAM芯片某一簇（mat）的电路图，整个SRAM chip 有32 mats。每个mat由2048 word lines构成的256-data-bit和20-parity-bit columns组成，且每个mat被划分为4个bank。</p>
-<p>读操作的仿真时序图在Fig4中展示。该SRAM是异步的，如果地址信号不发生改变SRAM将保持retention mode，<strong>如果地址信号改变，SRAM由retention mode转换为active mode，产生一个ATD 脉冲，激活reset 操作</strong>。</p>
-<p><strong>在4.3ns的reset期间，选中的bank中memory cell的VSS line（VSSM）从0.5V下拉到0V，同时bit-line pairs（BT,and BB）从1.0V预充为1.5V</strong>。</p>
-<p>传统异步SRAM中通常是在reset time时，bit-line pair由0v预充为1.5V，在我们的EFR电路设计中，我们可以容易的在reset time期间为bit-line预充和VSSM放电。另外，由于EFR电路和asynchronous SRAM上述类似，access time不会增加。</p>
-<p><img src="https://i.loli.net/2020/02/28/8HLKbmp5lkYrAcW.png" alt="memory4.4.png"></p>
-<p>Fig. 4 Simulated waveforms for readoperation</p>
-<p><strong>随后word line（wl）激活。随着sense amplifiers的激活，选中的128 bits of data 和10 parity bits出现在local bus（LBUS）</strong>。为了减少对power supplies噪声的产生，VSSM被控制在bank level而不是在mat level。这种控制方法可以保持VSS的噪声低于32mV，这个结果在仿真中通过power supply nets可以观察得到。VSSM line由第三层金属加强来以控制VSSM从0.5到0V。在完成读操作的500us内，VSSM line非常慢的恢复到0.5V。在读操作完成的100ms内由漏电流作用，bit-line pairs容易的恢复回1.0V。因此，复位操作很难影响到动态功耗。</p>
-<h1 id="Results"><a href="#Results" class="headerlink" title="Results"></a><em>Results</em></h1><p><img src="https://i.loli.net/2020/02/28/NiBFqxsgVILSGDM.jpg" alt="memory4.5.png"></p>
-<p>Fig. 5 Photograph and features of thechip</p>
-<h1 id="Source-Line-Voltage-Control-Technique"><a href="#Source-Line-Voltage-Control-Technique" class="headerlink" title="Source Line Voltage Control Technique"></a><em>Source Line Voltage Control Technique</em></h1><p>本节描述聚焦于移动电话应用处理器的减小漏电流技术。通常，集成在应用处理器中的SRAM会使用较低的阈值电压。因此，主要的泄漏电流是subthreshold leakage current。为了减小SRAM cells在未选通状态下的泄漏电流，便提出了source line voltage control 技术，来控制powerline电压，并保持最小限度地牺牲操作稳定性。</p>
-<p><strong>SRAM的Power supply voltage控制为VDD和VSS的中间电位，中间电位电压同时减小泄露电流以及数据保持电流</strong>。中间电压的产生由一个简单的电路实现，因为如果采用复杂电路，会有额外的功耗和面积代价。<strong>这一节介绍一个简单的电压控制电路，包括电压切换选择，电阻和二极管，此电路可以降低额外的功耗和面积代价</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/28/ALVXdw1abKkBSMJ.png" alt="memory4.6.png">Fig. 6 Leakage and stability vs. localpower line voltage</p>
-<p>SRAM模块必须满足其性能目标，设计能实现足够稳定的保存数据。控制VSSM的电压来减小memory cell的leakage时，更高的VSSM能减小SRAM cell leakage到一个更小的级别。另一方面，也能破坏SRAM的数据保持稳定性。这样的关系在图6中描述。为了满足low leakage 和high stability，VSSM必须被控制到能满足leakage目标的最低电压。图7展示了VSSM控制电路，<strong>PLVC1，由3个NMOSFETS组成。一个NMOSFET作为在VSSM和VSS之间的电压切换（MS1），一个作为二极管（MD1），另一个作为电阻（MR1）</strong>。MR1有一个长的栅极且保持常开。</p>
-<p><img src="https://i.loli.net/2020/02/28/CxKvrTI1EJUaH5d.png" alt="memory4.7.png"></p>
-<p>Fig. 7 VSSM controller in embedded SRAM</p>
-<p>由130nm制造工艺生产的memory，其cell的主要leakage current 是subthreshold current，很大程度受阈值电压变化的影响。例如，Vth减小100mV，subthreshold leakage增加超过十倍，而MOSFET的驱动电流仅增加10%。</p>
-<p><strong>当制造的MOSFET 阈值电压Vth波动到一个高值，memory cell的leakage会大大减小。</strong></p>
-<p><strong>因为MR1为开启状态，电流通过MR1轻微的减小。如果MR1的电流比memory cell leakage电流大，VSSM电压变低。</strong></p>
-<p><strong>当阈值电压Vth波动到较低的值，VSSM为高，但是MD1能限制VSSM上升，保持为某一电压。这样保持足够低的电压来保持存储的数据。</strong></p>
-<p>图8展示了MOSFET制造的阈值电压Vth和VSSM电压的对比。横轴展示了阈值电压Vth设计的理想值和生产制造的差异，受工艺变化而变化。当制造晶体管的阈值电压Vth低，leakage current高，VSSM 电压必须为高来减小leakage current。当制造晶体管为高，leakage current 为低，VSSM电压需要保持低来确保SRAM的retention 稳定性。</p>
-<p><img src="https://i.loli.net/2020/02/28/qeHMDoxYJZLtTGN.png" alt="memory4.8.png"></p>
-<p>Fig.8 VSSM voltage when Vth is changed</p>
-<p>虚线描绘了满足leakage 目标且最大化cell 稳定性的理想情况。如果MOSFET为worst-leakage 器件，MOSFET的阈值电压Vth低于设计值0.1V，VSSM需要高出0.3V来满足leakage目标。</p>
-<p><strong>如果voltage controller仅有power switch和diode组成，VSSM电压如图中（a）线所示</strong>，能满足leakage 目标，但是memory cell的稳定性降低。</p>
-<p><strong>如果voltage controller PLVC1由constant-voltage source 电路构成，VSSM电压如图中（b）线所示</strong>，能满足leakage 目标，且稳定性要好于线（a），但是memory cell的稳定性仍然低。</p>
-<p>因此，<strong>使用三种类型的MOSFETs，MS1，MD1和MR1，作为voltage controller，VSSM电压（图8中粗线）趋近于理想值</strong>。这些值能满足leakage目标，且保持了更高的稳定性。PLVC1能同时满足leakage目标且保持SRAM高的稳定性。</p>
-<p><img src="https://i.loli.net/2020/02/28/GkUdsolePiMtHc3.png" alt="memory4.9.png">Fig.9 Effect of leakage reduction in1-Mbit leakage-worst embedded SRAM</p>
-<p>在图9中，陈述了1-Mbit SRAM（图8） 的leakage current。使用leakage降低技术，leakage current能减少大约90%。在图10中给出了130nm SRAM 芯片模型的特征和照片信息。</p>
-<p><img src="https://i.loli.net/2020/02/28/d4pgR9kxEJUic1j.jpg" alt="memory4.10.png">Fig. 10 Photograph and features of theprototype chip</p>
-<blockquote>
-<p><em>Ref<strong>：</strong>Low Power and Reliable SRAM memory Cell and Array Design</em></p>
-</blockquote>
+
+
+<h3 id="Read-and-Write-Operatioins"><a href="#Read-and-Write-Operatioins" class="headerlink" title="Read and Write Operatioins"></a><strong>Read and Write Operatioins</strong></h3><hr>
+<p><img src="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png" alt="memory2.1.png"></p>
+<p>Fig.1 SRAM memory cell<br>图1为CMOS 6-T SRAM电路图，图2为其读写操作波形。</p>
+<p><img src="https://i.loli.net/2020/02/27/hypWa23on9Y6SUT.jpg" alt="memory2.2.png"></p>
+<p>Fig.2 Fundamental waveform of SRAM operation</p>
+<p><strong>当写**</strong>入数据“0”(W“0”)**时，word line(WL)被激活，bit line根据输入数据值被驱动到“H”和“L”状态。存储节点的电压发生翻转，输入数据写入到数据存储节点中。 </p>
+<p><strong>当从ce**</strong>ll中读“0”(R“0”)**时，所有bit line被预充为“H”，激活WL。原先保存在数据节点的数据使bit lines出现电压差。电压差通过灵敏放大器(sense amplifier)放大，保持的数据(retained data)被读出。</p>
+<p><strong>当写入数据“1”到cell中，**</strong>且写入失败(W “1” write failure case)**时，存储节点(N0/N1)的电压没有翻转，正确的数据没有写入cell中。在下一个读周期，不正确的数据“0”被读出。</p>
+<p><strong>当读数据“1”，**</strong>且读出失败(R1 read failure case<strong>**)</strong>时，存储节点的电压(N0/N1)发生翻转，存储节点的保持数据(retained data)被破坏。</p>
+<p>图3为SRAM memory保持数据情形，存储节点N0和N1，保持相反的状态，“H”和“L”。word line 为“L”。</p>
+<p><img src="https://i.loli.net/2020/02/27/ZR5cD8Ar6dQg4kG.png" alt="memory2.3.png"></p>
+<p>Fig.3 SRAM cell condition during data retention</p>
+<p>如下图4所示，Memory cell读过程中，右边的节点N1，状态为”H”，左边的节点状态为”L”。在读之前，bit lines被预充电到”H”状态。读的过程中，word lines变为”H”状态，存取管(access MOSs)导通打开。读cell电流Iread从access MOS到“L”-state的存储节点流动，对预充的bit line放电。</p>
+<p><img src="https://i.loli.net/2020/02/27/M3QP6qGIwLU9YgH.png" alt="memory2.4.png"></p>
+<p>Fig.4 Read operation of SRAM cell</p>
+<p>图5a电压波形是SRAM cell在正常读数据的过程中，每个存储节点的电压变化。正常读数据时，存储节点的电压不会发生翻转。图5b为memory cell正常操作的butterfly cruves，用来评估静态噪声裕量(SNM)。两条线之间有两个密闭空隙（space），意味着SRAM读操作的SNM是足够的。</p>
+<p><img src="https://i.loli.net/2020/02/27/hCbrwNcd1UKqRvm.png" alt="memory2.5.png"></p>
+<p>Fig.5 Voltage waveforms and butterfly curves during normal read operation.<br> (a) SRAM cell nodes during normal read operation.<br>(b) Butterfly curves to estimate SNM</p>
+<p><strong>在读操作期间，由于access MOS和driver MOS之间的电阻分压</strong>，存储节点的“L”-state被提升。<strong>如果存储节点电压“L”-state的提升值超过了由driver MOS,DR1和loadMOS，LD1组成的反相器的逻辑中点电压，保持数据将翻转**</strong>，被破坏(6a)**。这种情况就是memory cell读失败。图6b是memory cell读数据失败对应的butterfly curves，两条曲线之间只有一个空隙，SRAM能正常读的SNM是不够的。</p>
+<p><img src="https://i.loli.net/2020/02/27/YmZqEtu4s8oUaxd.png" alt="memory2.6.png"></p>
+<p>Fig.6 Voltage waveforms and butterfly curves during failure read operation.<br>(a) SRAM cell nodes during failureread operation.<br>(b) Butterfly curves to estimate SNM</p>
+<p><img src="https://i.loli.net/2020/02/27/qJ4Bnw86Dpi1TRN.png" alt="memory2.7.png"></p>
+<p>Fig.7 Write operation of SRAM cell</p>
+<p>关于写操作，如图7，在写之前，左边存储节点N0是“H” state，右边存储节点N1是“L” state。当要写的数据到达bit lines时，“H” state存储节点经过access MOS放电，写操作cell电流Iwrite,在图中用实线箭头标出。当“H”电位节点被放电至“L”电位时，节点的电压此时发生翻转，写操作完成(图8)。</p>
+<p><strong>在写的过程中，load MOS通过上拉电流Ipullup充电</strong>，如图3.7中虚线箭头所示。因此，<strong>如果load MOS充电的电流比access MOS放电电流大的话，存储节点“H”电位不会放电，节点电压不发生翻转，写操作失败(图9)</strong>。</p>
+<p><img src="https://i.loli.net/2020/02/27/rtyBeKJo1u25UgE.png" alt="memory2.8.png"></p>
+<p>Fig.8 SRAM cell nodes during normal write operation</p>
+<p><img src="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png" alt="memory2.9.png"></p>
+<p>Fig.9 SRAM cell nodes during failure write operation</p>
+<h3 id="Sum"><a href="#Sum" class="headerlink" title="Sum"></a><strong>Sum</strong></h3><hr>
+<p><strong>在SRAM cell 中，加强读操作和写操作稳定性的设计方法是一个矛盾的关系</strong>。例如，在表1中促使读操作和写操作更稳定的方法。所以，<strong>很难同时提高读和写操作的稳定性</strong>。在所有的130nm之前的传统制造工艺中，在SRAM cell中有更大的电压工作空间，可以同时保证稳定性，不会出问题。在更近的制造工艺中，随着MOSFETs中Vth变化(variation)，电压工作空间(operation margin)减小，SRAM cell中MOSFET电流随着Vth变化而波动(fluctuated)。</p>
+<p>除此之外，Vth variations会破坏在读和写操作期间MOSFET电流的平衡。因此，在SRAM cell设计阶段，最大化SRAM cell的operatingmargin，包括读和写的margin是必不可少的。Vth是MOSFET的一个很好的参数表征，它几乎完全可以指示晶体管的性能。</p>
+<p>Table.1 Drivability change to enhancestability of each operation</p>
+<p><img src="https://i.loli.net/2020/02/27/9fPUMrCs7QpLxA6.png" alt="memory2.10.png"></p>
+<p>为了实现最大化的operating-margins，需要更准确的SRAM operating margins，在本书第3章中，对于受MOSFET Vth variation而影响的SRAM operating margins分析做了进一步描述，这里不再细说。</p>
+<p>[^Ref]: <em>Low power and reliable SRAM memory cell and array design[M]. Springer Science &amp; Business Media, 2011.</em></p>
 
     </div>
 
@@ -349,7 +343,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/" title="Balance in circuit design">http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/</a>
+    <a href="http://www.sliu.info/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/" title="SRAM_cell电学稳定性分析">http://www.sliu.info/2020-02-15-SRAM_cell电学稳定性分析/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -372,7 +366,6 @@
           
           <div class="post-tags">
               <a href="/tags/Memory/" rel="tag"><i class="fa fa-tag"></i> Memory</a>
-              <a href="/tags/SRAM/" rel="tag"><i class="fa fa-tag"></i> SRAM</a>
           </div>
 
         
@@ -381,12 +374,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/02/28/2020-02-28-SRAM-leakage-current/" rel="prev" title="SRAM leakage current">
-      <i class="fa fa-chevron-left"></i> SRAM leakage current
+    <a href="/2020-02-12-SRAM%E5%9F%BA%E7%A1%80/" rel="prev" title="SRAM 基础">
+      <i class="fa fa-chevron-left"></i> SRAM 基础
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/" rel="next" title="RTL设计指导原则">
-      RTL设计指导原则 <i class="fa fa-chevron-right"></i>
+    <a href="/2020-02-18-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/" rel="next" title="RTL编码中考虑延时">
+      RTL编码中考虑延时 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -452,7 +445,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EFR-Scheme-for-Low-Power-SRAM"><span class="nav-number">1.</span> <span class="nav-text">EFR Scheme for Low Power SRAM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Chip-Architecture"><span class="nav-number">2.</span> <span class="nav-text">Chip Architecture</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Results"><span class="nav-number">3.</span> <span class="nav-text">Results</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Source-Line-Voltage-Control-Technique"><span class="nav-number">4.</span> <span class="nav-text">Source Line Voltage Control Technique</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Read-and-Write-Operatioins"><span class="nav-number">1.</span> <span class="nav-text">Read and Write Operatioins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sum"><span class="nav-number">2.</span> <span class="nav-text">Sum</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
