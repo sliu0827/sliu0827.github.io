@@ -1,0 +1,180 @@
+---
+title: 静态时序分析(STA)基础
+date: 2020-02-28 18:59:02
+tags:
+ - STA
+---
+
+
+
+# 什么是静态时序分析？
+
+静态时序分析是一种不使用动态仿真，来检查电路是否满足时序约束的分析方法。
+
+- Much faster than timing-driven，gate-level simulation
+- Proper circuit functionality is not checked
+- Vector generation NOT required
+
+<!--more-->
+
+**STA Flow**
+
+ 
+
+![STA1.1.png](https://i.loli.net/2020/02/28/X5Znv6eS2cNU1rM.png)
+
+ 
+
+**STA VS Event Simulation(互补)**
+
+ 
+
+![STA1.2.png](https://i.loli.net/2020/02/28/orh4VdtEMfavs9J.png)
+
+
+
+# How STA Work？
+
+> Three Steps in Static Timing Analysis
+>
+> 1.Design is broken down into sets of timing paths；
+>
+> 2.Delay of each path is calculated；
+>
+> 3.Path delays are checked to see if timing constraints have been met
+
+需要准备的文件和分析结果：
+
+![STA1.3.png](https://i.loli.net/2020/02/28/LS5eI1m7P4MjC9i.png)
+
+ 
+
+***Setup Time*-时钟边沿到来之前数据必须保持稳定的时间长度。**
+
+![STA1.4.png](https://i.loli.net/2020/02/28/DjZ5OLVgKyCuh8I.png)
+
+***Hold Time*-时钟边沿到来之后，输入引脚的输入数据依然要保持稳定的时间长度。**
+
+![STA1.5.png](https://i.loli.net/2020/02/28/CvwhO3KfENjklse.png)
+
+ 
+
+***Time Slack***
+
+Slack is the difference between the required time and the time that a signal arrives.
+
+- Positive slack or zero means meet constraints
+- Negative slack means violate constraint
+
+
+
+![STA1.6.png](https://i.loli.net/2020/02/28/LIZp64VMyHBn3hT.png)
+
+ 
+
+***Speed VS. slack***
+
+- 整个同步电路系统的最大工作频率（minimum clock period）由最差逻辑路径所决定
+- Slack 与时钟频率是息息相关的，例如clock period = 10 ns
+
+ 
+
+![STA1.7.png](https://i.loli.net/2020/02/28/fkuajURY9V8emA6.png)
+
+ 
+
+***Power VS. slack***
+
+如果 positive slack 较大，可以进步减小slack，使其保持为一个大于0的值。进一步缩小功耗和设计尺寸。
+
+ 
+
+静态时序分析相比于逻辑综合时的时序分析区别在于，静态时序分析可以在逻辑综合、布局布线、时钟树综合每个阶段都可以进行的，越靠后延时信息分析越准确。
+
+
+
+> There are 4 Types of PrimeTime paths:
+>
+> - Input port to data pin of flip-flop(Path 1)
+>
+> - Clock pin of flip-flop to data pin of flip-flop (Path 2)
+>
+> - Clock pin of flip-flop to output port (Path 3)
+>
+> - Input port to output port (Path 4)
+
+ 
+
+![STA1.8.png](https://i.loli.net/2020/02/28/7muHAlo2qieLJ4G.png)
+
+# 建立时间的检查（setup check）
+
+> A setup timing check verifies the timing relationship between the clock and the data pin of a flip-flop so that the setup requirement is met.
+
+换句话说，建立时间的检查可以确保在flip-flop时钟有效沿到来时 ，数据到达flip-flop输入引脚时刻是稳定的。
+
+ ![STA1.9.png](https://i.loli.net/2020/02/28/KeVuSCLax68nFMz.png)
+
+下面举一个简单的例子，如图所示，Launch & capture flip-flop使用的是同一个时钟CLKM。
+
+第一个时钟上升沿，CLKM 经Tlaunch延时到达launch flip-flop UFF0,通过该时钟沿在时刻Tlaunch + Tck2q + Tdp数据被建立。
+
+第二个时钟沿(setup is normally checked after one cycle)在时刻Tcycle + Tcapture到达capture flip-flop UFF1。
+
+以上两条路径之间的时间差别需要满足大于flip-flop的setup time，这样才能使得数据稳定的捕获到flip-flop中。
+
+
+
+![STA1.10.png](https://i.loli.net/2020/02/28/RAZpB7gIHcxQhvC.png)
+
+
+
+ 
+
+ ![STA1.11.png](https://i.loli.net/2020/02/28/eBmcAXLkiQT69Js.png)
+
+
+The setup check can be mathematically expressed as:
+
+![STA1.12.png](https://i.loli.net/2020/02/28/Ss4h9WpCB5o8vmJ.png)
+
+> - Tlaunch is the delay of the clock tree of the launch flip-flop UFF0;
+>
+> - Tdp is the delay of the combinational logic data path;
+>
+> - Tcycle is the clock period;
+>
+> - Tcapture is the delay of the clock tree for the capture flip-flop UFF1.
+
+ 
+
+​        **“<span style="color:red;"><u>  Since the setup check poses a max1 constraint, the setup check always uses the longest or the max timing path. </u> </span>For the same reason, this check is normally verified at the slow corner where the delays are the largest.”**
+
+ 
+
+[^1]: Static Timing Analysis for Nanometer Designs A Practical Approach
+[^2]: [芯动力—硬件加速设计方法](https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209)
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 

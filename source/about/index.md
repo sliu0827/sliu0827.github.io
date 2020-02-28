@@ -14,17 +14,13 @@ type: about
 
 也欢迎你关注我的微信公众号：ICerAShuang
 
-
-
 <img src="https://sliu0827.github.io/images/ICerAShuang.png"  align="left" alt="img" style="zoom:20%;" />	
 
 ​								
 
-​	
+​			
 
 ​	
-
-
 
 
 
