@@ -20,32 +20,33 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="01.EFR Scheme for Low Power SRAM； 02.Chip Architecture； 03.Results； 04.Source Line Voltage Control Technique">
+  <meta name="description" content="什么是静态时序分析？静态时序分析是一种不使用动态仿真，来检查电路是否满足时序约束的分析方法。  Much faster than timing-driven，gate-level simulation Proper circuit functionality is not checked Vector generation NOT required">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Balance in circuit design">
-<meta property="og:url" content="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/index.html">
+<meta property="og:title" content="静态时序分析(STA)基础">
+<meta property="og:url" content="http://www.sliu.info/2020/02/28/%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90-STA-%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="01.EFR Scheme for Low Power SRAM； 02.Chip Architecture； 03.Results； 04.Source Line Voltage Control Technique">
+<meta property="og:description" content="什么是静态时序分析？静态时序分析是一种不使用动态仿真，来检查电路是否满足时序约束的分析方法。  Much faster than timing-driven，gate-level simulation Proper circuit functionality is not checked Vector generation NOT required">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/Qg7JOSoHqxdKilb.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/j5faidzXmlgFVbc.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/8HLKbmp5lkYrAcW.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/NiBFqxsgVILSGDM.jpg">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/ALVXdw1abKkBSMJ.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/CxKvrTI1EJUaH5d.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/qeHMDoxYJZLtTGN.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/GkUdsolePiMtHc3.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/d4pgR9kxEJUic1j.jpg">
-<meta property="article:published_time" content="2020-02-28T07:35:57.000Z">
-<meta property="article:modified_time" content="2020-02-28T11:00:27.306Z">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/X5Znv6eS2cNU1rM.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/orh4VdtEMfavs9J.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/LS5eI1m7P4MjC9i.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/DjZ5OLVgKyCuh8I.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/CvwhO3KfENjklse.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/LIZp64VMyHBn3hT.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/fkuajURY9V8emA6.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/7muHAlo2qieLJ4G.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/KeVuSCLax68nFMz.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/RAZpB7gIHcxQhvC.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/eBmcAXLkiQT69Js.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/28/Ss4h9WpCB5o8vmJ.png">
+<meta property="article:published_time" content="2020-02-28T10:59:02.000Z">
+<meta property="article:modified_time" content="2020-02-28T14:28:27.803Z">
 <meta property="article:author" content="Shuang liu">
-<meta property="article:tag" content="Memory">
-<meta property="article:tag" content="SRAM">
+<meta property="article:tag" content="STA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png">
+<meta name="twitter:image" content="https://i.loli.net/2020/02/28/X5Znv6eS2cNU1rM.png">
 
-<link rel="canonical" href="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/">
+<link rel="canonical" href="http://www.sliu.info/2020/02/28/%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90-STA-%E5%9F%BA%E7%A1%80/">
 
 
 <script id="page-configurations">
@@ -57,7 +58,7 @@
   };
 </script>
 
-  <title>Balance in circuit design | Shuang'Blog</title>
+  <title>静态时序分析(STA)基础 | Shuang'Blog</title>
   
 
 
@@ -204,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/">
+    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020/02/28/%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90-STA-%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -217,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Balance in circuit design
+          静态时序分析(STA)基础
         </h1>
 
         <div class="post-meta">
@@ -228,16 +229,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-02-28 15:35:57 / 修改时间：19:00:27" itemprop="dateCreated datePublished" datetime="2020-02-28T15:35:57+08:00">2020-02-28</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B9%A6%E7%B1%8D%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">书籍文档</span></a>
-                </span>
+              <time title="创建时间：2020-02-28 18:59:02 / 修改时间：22:28:27" itemprop="dateCreated datePublished" datetime="2020-02-28T18:59:02+08:00">2020-02-28</time>
             </span>
 
           
@@ -245,13 +237,13 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 2k</span>
+		  </span>本文字数: 721</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
 		  <span class="post-meta-item-icon">
 			<i class="fa fa-clock-o"></i>
-		  </span>阅读时长 &asymp; 7 分钟</span>
+		  </span>阅读时长 &asymp; 3 分钟</span>
 
         </div>
       </header>
@@ -262,58 +254,87 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><em>01.EFR Scheme for Low Power SRAM；</em></p>
-<p><em>02.Chip Architecture；</em></p>
-<p><em>03.Results；</em></p>
-<p><em>04.Source Line Voltage Control Technique</em></p>
+        <h1 id="什么是静态时序分析？"><a href="#什么是静态时序分析？" class="headerlink" title="什么是静态时序分析？"></a>什么是静态时序分析？</h1><p>静态时序分析是一种不使用动态仿真，来检查电路是否满足时序约束的分析方法。</p>
+<ul>
+<li>Much faster than timing-driven，gate-level simulation</li>
+<li>Proper circuit functionality is not checked</li>
+<li>Vector generation NOT required</li>
+</ul>
 <a id="more"></a>
 
-<p>本文主要介绍一种新的设计架构来获得更低的静态功耗，电源电压控制技术（source line voltage control techniques）。传统设计中，power line的电压为某一常数值来保证SRAM稳定工作。在此，新方法中通过控制power line电压来改善漏电状况。</p>
-<p>首先，描述了在手机低电压SRAM cell中使用的<strong>electric field relaxation（EFR）</strong>电路。<strong>采用更高的阈值电压，有助于减小SRAM cell的静态功耗</strong>。</p>
-<p>其次，描述了在移动蜂窝电话应用处理器中集成的SRAM<strong>减小漏电流的设计技术</strong>。<strong>采用较低的阈值电压，有助于获得SRAM cell更低的获取时间（low access time）</strong>。</p>
-<h1 id="EFR-Scheme-for-Low-Power-SRAM"><a href="#EFR-Scheme-for-Low-Power-SRAM" class="headerlink" title="EFR Scheme for Low Power SRAM"></a><em>EFR Scheme for Low Power SRAM</em></h1><p>EFR电路如图1所示，它能从电路级别消除泄漏电流。<strong>在保持阶段（retention mode），对于bit lines（BT and BB）用1.0V的供电替换原先1.5V的供电，同时VSSM从0提升到0.5V</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png" alt="memory4.1.png"></p>
-<p>Fig. 1 Electric field relaxation scheme</p>
-<p><strong>黑色的实线箭头表示bit lines（BT and BB）从1.5V替换为1.0V的差异</strong>。这种relaxation能减小gate leakage和GIDL currents大约90%。</p>
-<p><strong>灰色的实线箭头表示负的0.5v VGS应用到transfer nMOS晶体管</strong>。负偏压能够将subthreshold leakagecurrent降到接近0。</p>
-<p><strong>圆点的箭头表示负的0.5V back-bodybias电压VBB应用到driver nMOS晶体管</strong>。这个反偏压能减小subthreshold leakage current大约90%。</p>
-<p>以上是MOS管的source电压和衬底之间电压由0变为0.5V的区别，但是，the band-to-band tunneling leakage仍然没有改善。</p>
-<p>图2给出了在25℃（Fig.2a）和90℃（Fig.2b）温度环境下，对传统设计方式和EFR设计方式的SRAM cells在最坏的工艺环境下（the worst-case process）静态泄漏电流的测试数据。每种器件类型合计了subthreshold和GIDL currents。</p>
-<p><img src="https://i.loli.net/2020/02/28/Qg7JOSoHqxdKilb.png" alt="memory4.2.png">Fig. 2 Measured SRAM cell leakagecurrent; (a) 25ıC/worst case (b) 90ıC/worst case</p>
-<p>在两个例子中，pMOS的阈值电压为1.0V，在25℃和90℃中两者的subthreshold leakage均比GIDL currents小得多。nMOS的阈值电压为0.7V，subthreshold leakage current相对于GIDLcurrent在25℃更小，但在90℃更大。cell的静态泄漏功耗在EFR设计中25℃时为16.6fA，90℃时为101.7fA，分别相比于传统设计的cell小82.5%和91.8%。</p>
-<h1 id="Chip-Architecture"><a href="#Chip-Architecture" class="headerlink" title="Chip Architecture"></a><em>Chip Architecture</em></h1><p><img src="https://i.loli.net/2020/02/28/j5faidzXmlgFVbc.png" alt="memory4.3.png">Fig.3 Circuit diagram of one mat</p>
-<p>图3展示了SRAM芯片某一簇（mat）的电路图，整个SRAM chip 有32 mats。每个mat由2048 word lines构成的256-data-bit和20-parity-bit columns组成，且每个mat被划分为4个bank。</p>
-<p>读操作的仿真时序图在Fig4中展示。该SRAM是异步的，如果地址信号不发生改变SRAM将保持retention mode，<strong>如果地址信号改变，SRAM由retention mode转换为active mode，产生一个ATD 脉冲，激活reset 操作</strong>。</p>
-<p><strong>在4.3ns的reset期间，选中的bank中memory cell的VSS line（VSSM）从0.5V下拉到0V，同时bit-line pairs（BT,and BB）从1.0V预充为1.5V</strong>。</p>
-<p>传统异步SRAM中通常是在reset time时，bit-line pair由0v预充为1.5V，在我们的EFR电路设计中，我们可以容易的在reset time期间为bit-line预充和VSSM放电。另外，由于EFR电路和asynchronous SRAM上述类似，access time不会增加。</p>
-<p><img src="https://i.loli.net/2020/02/28/8HLKbmp5lkYrAcW.png" alt="memory4.4.png"></p>
-<p>Fig. 4 Simulated waveforms for readoperation</p>
-<p><strong>随后word line（wl）激活。随着sense amplifiers的激活，选中的128 bits of data 和10 parity bits出现在local bus（LBUS）</strong>。为了减少对power supplies噪声的产生，VSSM被控制在bank level而不是在mat level。这种控制方法可以保持VSS的噪声低于32mV，这个结果在仿真中通过power supply nets可以观察得到。VSSM line由第三层金属加强来以控制VSSM从0.5到0V。在完成读操作的500us内，VSSM line非常慢的恢复到0.5V。在读操作完成的100ms内由漏电流作用，bit-line pairs容易的恢复回1.0V。因此，复位操作很难影响到动态功耗。</p>
-<h1 id="Results"><a href="#Results" class="headerlink" title="Results"></a><em>Results</em></h1><p><img src="https://i.loli.net/2020/02/28/NiBFqxsgVILSGDM.jpg" alt="memory4.5.png"></p>
-<p>Fig. 5 Photograph and features of thechip</p>
-<h1 id="Source-Line-Voltage-Control-Technique"><a href="#Source-Line-Voltage-Control-Technique" class="headerlink" title="Source Line Voltage Control Technique"></a><em>Source Line Voltage Control Technique</em></h1><p>本节描述聚焦于移动电话应用处理器的减小漏电流技术。通常，集成在应用处理器中的SRAM会使用较低的阈值电压。因此，主要的泄漏电流是subthreshold leakage current。为了减小SRAM cells在未选通状态下的泄漏电流，便提出了source line voltage control 技术，来控制powerline电压，并保持最小限度地牺牲操作稳定性。</p>
-<p><strong>SRAM的Power supply voltage控制为VDD和VSS的中间电位，中间电位电压同时减小泄露电流以及数据保持电流</strong>。中间电压的产生由一个简单的电路实现，因为如果采用复杂电路，会有额外的功耗和面积代价。<strong>这一节介绍一个简单的电压控制电路，包括电压切换选择，电阻和二极管，此电路可以降低额外的功耗和面积代价</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/28/ALVXdw1abKkBSMJ.png" alt="memory4.6.png">Fig. 6 Leakage and stability vs. localpower line voltage</p>
-<p>SRAM模块必须满足其性能目标，设计能实现足够稳定的保存数据。控制VSSM的电压来减小memory cell的leakage时，更高的VSSM能减小SRAM cell leakage到一个更小的级别。另一方面，也能破坏SRAM的数据保持稳定性。这样的关系在图6中描述。为了满足low leakage 和high stability，VSSM必须被控制到能满足leakage目标的最低电压。图7展示了VSSM控制电路，<strong>PLVC1，由3个NMOSFETS组成。一个NMOSFET作为在VSSM和VSS之间的电压切换（MS1），一个作为二极管（MD1），另一个作为电阻（MR1）</strong>。MR1有一个长的栅极且保持常开。</p>
-<p><img src="https://i.loli.net/2020/02/28/CxKvrTI1EJUaH5d.png" alt="memory4.7.png"></p>
-<p>Fig. 7 VSSM controller in embedded SRAM</p>
-<p>由130nm制造工艺生产的memory，其cell的主要leakage current 是subthreshold current，很大程度受阈值电压变化的影响。例如，Vth减小100mV，subthreshold leakage增加超过十倍，而MOSFET的驱动电流仅增加10%。</p>
-<p><strong>当制造的MOSFET 阈值电压Vth波动到一个高值，memory cell的leakage会大大减小。</strong></p>
-<p><strong>因为MR1为开启状态，电流通过MR1轻微的减小。如果MR1的电流比memory cell leakage电流大，VSSM电压变低。</strong></p>
-<p><strong>当阈值电压Vth波动到较低的值，VSSM为高，但是MD1能限制VSSM上升，保持为某一电压。这样保持足够低的电压来保持存储的数据。</strong></p>
-<p>图8展示了MOSFET制造的阈值电压Vth和VSSM电压的对比。横轴展示了阈值电压Vth设计的理想值和生产制造的差异，受工艺变化而变化。当制造晶体管的阈值电压Vth低，leakage current高，VSSM 电压必须为高来减小leakage current。当制造晶体管为高，leakage current 为低，VSSM电压需要保持低来确保SRAM的retention 稳定性。</p>
-<p><img src="https://i.loli.net/2020/02/28/qeHMDoxYJZLtTGN.png" alt="memory4.8.png"></p>
-<p>Fig.8 VSSM voltage when Vth is changed</p>
-<p>虚线描绘了满足leakage 目标且最大化cell 稳定性的理想情况。如果MOSFET为worst-leakage 器件，MOSFET的阈值电压Vth低于设计值0.1V，VSSM需要高出0.3V来满足leakage目标。</p>
-<p><strong>如果voltage controller仅有power switch和diode组成，VSSM电压如图中（a）线所示</strong>，能满足leakage 目标，但是memory cell的稳定性降低。</p>
-<p><strong>如果voltage controller PLVC1由constant-voltage source 电路构成，VSSM电压如图中（b）线所示</strong>，能满足leakage 目标，且稳定性要好于线（a），但是memory cell的稳定性仍然低。</p>
-<p>因此，<strong>使用三种类型的MOSFETs，MS1，MD1和MR1，作为voltage controller，VSSM电压（图8中粗线）趋近于理想值</strong>。这些值能满足leakage目标，且保持了更高的稳定性。PLVC1能同时满足leakage目标且保持SRAM高的稳定性。</p>
-<p><img src="https://i.loli.net/2020/02/28/GkUdsolePiMtHc3.png" alt="memory4.9.png">Fig.9 Effect of leakage reduction in1-Mbit leakage-worst embedded SRAM</p>
-<p>在图9中，陈述了1-Mbit SRAM（图8） 的leakage current。使用leakage降低技术，leakage current能减少大约90%。在图10中给出了130nm SRAM 芯片模型的特征和照片信息。</p>
-<p><img src="https://i.loli.net/2020/02/28/d4pgR9kxEJUic1j.jpg" alt="memory4.10.png">Fig. 10 Photograph and features of theprototype chip</p>
-<blockquote>
-<p><em>Ref<strong>：</strong>Low Power and Reliable SRAM memory Cell and Array Design</em></p>
+<p><strong>STA Flow</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/X5Znv6eS2cNU1rM.png" alt="STA1.1.png"></p>
+<p><strong>STA VS Event Simulation(互补)</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/orh4VdtEMfavs9J.png" alt="STA1.2.png"></p>
+<h1 id="How-STA-Work？"><a href="#How-STA-Work？" class="headerlink" title="How STA Work？"></a>How STA Work？</h1><blockquote>
+<p>Three Steps in Static Timing Analysis</p>
+<p>1.Design is broken down into sets of timing paths；</p>
+<p>2.Delay of each path is calculated；</p>
+<p>3.Path delays are checked to see if timing constraints have been met</p>
 </blockquote>
+<p>需要准备的文件和分析结果：</p>
+<p><img src="https://i.loli.net/2020/02/28/LS5eI1m7P4MjC9i.png" alt="STA1.3.png"></p>
+<p><strong><em>Setup Time</em>-时钟边沿到来之前数据必须保持稳定的时间长度。</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/DjZ5OLVgKyCuh8I.png" alt="STA1.4.png"></p>
+<p><strong><em>Hold Time</em>-时钟边沿到来之后，输入引脚的输入数据依然要保持稳定的时间长度。</strong></p>
+<p><img src="https://i.loli.net/2020/02/28/CvwhO3KfENjklse.png" alt="STA1.5.png"></p>
+<p><strong><em>Time Slack</em></strong></p>
+<p>Slack is the difference between the required time and the time that a signal arrives.</p>
+<ul>
+<li>Positive slack or zero means meet constraints</li>
+<li>Negative slack means violate constraint</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/28/LIZp64VMyHBn3hT.png" alt="STA1.6.png"></p>
+<p><strong><em>Speed VS. slack</em></strong></p>
+<ul>
+<li>整个同步电路系统的最大工作频率（minimum clock period）由最差逻辑路径所决定</li>
+<li>Slack 与时钟频率是息息相关的，例如clock period = 10 ns</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/28/fkuajURY9V8emA6.png" alt="STA1.7.png"></p>
+<p><strong><em>Power VS. slack</em></strong></p>
+<p>如果 positive slack 较大，可以进步减小slack，使其保持为一个大于0的值。进一步缩小功耗和设计尺寸。</p>
+<p>静态时序分析相比于逻辑综合时的时序分析区别在于，静态时序分析可以在逻辑综合、布局布线、时钟树综合每个阶段都可以进行的，越靠后延时信息分析越准确。</p>
+<blockquote>
+<p>There are 4 Types of PrimeTime paths:</p>
+<ul>
+<li><p>Input port to data pin of flip-flop(Path 1)</p>
+</li>
+<li><p>Clock pin of flip-flop to data pin of flip-flop (Path 2)</p>
+</li>
+<li><p>Clock pin of flip-flop to output port (Path 3)</p>
+</li>
+<li><p>Input port to output port (Path 4)</p>
+</li>
+</ul>
+</blockquote>
+<p><img src="https://i.loli.net/2020/02/28/7muHAlo2qieLJ4G.png" alt="STA1.8.png"></p>
+<h1 id="建立时间的检查（setup-check）"><a href="#建立时间的检查（setup-check）" class="headerlink" title="建立时间的检查（setup check）"></a>建立时间的检查（setup check）</h1><blockquote>
+<p>A setup timing check verifies the timing relationship between the clock and the data pin of a flip-flop so that the setup requirement is met.</p>
+</blockquote>
+<p>换句话说，建立时间的检查可以确保在flip-flop时钟有效沿到来时 ，数据到达flip-flop输入引脚时刻是稳定的。</p>
+<p> <img src="https://i.loli.net/2020/02/28/KeVuSCLax68nFMz.png" alt="STA1.9.png"></p>
+<p>下面举一个简单的例子，如图所示，Launch &amp; capture flip-flop使用的是同一个时钟CLKM。</p>
+<p>第一个时钟上升沿，CLKM 经Tlaunch延时到达launch flip-flop UFF0,通过该时钟沿在时刻Tlaunch + Tck2q + Tdp数据被建立。</p>
+<p>第二个时钟沿(setup is normally checked after one cycle)在时刻Tcycle + Tcapture到达capture flip-flop UFF1。</p>
+<p>以上两条路径之间的时间差别需要满足大于flip-flop的setup time，这样才能使得数据稳定的捕获到flip-flop中。</p>
+<p><img src="https://i.loli.net/2020/02/28/RAZpB7gIHcxQhvC.png" alt="STA1.10.png"></p>
+<p> <img src="https://i.loli.net/2020/02/28/eBmcAXLkiQT69Js.png" alt="STA1.11.png"></p>
+<p>The setup check can be mathematically expressed as:</p>
+<p><img src="https://i.loli.net/2020/02/28/Ss4h9WpCB5o8vmJ.png" alt="STA1.12.png"></p>
+<blockquote>
+<ul>
+<li><p>Tlaunch is the delay of the clock tree of the launch flip-flop UFF0;</p>
+</li>
+<li><p>Tdp is the delay of the combinational logic data path;</p>
+</li>
+<li><p>Tcycle is the clock period;</p>
+</li>
+<li><p>Tcapture is the delay of the clock tree for the capture flip-flop UFF1.</p>
+</li>
+</ul>
+</blockquote>
+<p>​        <strong>“<span style="color:red;"><u>  Since the setup check poses a max1 constraint, the setup check always uses the longest or the max timing path. </u> </span>For the same reason, this check is normally verified at the slow corner where the delays are the largest.”</strong></p>
+<p>[^1]: Static Timing Analysis for Nanometer Designs A Practical Approach<br>[^2]: <a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
 
     </div>
 
@@ -349,7 +370,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/" title="Balance in circuit design">http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/</a>
+    <a href="http://www.sliu.info/2020/02/28/%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90-STA-%E5%9F%BA%E7%A1%80/" title="静态时序分析(STA)基础">http://www.sliu.info/2020/02/28/静态时序分析-STA-基础/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -371,8 +392,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/Memory/" rel="tag"><i class="fa fa-tag"></i> Memory</a>
-              <a href="/tags/SRAM/" rel="tag"><i class="fa fa-tag"></i> SRAM</a>
+              <a href="/tags/STA/" rel="tag"><i class="fa fa-tag"></i> STA</a>
           </div>
 
         
@@ -381,13 +401,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/02/28/2020-02-28-SRAM-leakage-current/" rel="prev" title="SRAM leakage current">
-      <i class="fa fa-chevron-left"></i> SRAM leakage current
+    <a href="/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/" rel="prev" title="RTL设计指导原则">
+      <i class="fa fa-chevron-left"></i> RTL设计指导原则
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/" rel="next" title="RTL设计指导原则">
-      RTL设计指导原则 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -452,7 +469,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EFR-Scheme-for-Low-Power-SRAM"><span class="nav-number">1.</span> <span class="nav-text">EFR Scheme for Low Power SRAM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Chip-Architecture"><span class="nav-number">2.</span> <span class="nav-text">Chip Architecture</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Results"><span class="nav-number">3.</span> <span class="nav-text">Results</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Source-Line-Voltage-Control-Technique"><span class="nav-number">4.</span> <span class="nav-text">Source Line Voltage Control Technique</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是静态时序分析？"><span class="nav-number">1.</span> <span class="nav-text">什么是静态时序分析？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#How-STA-Work？"><span class="nav-number">2.</span> <span class="nav-text">How STA Work？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#建立时间的检查（setup-check）"><span class="nav-number">3.</span> <span class="nav-text">建立时间的检查（setup check）</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
