@@ -13,7 +13,7 @@ timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://sliu.info
+url: http://www.sliu.info
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -102,6 +102,12 @@ deploy:
   repository: https://github.com/sliu0827/sliu0827.github.io
   branch: master
 
+
+baidusitemap:
+  path: baidusitemap.xml
+sitemap:
+  path: sitemap.xml
+  
 #symbols_count_time:
   # symbols: true
   # time: true
