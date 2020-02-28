@@ -20,32 +20,20 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="01.EFR Scheme for Low Power SRAM； 02.Chip Architecture； 03.Results； 04.Source Line Voltage Control Technique">
+  <meta name="description" content="GNU sed实例教程 sed (stream editor) is a non-interactive command-line text editor.  官方的定义是非交互地命令行文本编辑器。而我觉得描述成“行内文本插入、删除、替换的小工具“更容易理解。 说到”行内“，即以一行文本为单位进行处理。sed的工作模式如下图，读入一行文本到内部的buffer，执行处理文本命令，输出到屏幕。然后读入">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Balance in circuit design">
-<meta property="og:url" content="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/index.html">
+<meta property="og:title" content="sed实例">
+<meta property="og:url" content="http://www.sliu.info/title/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="01.EFR Scheme for Low Power SRAM； 02.Chip Architecture； 03.Results； 04.Source Line Voltage Control Technique">
+<meta property="og:description" content="GNU sed实例教程 sed (stream editor) is a non-interactive command-line text editor.  官方的定义是非交互地命令行文本编辑器。而我觉得描述成“行内文本插入、删除、替换的小工具“更容易理解。 说到”行内“，即以一行文本为单位进行处理。sed的工作模式如下图，读入一行文本到内部的buffer，执行处理文本命令，输出到屏幕。然后读入">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/Qg7JOSoHqxdKilb.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/j5faidzXmlgFVbc.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/8HLKbmp5lkYrAcW.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/NiBFqxsgVILSGDM.jpg">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/ALVXdw1abKkBSMJ.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/CxKvrTI1EJUaH5d.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/qeHMDoxYJZLtTGN.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/GkUdsolePiMtHc3.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/d4pgR9kxEJUic1j.jpg">
-<meta property="article:published_time" content="2020-02-28T07:35:57.000Z">
-<meta property="article:modified_time" content="2020-02-28T11:00:27.306Z">
+<meta property="article:published_time" content="2020-02-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-02-27T10:19:36.203Z">
 <meta property="article:author" content="Shuang liu">
-<meta property="article:tag" content="Memory">
-<meta property="article:tag" content="SRAM">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png">
 
-<link rel="canonical" href="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/">
+<link rel="canonical" href="http://www.sliu.info/title/">
 
 
 <script id="page-configurations">
@@ -57,7 +45,7 @@
   };
 </script>
 
-  <title>Balance in circuit design | Shuang'Blog</title>
+  <title>sed实例 | Shuang'Blog</title>
   
 
 
@@ -204,7 +192,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/">
+    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/title/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -217,7 +205,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Balance in circuit design
+          sed实例
         </h1>
 
         <div class="post-meta">
@@ -226,17 +214,23 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-02-28 15:35:57 / 修改时间：19:00:27" itemprop="dateCreated datePublished" datetime="2020-02-28T15:35:57+08:00">2020-02-28</time>
+              <time title="创建时间：2020-02-07 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-07T00:00:00+08:00">2020-02-07</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-27 18:19:36" itemprop="dateModified" datetime="2020-02-27T18:19:36+08:00">2020-02-27</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B9%A6%E7%B1%8D%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">书籍文档</span></a>
+                  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
                 </span>
             </span>
 
@@ -245,13 +239,13 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 2k</span>
+		  </span>本文字数: 1k</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
 		  <span class="post-meta-item-icon">
 			<i class="fa fa-clock-o"></i>
-		  </span>阅读时长 &asymp; 7 分钟</span>
+		  </span>阅读时长 &asymp; 4 分钟</span>
 
         </div>
       </header>
@@ -262,57 +256,106 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><em>01.EFR Scheme for Low Power SRAM；</em></p>
-<p><em>02.Chip Architecture；</em></p>
-<p><em>03.Results；</em></p>
-<p><em>04.Source Line Voltage Control Technique</em></p>
+        <h1 id="GNU-sed实例教程"><a href="#GNU-sed实例教程" class="headerlink" title="GNU sed实例教程"></a>GNU sed实例教程</h1><blockquote>
+<p>sed (stream editor) is a non-interactive command-line text editor.</p>
+</blockquote>
+<p>官方的定义是非交互地命令行文本编辑器。而我觉得描述成“行内文本插入、删除、替换的小工具“更容易理解。</p>
+<p>说到”行内“，即以一行文本为单位进行处理。sed的工作模式如下图，读入一行文本到内部的buffer，执行处理文本命令，输出到屏幕。然后读入下一行文本，进行下一轮处理。</p>
 <a id="more"></a>
 
-<p>本文主要介绍一种新的设计架构来获得更低的静态功耗，电源电压控制技术（source line voltage control techniques）。传统设计中，power line的电压为某一常数值来保证SRAM稳定工作。在此，新方法中通过控制power line电压来改善漏电状况。</p>
-<p>首先，描述了在手机低电压SRAM cell中使用的<strong>electric field relaxation（EFR）</strong>电路。<strong>采用更高的阈值电压，有助于减小SRAM cell的静态功耗</strong>。</p>
-<p>其次，描述了在移动蜂窝电话应用处理器中集成的SRAM<strong>减小漏电流的设计技术</strong>。<strong>采用较低的阈值电压，有助于获得SRAM cell更低的获取时间（low access time）</strong>。</p>
-<h1 id="EFR-Scheme-for-Low-Power-SRAM"><a href="#EFR-Scheme-for-Low-Power-SRAM" class="headerlink" title="EFR Scheme for Low Power SRAM"></a><em>EFR Scheme for Low Power SRAM</em></h1><p>EFR电路如图1所示，它能从电路级别消除泄漏电流。<strong>在保持阶段（retention mode），对于bit lines（BT and BB）用1.0V的供电替换原先1.5V的供电，同时VSSM从0提升到0.5V</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/28/mRG8OLKn5vijHZy.png" alt="memory4.1.png"></p>
-<p>Fig. 1 Electric field relaxation scheme</p>
-<p><strong>黑色的实线箭头表示bit lines（BT and BB）从1.5V替换为1.0V的差异</strong>。这种relaxation能减小gate leakage和GIDL currents大约90%。</p>
-<p><strong>灰色的实线箭头表示负的0.5v VGS应用到transfer nMOS晶体管</strong>。负偏压能够将subthreshold leakagecurrent降到接近0。</p>
-<p><strong>圆点的箭头表示负的0.5V back-bodybias电压VBB应用到driver nMOS晶体管</strong>。这个反偏压能减小subthreshold leakage current大约90%。</p>
-<p>以上是MOS管的source电压和衬底之间电压由0变为0.5V的区别，但是，the band-to-band tunneling leakage仍然没有改善。</p>
-<p>图2给出了在25℃（Fig.2a）和90℃（Fig.2b）温度环境下，对传统设计方式和EFR设计方式的SRAM cells在最坏的工艺环境下（the worst-case process）静态泄漏电流的测试数据。每种器件类型合计了subthreshold和GIDL currents。</p>
-<p><img src="https://i.loli.net/2020/02/28/Qg7JOSoHqxdKilb.png" alt="memory4.2.png">Fig. 2 Measured SRAM cell leakagecurrent; (a) 25ıC/worst case (b) 90ıC/worst case</p>
-<p>在两个例子中，pMOS的阈值电压为1.0V，在25℃和90℃中两者的subthreshold leakage均比GIDL currents小得多。nMOS的阈值电压为0.7V，subthreshold leakage current相对于GIDLcurrent在25℃更小，但在90℃更大。cell的静态泄漏功耗在EFR设计中25℃时为16.6fA，90℃时为101.7fA，分别相比于传统设计的cell小82.5%和91.8%。</p>
-<h1 id="Chip-Architecture"><a href="#Chip-Architecture" class="headerlink" title="Chip Architecture"></a><em>Chip Architecture</em></h1><p><img src="https://i.loli.net/2020/02/28/j5faidzXmlgFVbc.png" alt="memory4.3.png">Fig.3 Circuit diagram of one mat</p>
-<p>图3展示了SRAM芯片某一簇（mat）的电路图，整个SRAM chip 有32 mats。每个mat由2048 word lines构成的256-data-bit和20-parity-bit columns组成，且每个mat被划分为4个bank。</p>
-<p>读操作的仿真时序图在Fig4中展示。该SRAM是异步的，如果地址信号不发生改变SRAM将保持retention mode，<strong>如果地址信号改变，SRAM由retention mode转换为active mode，产生一个ATD 脉冲，激活reset 操作</strong>。</p>
-<p><strong>在4.3ns的reset期间，选中的bank中memory cell的VSS line（VSSM）从0.5V下拉到0V，同时bit-line pairs（BT,and BB）从1.0V预充为1.5V</strong>。</p>
-<p>传统异步SRAM中通常是在reset time时，bit-line pair由0v预充为1.5V，在我们的EFR电路设计中，我们可以容易的在reset time期间为bit-line预充和VSSM放电。另外，由于EFR电路和asynchronous SRAM上述类似，access time不会增加。</p>
-<p><img src="https://i.loli.net/2020/02/28/8HLKbmp5lkYrAcW.png" alt="memory4.4.png"></p>
-<p>Fig. 4 Simulated waveforms for readoperation</p>
-<p><strong>随后word line（wl）激活。随着sense amplifiers的激活，选中的128 bits of data 和10 parity bits出现在local bus（LBUS）</strong>。为了减少对power supplies噪声的产生，VSSM被控制在bank level而不是在mat level。这种控制方法可以保持VSS的噪声低于32mV，这个结果在仿真中通过power supply nets可以观察得到。VSSM line由第三层金属加强来以控制VSSM从0.5到0V。在完成读操作的500us内，VSSM line非常慢的恢复到0.5V。在读操作完成的100ms内由漏电流作用，bit-line pairs容易的恢复回1.0V。因此，复位操作很难影响到动态功耗。</p>
-<h1 id="Results"><a href="#Results" class="headerlink" title="Results"></a><em>Results</em></h1><p><img src="https://i.loli.net/2020/02/28/NiBFqxsgVILSGDM.jpg" alt="memory4.5.png"></p>
-<p>Fig. 5 Photograph and features of thechip</p>
-<h1 id="Source-Line-Voltage-Control-Technique"><a href="#Source-Line-Voltage-Control-Technique" class="headerlink" title="Source Line Voltage Control Technique"></a><em>Source Line Voltage Control Technique</em></h1><p>本节描述聚焦于移动电话应用处理器的减小漏电流技术。通常，集成在应用处理器中的SRAM会使用较低的阈值电压。因此，主要的泄漏电流是subthreshold leakage current。为了减小SRAM cells在未选通状态下的泄漏电流，便提出了source line voltage control 技术，来控制powerline电压，并保持最小限度地牺牲操作稳定性。</p>
-<p><strong>SRAM的Power supply voltage控制为VDD和VSS的中间电位，中间电位电压同时减小泄露电流以及数据保持电流</strong>。中间电压的产生由一个简单的电路实现，因为如果采用复杂电路，会有额外的功耗和面积代价。<strong>这一节介绍一个简单的电压控制电路，包括电压切换选择，电阻和二极管，此电路可以降低额外的功耗和面积代价</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/28/ALVXdw1abKkBSMJ.png" alt="memory4.6.png">Fig. 6 Leakage and stability vs. localpower line voltage</p>
-<p>SRAM模块必须满足其性能目标，设计能实现足够稳定的保存数据。控制VSSM的电压来减小memory cell的leakage时，更高的VSSM能减小SRAM cell leakage到一个更小的级别。另一方面，也能破坏SRAM的数据保持稳定性。这样的关系在图6中描述。为了满足low leakage 和high stability，VSSM必须被控制到能满足leakage目标的最低电压。图7展示了VSSM控制电路，<strong>PLVC1，由3个NMOSFETS组成。一个NMOSFET作为在VSSM和VSS之间的电压切换（MS1），一个作为二极管（MD1），另一个作为电阻（MR1）</strong>。MR1有一个长的栅极且保持常开。</p>
-<p><img src="https://i.loli.net/2020/02/28/CxKvrTI1EJUaH5d.png" alt="memory4.7.png"></p>
-<p>Fig. 7 VSSM controller in embedded SRAM</p>
-<p>由130nm制造工艺生产的memory，其cell的主要leakage current 是subthreshold current，很大程度受阈值电压变化的影响。例如，Vth减小100mV，subthreshold leakage增加超过十倍，而MOSFET的驱动电流仅增加10%。</p>
-<p><strong>当制造的MOSFET 阈值电压Vth波动到一个高值，memory cell的leakage会大大减小。</strong></p>
-<p><strong>因为MR1为开启状态，电流通过MR1轻微的减小。如果MR1的电流比memory cell leakage电流大，VSSM电压变低。</strong></p>
-<p><strong>当阈值电压Vth波动到较低的值，VSSM为高，但是MD1能限制VSSM上升，保持为某一电压。这样保持足够低的电压来保持存储的数据。</strong></p>
-<p>图8展示了MOSFET制造的阈值电压Vth和VSSM电压的对比。横轴展示了阈值电压Vth设计的理想值和生产制造的差异，受工艺变化而变化。当制造晶体管的阈值电压Vth低，leakage current高，VSSM 电压必须为高来减小leakage current。当制造晶体管为高，leakage current 为低，VSSM电压需要保持低来确保SRAM的retention 稳定性。</p>
-<p><img src="https://i.loli.net/2020/02/28/qeHMDoxYJZLtTGN.png" alt="memory4.8.png"></p>
-<p>Fig.8 VSSM voltage when Vth is changed</p>
-<p>虚线描绘了满足leakage 目标且最大化cell 稳定性的理想情况。如果MOSFET为worst-leakage 器件，MOSFET的阈值电压Vth低于设计值0.1V，VSSM需要高出0.3V来满足leakage目标。</p>
-<p><strong>如果voltage controller仅有power switch和diode组成，VSSM电压如图中（a）线所示</strong>，能满足leakage 目标，但是memory cell的稳定性降低。</p>
-<p><strong>如果voltage controller PLVC1由constant-voltage source 电路构成，VSSM电压如图中（b）线所示</strong>，能满足leakage 目标，且稳定性要好于线（a），但是memory cell的稳定性仍然低。</p>
-<p>因此，<strong>使用三种类型的MOSFETs，MS1，MD1和MR1，作为voltage controller，VSSM电压（图8中粗线）趋近于理想值</strong>。这些值能满足leakage目标，且保持了更高的稳定性。PLVC1能同时满足leakage目标且保持SRAM高的稳定性。</p>
-<p><img src="https://i.loli.net/2020/02/28/GkUdsolePiMtHc3.png" alt="memory4.9.png">Fig.9 Effect of leakage reduction in1-Mbit leakage-worst embedded SRAM</p>
-<p>在图9中，陈述了1-Mbit SRAM（图8） 的leakage current。使用leakage降低技术，leakage current能减少大约90%。在图10中给出了130nm SRAM 芯片模型的特征和照片信息。</p>
-<p><img src="https://i.loli.net/2020/02/28/d4pgR9kxEJUic1j.jpg" alt="memory4.10.png">Fig. 10 Photograph and features of theprototype chip</p>
+<h2 id="sed使用方法"><a href="#sed使用方法" class="headerlink" title="sed使用方法"></a>sed使用方法</h2><p>sed使用格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -option &#39;cmd&#39; file</span><br></pre></td></tr></table></figure>
+
+<p>其中，-option是sed的一些选项，’cmd’是处理文本的命令，如插入、删掉、替换等，file是待处理的文件。</p>
+<p>cmd一般用单引号括起来，格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#39;[line num]X[options]&#39;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>line num是指定待处理的单行或几行。如果不指定行号，即为所有行。</li>
+<li>X是执行的命令，如a（append）、d（delete）、i（insert）、s（search and replace）等。</li>
+<li>options是指某些命令后可以带额外的参数。</li>
+</ul>
+<h2 id="sed基本用法示例"><a href="#sed基本用法示例" class="headerlink" title="sed基本用法示例"></a>sed基本用法示例</h2><h6 id="示例一："><a href="#示例一：" class="headerlink" title="示例一："></a>示例一：</h6><p>第一行插入日期</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;1i &#x2F;&#x2F;2019-2-13&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<h6 id="示例二："><a href="#示例二：" class="headerlink" title="示例二："></a>示例二：</h6><p>删除`timescale 1ns/100ps行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;&#x2F;\x60timescale&#x2F;d&#39;</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>`用ASCII码0x60转义。</li>
+<li>/xxx/是用正则的方式来指定要处理哪些行，也可以理解成包含xxx的行。</li>
+</ol>
+<h6 id="示例三："><a href="#示例三：" class="headerlink" title="示例三："></a>示例三：</h6><p>endmodule后面加// xxx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;&#x2F;endmodule&#x2F;a &#x2F;&#x2F; xxx&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<h6 id="示例四："><a href="#示例四：" class="headerlink" title="示例四："></a>示例四：</h6><p>把output wire修改成output reg</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;&#x2F;output&#x2F;s&#x2F;wire&#x2F;reg&#x2F;&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<h6 id="示例五："><a href="#示例五：" class="headerlink" title="示例五："></a>示例五：</h6><p>看看analog verilog model文件中有哪些module</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -n &#39;&#x2F;^module&#x2F;p&#39; ana_v.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>-n是取消默认的打印，即仅打印匹配的行。</li>
+<li>p是打印命令。</li>
+</ol>
+<h6 id="示例六："><a href="#示例六：" class="headerlink" title="示例六："></a>示例六：</h6><p>把逗号分隔的端口或者变量分成多行书写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;s&#x2F;,&#x2F;,\n&#x2F;g&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>\n是回车符，用来换行</li>
+<li>g是指行内替换多次，如果不加g则替换一次。</li>
+</ol>
+<h6 id="示例七："><a href="#示例七：" class="headerlink" title="示例七："></a>示例七：</h6><p>统计rtl的行数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -n &#39;$&#x3D;&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<h6 id="示例八："><a href="#示例八：" class="headerlink" title="示例八："></a>示例八：</h6><p>把//aa的下一行中的assign加上延时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;&#x2F;\&#x2F;\&#x2F;aa&#x2F;&#123;n;s&#x2F;assign&#x2F;assign #1&#x2F;&#125;&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>n是跳转到下一行，再执行后面的命令。</li>
+</ol>
+<h2 id="sed高级用法示例"><a href="#sed高级用法示例" class="headerlink" title="sed高级用法示例"></a>sed高级用法示例</h2><p>sed内部有两个存储空间，模式空间（pattern space）和保持空间（hold space）。模式空间就是上面提到的“行buffer”，而保持空间可以理解为另一个buffer，可以暂存任何临时数据。你可以想像成CPU的两个寄存器，通过类似汇编的指令来操作。</p>
+<ul>
+<li>g 将hold space中的内容拷贝到pattern space中</li>
+<li>G 将hold space中的内容追加到pattern space中</li>
+<li>h 将pattern space中的内容拷贝到hold space中</li>
+<li>H 将pattern space中的内容追加到hold space中</li>
+<li>d 删除multiline pattern中的所有行，并读入下一新行到pattern中</li>
+<li>D 删除multiline pattern中的第一行</li>
+<li>x 交换保持空间和模式空间的内容</li>
+</ul>
+<h6 id="示例九："><a href="#示例九：" class="headerlink" title="示例九："></a>示例九：</h6><p>删除rtl中的多行注释/* … */</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat -n script</span><br><span class="line"></span><br><span class="line">     1	&#x2F;\&#x2F;\*&#x2F;!&#123;p;d&#125;</span><br><span class="line">     2	:a</span><br><span class="line">     3	&#x2F;\*\&#x2F;&#x2F;!&#123;N;ba&#125;</span><br><span class="line">     4	s&#x2F;\&#x2F;\*.*\*\&#x2F;&#x2F;&#x2F;</span><br><span class="line">     5	p</span><br><span class="line"></span><br><span class="line">sed -nf script rtl.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>第1行，当没有遇到/*的行时，先输出，然后d忽略掉下方的其它sed命令，退出本次处理。只有遇到/*才开执行后续的命令。</li>
+<li>第2行，:a设置标签</li>
+<li>第3行，如果没有遇到*/，就把内容追加到pattern space</li>
+<li>第4行，遇到*/后，执行查找替换，把/* … */删除</li>
+<li>第5行，输出删除注释后的rtl</li>
+<li>由于sed正则没有非贪婪模式，不然就可以直接全部读到pattern space再用正则。</li>
+<li>-f选项是指sed命令写在脚本里，好处是不需要考虑shell的转义，写多个命令时比较方便。</li>
+</ol>
+<h6 id="示例十："><a href="#示例十：" class="headerlink" title="示例十："></a>示例十：</h6><p>交换rtl中的相邻两行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -n &#39;&#123;h;n;G;p&#125;&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>h把第一行存入hold space</li>
+<li>n读入第二行到pattern space（覆盖掉第一行）</li>
+<li>G把hold space中的内容追加到pattern space</li>
+<li>p输出</li>
+</ol>
 <blockquote>
-<p><em>Ref<strong>：</strong>Low Power and Reliable SRAM memory Cell and Array Design</em></p>
+<p>《GNU sed, a stream editor 》  version 4.5, 30 March 2018  by Ken Pizzini, Paolo Bonzini  （P85）</p>
+</blockquote>
+<blockquote>
+<p>本文转载自:<a href="http://exasic.com" target="_blank" rel="noopener" title="ExASIC">ExASIC</a></p>
 </blockquote>
 
     </div>
@@ -349,7 +392,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/" title="Balance in circuit design">http://www.sliu.info/2020/02/28/2020-02-28-Balance-in-circuit-design/</a>
+    <a href="http://www.sliu.info/title/" title="sed实例">http://www.sliu.info/title/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -371,8 +414,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/Memory/" rel="tag"><i class="fa fa-tag"></i> Memory</a>
-              <a href="/tags/SRAM/" rel="tag"><i class="fa fa-tag"></i> SRAM</a>
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
           </div>
 
         
@@ -380,13 +422,10 @@
 
         
     <div class="post-nav">
+      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2020/02/28/2020-02-28-SRAM-leakage-current/" rel="prev" title="SRAM leakage current">
-      <i class="fa fa-chevron-left"></i> SRAM leakage current
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/02/28/RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/" rel="next" title="RTL设计指导原则">
-      RTL设计指导原则 <i class="fa fa-chevron-right"></i>
+    <a href="/title/" rel="next" title="CMOS反相器介绍">
+      CMOS反相器介绍 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -452,7 +491,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EFR-Scheme-for-Low-Power-SRAM"><span class="nav-number">1.</span> <span class="nav-text">EFR Scheme for Low Power SRAM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Chip-Architecture"><span class="nav-number">2.</span> <span class="nav-text">Chip Architecture</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Results"><span class="nav-number">3.</span> <span class="nav-text">Results</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Source-Line-Voltage-Control-Technique"><span class="nav-number">4.</span> <span class="nav-text">Source Line Voltage Control Technique</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GNU-sed实例教程"><span class="nav-number">1.</span> <span class="nav-text">GNU sed实例教程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sed使用方法"><span class="nav-number">1.1.</span> <span class="nav-text">sed使用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed基本用法示例"><span class="nav-number">1.2.</span> <span class="nav-text">sed基本用法示例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#示例一："><span class="nav-number">1.2.0.0.0.1.</span> <span class="nav-text">示例一：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例二："><span class="nav-number">1.2.0.0.0.2.</span> <span class="nav-text">示例二：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例三："><span class="nav-number">1.2.0.0.0.3.</span> <span class="nav-text">示例三：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例四："><span class="nav-number">1.2.0.0.0.4.</span> <span class="nav-text">示例四：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例五："><span class="nav-number">1.2.0.0.0.5.</span> <span class="nav-text">示例五：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例六："><span class="nav-number">1.2.0.0.0.6.</span> <span class="nav-text">示例六：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例七："><span class="nav-number">1.2.0.0.0.7.</span> <span class="nav-text">示例七：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例八："><span class="nav-number">1.2.0.0.0.8.</span> <span class="nav-text">示例八：</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed高级用法示例"><span class="nav-number">1.3.</span> <span class="nav-text">sed高级用法示例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#示例九："><span class="nav-number">1.3.0.0.0.1.</span> <span class="nav-text">示例九：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例十："><span class="nav-number">1.3.0.0.0.2.</span> <span class="nav-text">示例十：</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
