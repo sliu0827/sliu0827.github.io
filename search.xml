@@ -42,7 +42,7 @@
 <p> hold timing check 和setup timing check 有如下差别：</p>
 <blockquote>
 <p>The hold check is from one active edge of the clock in the launch flip-flop to the same clock edge at the capture flip-flop.</p>
-<p>*<em>Thus, a hold check is independent of the clock period. *</em></p>
+<p>** Thus, a hold check is independent of the clock period. **</p>
 <p>The hold check is carried out on each active edge of the clock of the capture flip-flop.</p>
 </blockquote>
 <p> <img src="https://i.loli.net/2020/02/29/npwRDSoOLria3CF.png" alt="STA3.8.png"></p>
