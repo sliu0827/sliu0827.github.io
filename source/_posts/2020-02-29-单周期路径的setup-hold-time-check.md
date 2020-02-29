@@ -159,7 +159,7 @@ input port clocked by VIRTUAL_CLKM，可以认为是由一个在设计外面的i
 
  
 
-# 单周期路径的保持时间的检查
+# 单周期路径下hold time check
 
  
 
