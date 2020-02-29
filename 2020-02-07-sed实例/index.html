@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Times New Roman:300,300italic,400,400italic,700,700italic|STKaiti:300,300italic,400,400italic,700,700italic|light italic:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="GNU sed实例教程 sed (stream editor) is a non-interactive command-line text editor.  官方的定义是非交互地命令行文本编辑器。而我觉得描述成“行内文本插入、删除、替换的小工具“更容易理解。 说到”行内“，即以一行文本为单位进行处理。sed的工作模式如下图，读入一行文本到内部的buffer，执行处理文本命令，输出到屏幕。然后读入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sed实例">
+<meta property="og:url" content="http://www.sliu.info/2020-02-07-sed%E5%AE%9E%E4%BE%8B/index.html">
+<meta property="og:site_name" content="Shuang&#39;Blog">
+<meta property="og:description" content="GNU sed实例教程 sed (stream editor) is a non-interactive command-line text editor.  官方的定义是非交互地命令行文本编辑器。而我觉得描述成“行内文本插入、删除、替换的小工具“更容易理解。 说到”行内“，即以一行文本为单位进行处理。sed的工作模式如下图，读入一行文本到内部的buffer，执行处理文本命令，输出到屏幕。然后读入">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-02-28T16:07:14.028Z">
+<meta property="article:author" content="Shuang liu">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://www.sliu.info/2020-02-07-sed%E5%AE%9E%E4%BE%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>sed实例 | Shuang'Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shuang'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-互动">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-fw fa-comments"></i>互动</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020-02-07-sed%E5%AE%9E%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Shuang liu">
+      <meta itemprop="description" content="你好呀">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shuang'Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          sed实例
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-07 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-07T00:00:00+08:00">2020-02-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-29 00:07:14" itemprop="dateModified" datetime="2020-02-29T00:07:14+08:00">2020-02-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">工具使用</span></a>
+                </span>
+            </span>
+
+          
+		  
+		  <!-- 添加time count 2020.02.26 -->
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
+		  </span>本文字数: 1k</span>
+	
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount">
+		  <span class="post-meta-item-icon">
+			<i class="fa fa-clock-o"></i>
+		  </span>阅读时长 &asymp; 4 分钟</span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="GNU-sed实例教程"><a href="#GNU-sed实例教程" class="headerlink" title="GNU sed实例教程"></a>GNU sed实例教程</h1><blockquote>
+<p>sed (stream editor) is a non-interactive command-line text editor.</p>
+</blockquote>
+<p>官方的定义是非交互地命令行文本编辑器。而我觉得描述成“行内文本插入、删除、替换的小工具“更容易理解。</p>
+<p>说到”行内“，即以一行文本为单位进行处理。sed的工作模式如下图，读入一行文本到内部的buffer，执行处理文本命令，输出到屏幕。然后读入下一行文本，进行下一轮处理。</p>
+<a id="more"></a>
+
+<h2 id="sed使用方法"><a href="#sed使用方法" class="headerlink" title="sed使用方法"></a>sed使用方法</h2><p>sed使用格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -option &#39;cmd&#39; file</span><br></pre></td></tr></table></figure>
+
+<p>其中，-option是sed的一些选项，’cmd’是处理文本的命令，如插入、删掉、替换等，file是待处理的文件。</p>
+<p>cmd一般用单引号括起来，格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#39;[line num]X[options]&#39;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>line num是指定待处理的单行或几行。如果不指定行号，即为所有行。</li>
+<li>X是执行的命令，如a（append）、d（delete）、i（insert）、s（search and replace）等。</li>
+<li>options是指某些命令后可以带额外的参数。</li>
+</ul>
+<h2 id="sed基本用法示例"><a href="#sed基本用法示例" class="headerlink" title="sed基本用法示例"></a>sed基本用法示例</h2><h6 id="示例一："><a href="#示例一：" class="headerlink" title="示例一："></a>示例一：</h6><p>第一行插入日期</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;1i &#x2F;&#x2F;2019-2-13&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<h6 id="示例二："><a href="#示例二：" class="headerlink" title="示例二："></a>示例二：</h6><p>删除`timescale 1ns/100ps行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;&#x2F;\x60timescale&#x2F;d&#39;</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>`用ASCII码0x60转义。</li>
+<li>/xxx/是用正则的方式来指定要处理哪些行，也可以理解成包含xxx的行。</li>
+</ol>
+<h6 id="示例三："><a href="#示例三：" class="headerlink" title="示例三："></a>示例三：</h6><p>endmodule后面加// xxx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;&#x2F;endmodule&#x2F;a &#x2F;&#x2F; xxx&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<h6 id="示例四："><a href="#示例四：" class="headerlink" title="示例四："></a>示例四：</h6><p>把output wire修改成output reg</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;&#x2F;output&#x2F;s&#x2F;wire&#x2F;reg&#x2F;&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<h6 id="示例五："><a href="#示例五：" class="headerlink" title="示例五："></a>示例五：</h6><p>看看analog verilog model文件中有哪些module</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -n &#39;&#x2F;^module&#x2F;p&#39; ana_v.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>-n是取消默认的打印，即仅打印匹配的行。</li>
+<li>p是打印命令。</li>
+</ol>
+<h6 id="示例六："><a href="#示例六：" class="headerlink" title="示例六："></a>示例六：</h6><p>把逗号分隔的端口或者变量分成多行书写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;s&#x2F;,&#x2F;,\n&#x2F;g&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>\n是回车符，用来换行</li>
+<li>g是指行内替换多次，如果不加g则替换一次。</li>
+</ol>
+<h6 id="示例七："><a href="#示例七：" class="headerlink" title="示例七："></a>示例七：</h6><p>统计rtl的行数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -n &#39;$&#x3D;&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<h6 id="示例八："><a href="#示例八：" class="headerlink" title="示例八："></a>示例八：</h6><p>把//aa的下一行中的assign加上延时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed &#39;&#x2F;\&#x2F;\&#x2F;aa&#x2F;&#123;n;s&#x2F;assign&#x2F;assign #1&#x2F;&#125;&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>n是跳转到下一行，再执行后面的命令。</li>
+</ol>
+<h2 id="sed高级用法示例"><a href="#sed高级用法示例" class="headerlink" title="sed高级用法示例"></a>sed高级用法示例</h2><p>sed内部有两个存储空间，模式空间（pattern space）和保持空间（hold space）。模式空间就是上面提到的“行buffer”，而保持空间可以理解为另一个buffer，可以暂存任何临时数据。你可以想像成CPU的两个寄存器，通过类似汇编的指令来操作。</p>
+<ul>
+<li>g 将hold space中的内容拷贝到pattern space中</li>
+<li>G 将hold space中的内容追加到pattern space中</li>
+<li>h 将pattern space中的内容拷贝到hold space中</li>
+<li>H 将pattern space中的内容追加到hold space中</li>
+<li>d 删除multiline pattern中的所有行，并读入下一新行到pattern中</li>
+<li>D 删除multiline pattern中的第一行</li>
+<li>x 交换保持空间和模式空间的内容</li>
+</ul>
+<h6 id="示例九："><a href="#示例九：" class="headerlink" title="示例九："></a>示例九：</h6><p>删除rtl中的多行注释/* … */</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat -n script</span><br><span class="line"></span><br><span class="line">     1	&#x2F;\&#x2F;\*&#x2F;!&#123;p;d&#125;</span><br><span class="line">     2	:a</span><br><span class="line">     3	&#x2F;\*\&#x2F;&#x2F;!&#123;N;ba&#125;</span><br><span class="line">     4	s&#x2F;\&#x2F;\*.*\*\&#x2F;&#x2F;&#x2F;</span><br><span class="line">     5	p</span><br><span class="line"></span><br><span class="line">sed -nf script rtl.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>第1行，当没有遇到/*的行时，先输出，然后d忽略掉下方的其它sed命令，退出本次处理。只有遇到/*才开执行后续的命令。</li>
+<li>第2行，:a设置标签</li>
+<li>第3行，如果没有遇到*/，就把内容追加到pattern space</li>
+<li>第4行，遇到*/后，执行查找替换，把/* … */删除</li>
+<li>第5行，输出删除注释后的rtl</li>
+<li>由于sed正则没有非贪婪模式，不然就可以直接全部读到pattern space再用正则。</li>
+<li>-f选项是指sed命令写在脚本里，好处是不需要考虑shell的转义，写多个命令时比较方便。</li>
+</ol>
+<h6 id="示例十："><a href="#示例十：" class="headerlink" title="示例十："></a>示例十：</h6><p>交换rtl中的相邻两行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -n &#39;&#123;h;n;G;p&#125;&#39; rtl.v</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>h把第一行存入hold space</li>
+<li>n读入第二行到pattern space（覆盖掉第一行）</li>
+<li>G把hold space中的内容追加到pattern space</li>
+<li>p输出</li>
+</ol>
+<blockquote>
+<p>《GNU sed, a stream editor 》  version 4.5, 30 March 2018  by Ken Pizzini, Paolo Bonzini  （P85）</p>
+</blockquote>
+<blockquote>
+<p>本文转载自:<a href="http://exasic.com" target="_blank" rel="noopener" title="ExASIC">ExASIC</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thank you for your accept. mua！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/wechatpay.jpg" alt="Shuang liu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/alipay.jpg" alt="Shuang liu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Shuang liu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.sliu.info/2020-02-07-sed%E5%AE%9E%E4%BE%8B/" title="sed实例">http://www.sliu.info/2020-02-07-sed实例/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+	  
+	  <div>
+		
+		  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	  </div>
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/" rel="next" title="CMOS反相器介绍">
+      CMOS反相器介绍 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODU0NS8yNTAzOQ"></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GNU-sed实例教程"><span class="nav-number">1.</span> <span class="nav-text">GNU sed实例教程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sed使用方法"><span class="nav-number">1.1.</span> <span class="nav-text">sed使用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed基本用法示例"><span class="nav-number">1.2.</span> <span class="nav-text">sed基本用法示例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#示例一："><span class="nav-number">1.2.0.0.0.1.</span> <span class="nav-text">示例一：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例二："><span class="nav-number">1.2.0.0.0.2.</span> <span class="nav-text">示例二：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例三："><span class="nav-number">1.2.0.0.0.3.</span> <span class="nav-text">示例三：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例四："><span class="nav-number">1.2.0.0.0.4.</span> <span class="nav-text">示例四：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例五："><span class="nav-number">1.2.0.0.0.5.</span> <span class="nav-text">示例五：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例六："><span class="nav-number">1.2.0.0.0.6.</span> <span class="nav-text">示例六：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例七："><span class="nav-number">1.2.0.0.0.7.</span> <span class="nav-text">示例七：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例八："><span class="nav-number">1.2.0.0.0.8.</span> <span class="nav-text">示例八：</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed高级用法示例"><span class="nav-number">1.3.</span> <span class="nav-text">sed高级用法示例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#示例九："><span class="nav-number">1.3.0.0.0.1.</span> <span class="nav-text">示例九：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#示例十："><span class="nav-number">1.3.0.0.0.2.</span> <span class="nav-text">示例十：</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shuang liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Shuang liu</p>
+  <div class="site-description" itemprop="description">你好呀</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sliu0827" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sliu0827" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:striveleos@qq.com" title="E-Mail → mailto:striveleos@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://linux.51yip.com/" title="http:&#x2F;&#x2F;linux.51yip.com&#x2F;" rel="noopener" target="_blank">Linux命令手册</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shuang liu</span>
+
+	<!-- 添加word count,2020.02.26 -->
+  <div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共 15.6k 字</span>
+  </div>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script size="200" alpha="0.2" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

@@ -1,6 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+<<<<<<< HEAD
+=======
+    <title>单周期路径的setup/hold time check</title>
+    <url>/2020-02-29-%E5%8D%95%E5%91%A8%E6%9C%9F%E8%B7%AF%E5%BE%84%E7%9A%84setup-hold-time-check/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>主要分析单周期时序路径下setup/hold time check</p>
+<a id="more"></a>
+
+<h1 id="单周期路径下setup-time-check"><a href="#单周期路径下setup-time-check" class="headerlink" title="单周期路径下setup time check"></a>单周期路径下setup time check</h1><h2 id="Input-to-Flip-flop-Path"><a href="#Input-to-Flip-flop-Path" class="headerlink" title="Input to Flip-flop Path"></a>Input to Flip-flop Path</h2><p> 时序报告：</p>
+<p><img src="https://i.loli.net/2020/02/29/dFhK1PumQM674z5.png" alt="STA3.1.png"></p>
+<p>input port clocked by VIRTUAL_CLKM，可以认为是由一个在设计外面的imaginary（virtual）flip-flop驱动的input port。另外，从该clock pin到达input port INA的max delay 可以被定义为一个确定的数值，在报告中为input external delay。通过以下SDC commands可以实现上述操作：</p>
+<p><code>create_clock -name VIRTUAL_CLKM -period 10 -waveform {0 5}</code></p>
+<p><code>set_input_delay -clock VIRTUAL_CLKM -max 2.55 [get_ports INA]</code></p>
+<p>同时可以注意到DUA中经过input port INA，和其连接的第一个cell UINV1，可以通过specifying the driving cell of the input port INA计算delay：</p>
+<p><code>set_driving_cell -lib_cell BUFF -library lib013lwc [get_ports INA]</code></p>
+<h3 id="Setup-check-for-the-path-through-input-port"><a href="#Setup-check-for-the-path-through-input-port" class="headerlink" title="Setup check for the path through input port"></a>Setup check for the path through input port</h3><p><img src="https://i.loli.net/2020/02/29/uyT9sEJf4aIpPFv.png" alt="STA3.2.png"></p>
+<h2 id="Flip-flop-to-Output-Path"><a href="#Flip-flop-to-Output-Path" class="headerlink" title="Flip-flop to Output Path"></a>Flip-flop to Output Path</h2><p>类似于input port 约束，output port 也可以受virtual clock，internal clock of the design，input clock port，output clock port约束。下面是output pin ROUT constraint with respect to a virtual clock。如下：</p>
+<p><code>set_output_delay -clock VIRTUAL_CLKP -max 5.1 [get_ports ROUT]</code></p>
+<p><code>set_load 0.02 [get_ports ROUT]</code></p>
+<blockquote>
+<p>To determine the delay of the last cell connected to the output port correctly,one needs to specify the load on this port. </p>
+<p>The output load is specified above using the <em>set_load</em> command.</p>
+</blockquote>
+<h3 id="Setup-check-for-path-through-output-port"><a href="#Setup-check-for-path-through-output-port" class="headerlink" title="Setup check for path through output port"></a>Setup check for path through output port</h3><p><img src="https://i.loli.net/2020/02/29/WNVHDpCyTtdJ3u5.png" alt="STA3.3.png"></p>
+<p>时序报告：</p>
+<p><img src="https://i.loli.net/2020/02/29/ONaM34jEuR7lVfG.png" alt="STA3.4.png"></p>
+<blockquote>
+<p>Notice that the output delay specified appears as output external delay and behaves like a required setup time for the virtual flip-flop</p>
+</blockquote>
+<p>​        因为 output external delay应该对应于virtual flip-flop的launch path中，但此处路径已在ROUT终止，因此将其放于capture path中，表现为负值。</p>
+<p>总结：</p>
+<p><code>slack = （Tcapture + Tcycle - Tuncertainty - Tsetup - Toutput_dealy）- （Tlaunch + Tck2q + Tdp）</code></p>
+<h2 id="Input-to-Output-Path"><a href="#Input-to-Output-Path" class="headerlink" title="Input to Output Path"></a>Input to Output Path</h2><p>和先前input path、output path类似，使用Virtual clocks来约束input&amp;output ports。通过以下指令进行约束：</p>
+<p><code>set_input_delay -clock VIRTUAL_CLKM -max 3.6 [get_ports INB]</code></p>
+<p><code>set_output_delay -clock VIRTUAL_CLKM -max 5.8 [get_ports POUT]</code></p>
+<h3 id="Combinational-path-from-input-to-output-port"><a href="#Combinational-path-from-input-to-output-port" class="headerlink" title="Combinational path from input to output port"></a>Combinational path from input to output port</h3><p><img src="https://i.loli.net/2020/02/29/HSAJg9DBMGdphuV.png" alt="STA3.5.png"></p>
+<p>时序报告：</p>
+<p><img src="https://i.loli.net/2020/02/29/FJOdvztUEQjZYoC.png" alt="STA3.6.png"></p>
+<h1 id="单周期路径下hold-time-check"><a href="#单周期路径下hold-time-check" class="headerlink" title="单周期路径下hold time check"></a>单周期路径下hold time check</h1><p>Hold timing check确保使flip-flop能够捕获其原始的正确数据，保证前一级flip-flop输出值变化不会经过capture flip-flop，覆盖输出数据 。</p>
+<p>Hold time 要求flip-flop在时钟的有效沿之后的指定时间段内，被锁存的数据应保持稳定。</p>
+<p><img src="https://i.loli.net/2020/02/29/QYsN1Fc2GlKyOdi.png" alt="STA3.7.png"></p>
+<p> hold timing check 和setup timing check 有如下差别：</p>
+<blockquote>
+<p>The hold check is from one active edge of the clock in the launch flip-flop to the same clock edge at the capture flip-flop.</p>
+<p>*<em>Thus, a hold check is independent of the clock period. *</em></p>
+<p>The hold check is carried out on each active edge of the clock of the capture flip-flop.</p>
+</blockquote>
+<p> <img src="https://i.loli.net/2020/02/29/npwRDSoOLria3CF.png" alt="STA3.8.png"></p>
+<p> <img src="https://i.loli.net/2020/02/29/uQOK72X1WxaHctR.png" alt="STA3.9.png"></p>
+<p>The hold check can be mathematically expressed as:</p>
+<p><img src="https://i.loli.net/2020/02/29/iHVeXdlkhg1fFEW.png" alt="STA3.10.png"></p>
+<p><code>Slack = (Tlaunch + Tck2q + Tdp) - (Tcapture + Thold)</code></p>
+<p>Hold time check 对capture flip-flop上数据引脚的路径施加了下限或最小值限制。需要确定到捕获触发器D引脚的最快路径。 这意味着将始终使用最短路径来验证hold checks。 因此，通常在fast timing corner 中执行hold checks。</p>
+<h2 id="Hold-time-check-和setup-time-check-之间的关系"><a href="#Hold-time-check-和setup-time-check-之间的关系" class="headerlink" title="Hold time check 和setup time check 之间的关系"></a>Hold time check 和setup time check 之间的关系</h2><p>如下图所示，hold timing check 确保:</p>
+<ul>
+<li><em>Data from the subsequent launch edge must not be captured by the setup receiving edge.</em></li>
+<li><em>Data from the setup launch edge must not be captured by the preceding receiving edge.</em></li>
+</ul>
+<p><strong>Two hold checks for one setup check</strong></p>
+<p><img src="https://i.loli.net/2020/02/29/lRH74hbNPJdvOsn.png" alt="STA3.11.png"></p>
+<blockquote>
+<p>UFF0 ：launch flip-flop，UFF1：capture flip-flop</p>
+</blockquote>
+<blockquote>
+<p>Setup check：setup launch edge –&gt; setup receiving edge</p>
+</blockquote>
+<p><strong>The subsequent launch edge must not propagate data so fast that the setup receiving edge does not have time to capture its data reliably.</strong></p>
+<p><strong>The setup launch edge must not propagate data so fast that the preceding receiving edge does not get a chance to capture its data.</strong></p>
+<p>While setup violations can cause the operating frequency of the design to be lowered, the hold violations can kill a design, that is, make the design inoperable at any frequency. Thus it is very important to understand the hold timing checks and resolve any violations.</p>
+<p>[^Ref]:  Static Timing Analysis for Nanometer Designs A Practical Approach</p>
+]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>STA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>reg2reg setup time 分析</title>
+    <url>/2020-02-29-Path-reg2reg-setup-time-%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>简单地对<em>寄存器到寄存器路径</em>建立时间的报告进行了分析</p>
+<a id="more"></a>
+
+
+
+<h2 id="理想的时钟网络"><a href="#理想的时钟网络" class="headerlink" title="理想的时钟网络"></a>理想的时钟网络</h2><p><img src="https://i.loli.net/2020/02/29/ec9qmofu2OEhbXv.png" alt="STA2.1.png"></p>
+<p>可以先分析出下面几个问题：</p>
+<blockquote>
+<p>1.what are the start point and the end point of this path？</p>
+<p>2.Which Path Group is this path belong to？</p>
+<p>3.Path Type？</p>
+<p>4.Constrain？</p>
+</blockquote>
+<p> 分析可知，</p>
+<ul>
+<li><p>Start point: the launch flip-flop UFF0;End point: the capture flip-flop UFF1</p>
+</li>
+<li><p>Path group:归属于CLKM</p>
+</li>
+<li><p>Path Type ：max，意味着报告中所有路径区最大延时，对应setup time check</p>
+</li>
+<li><p>Constraints:</p>
+<p>create_clock -name CLKM -period 10 -waveform {0 5} [get_ports CLKM]<br>set_clock_uncertainty -setup 0.3 [all_clocks]<br>set_clock_transition -rise 0.2 [all_clocks]<br>set_clock_transition -fall 0.15 [all_clocks]</p>
+<blockquote>
+<p>设置 clock uncertainty可以加紧约束</p>
+</blockquote>
+</li>
+</ul>
+<p>总结报告，对于flip-flop path：</p>
+<ul>
+<li><p>launch path： 时钟由源点出发，经过Tlaunch = 0，经过flip-flop CLK2Q 延时Tck2q = 0.16，经过组合逻辑延时Tdp=0.04+0.05，最终到达时序路径终点UFF1/D，Data arrival time = 0.26；</p>
+</li>
+<li><p>Capture path：时钟源点加上一个时钟周期，经过理想的时钟网络，最终到达终点UFF1/CK。data required time 还需要减掉 clock uncertainty 和 library setup time，得到data required time = 9.66；</p>
+</li>
+<li><p>Slack = data required time - data arrival time，slack 大于0则满足约束，具体公式总结如下图所示。</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/29/UavV19MIKOT32cR.png" alt="STA2.2.png"></p>
+<h2 id="时钟网络有一个确定的延时值"><a href="#时钟网络有一个确定的延时值" class="headerlink" title="时钟网络有一个确定的延时值"></a>时钟网络有一个确定的延时值</h2><p>上面报告中clock network delay是一个理想的值（marked as ideal），这意味着clock trees被认为是理想的，即clock path上所有的buffer delay都为0。显然，当时钟树被建立之后，clock paths会先显示真实的delays（marked as propagated），如下图所示。</p>
+<p><img src="https://i.loli.net/2020/02/29/efwkadL7CAlOmNx.png" alt="STA2.3.png"></p>
+<p><strong>后一个时钟为0.12比前一个触发器的时钟要晚到一点，差值012-0.11=0.01称之为时钟的<em>偏斜</em>。</strong></p>
+<p><strong>另外时序报告中标有“r”和“f”，分别代表clock或数据信号的rising and falling edge。</strong>因为是建立时间检查，所以通常取上升或下降沿延迟中的最大延迟值。</p>
+<h3 id="两种类型的clock-latencies"><a href="#两种类型的clock-latencies" class="headerlink" title="两种类型的clock latencies"></a>两种类型的clock latencies</h3><p><em>clock source latency &amp; clock network latency</em></p>
+<ul>
+<li><p>Clock source latency：也称insertion delay，是由时钟源传播至当前分析时钟定义点所花费的时间。</p>
+<p>Source latency 不会影响内部设计的时序分析，因为它被同时加到launch clock 和capture clock。</p>
+<p>set_clock_latency -source -rise 0.7 [get_clocks CLKM]</p>
+<p>set_clock_latency -source -fall 0.65 [get_clocks CLKM] </p>
+</li>
+<li><p>Clock network latency：如果不使用 -source 命令，命令定义的则为clock network latency，是由DUA中时钟定义点到flip-flop clock pin的时间。</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/29/xhVU1BYlvqLASFe.png" alt="STA2.4.png"></p>
+]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>STA</tag>
+      </tags>
+  </entry>
+  <entry>
+>>>>>>> af9c4c092cc1a750d286f4342ae7b430d4a56de0
     <title>静态时序分析(STA)基础</title>
     <url>/2020-02-28-%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90-STA-%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="什么是静态时序分析？"><a href="#什么是静态时序分析？" class="headerlink" title="什么是静态时序分析？"></a>什么是静态时序分析？</h1><p>静态时序分析是一种不使用动态仿真，来检查电路是否满足时序约束的分析方法。</p>
