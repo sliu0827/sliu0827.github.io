@@ -20,26 +20,34 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="01.Leakage Currents in an SRAM of Conventional Design； 02.Gate-Tunnel Leakage and GIDL Currents">
+  <meta name="description" content="快慢时钟交互路径如何检查建立时间和保持时间">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SRAM leakage current">
-<meta property="og:url" content="http://www.sliu.info/2020-02-28-SRAM-leakage-current/index.html">
+<meta property="og:title" content="Timing across Clock Domains">
+<meta property="og:url" content="http://www.sliu.info/2020-03-01-Timing-across-Clock-Domains/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="01.Leakage Currents in an SRAM of Conventional Design； 02.Gate-Tunnel Leakage and GIDL Currents">
+<meta property="og:description" content="快慢时钟交互路径如何检查建立时间和保持时间">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/zYtK3kj5GyNTQ6u.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/qmrVH6kYvJ3T175.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/KRAyngmhox23SPE.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/28/7c3LNTH5Jml6xMI.png">
-<meta property="article:published_time" content="2020-02-28T07:31:49.000Z">
-<meta property="article:modified_time" content="2020-02-28T16:07:14.033Z">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/x7XgV3cKHMfas9Y.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/JFPeac2AMBQkV5p.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/xeDVXNYmaWhs7KP.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/TkYIrztawg2l3M5.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/CxLa2IE5ijuNB8R.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/lzbyeaXTuxOPhQm.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/6LAiWREQpydqMob.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/CPNjQ5eBEvWzRUL.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/ZDqOS7jEbTrPa5t.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/ofS3F1UvID4Ri9Y.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/5OLJNHDsfRwPBEV.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/rwCXEFpYBSyj8fW.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/01/Eh4GYrVkie2unDF.png">
+<meta property="article:published_time" content="2020-03-01T04:52:38.000Z">
+<meta property="article:modified_time" content="2020-03-01T06:42:52.519Z">
 <meta property="article:author" content="Shuang liu">
-<meta property="article:tag" content="Memory">
+<meta property="article:tag" content="STA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/01/x7XgV3cKHMfas9Y.png">
 
-<link rel="canonical" href="http://www.sliu.info/2020-02-28-SRAM-leakage-current/">
+<link rel="canonical" href="http://www.sliu.info/2020-03-01-Timing-across-Clock-Domains/">
 
 
 <script id="page-configurations">
@@ -51,7 +59,7 @@
   };
 </script>
 
-  <title>SRAM leakage current | Shuang'Blog</title>
+  <title>Timing across Clock Domains | Shuang'Blog</title>
   
 
 
@@ -198,7 +206,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020-02-28-SRAM-leakage-current/">
+    <link itemprop="mainEntityOfPage" href="http://www.sliu.info/2020-03-01-Timing-across-Clock-Domains/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -211,7 +219,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          SRAM leakage current
+          Timing across Clock Domains
         </h2>
 
         <div class="post-meta">
@@ -220,16 +228,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-02-28 15:31:49" itemprop="dateCreated datePublished" datetime="2020-02-28T15:31:49+08:00">2020-02-28</time>
+              <time title="创建时间：2020-03-01 12:52:38 / 修改时间：14:42:52" itemprop="dateCreated datePublished" datetime="2020-03-01T12:52:38+08:00">2020-03-01</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-29 00:07:14" itemprop="dateModified" datetime="2020-02-29T00:07:14+08:00">2020-02-29</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -245,7 +247,7 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 926</span>
+		  </span>本文字数: 768</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
@@ -262,39 +264,58 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><em>01.Leakage Currents in an SRAM of Conventional Design；</em></p>
-<p><em>02.Gate-Tunnel Leakage and GIDL Currents</em></p>
-<a id="more"></a>
+        <p>快慢时钟交互路径如何检查建立时间和保持时间</p>
+ <a id="more"></a>
 
-
-
-<p>DRAM有较低的待机功耗，但是需要刷新操作，而SRAM则能静态的保存数据，不需要类似于刷新这样的特殊操作。因此，对于手机或移动设备中集成的SRAM芯片，我们很容易对其进行控制。此外，由于SRAM的制造工艺和CMOS工艺一样，例如移动蜂窝电话等中的应用处理器也使用SRAM作为集成的存储器。</p>
-<p>随着MOS工艺的进步，近阈值泄漏电流（subthreshold leakage current）中会增加<strong>gate-oxide tunnel leakage</strong>和<strong>gate-induced drain leakage（GIDL）currents</strong>，成为主要的泄漏电流，增加的泄漏电流同时也增加了整个SRAM cell的静态漏电流。本小节将描述SRAM array的基本泄漏功耗。</p>
-<h1 id="leakage-Currents-in-Conventional-Design"><a href="#leakage-Currents-in-Conventional-Design" class="headerlink" title="leakage Currents in Conventional Design"></a><em>leakage Currents in Conventional Design</em></h1><p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="img"> </p>
-<p><img src="https://i.loli.net/2020/02/28/zYtK3kj5GyNTQ6u.png" alt="memory3.1.png"></p>
-<p>Fig.1 Leakage currents in a technologically advanced nMOS device</p>
-<p>关于工艺进步而造成泄漏电流增加的问题，图1展示了nMos晶体管在工艺上进步产生的4种主要泄漏电流。<strong>包括gate-oxide tunnel leakage，GIDL，junction tunnel leakage以及subthreshold leakage currents.</strong></p>
-<p><strong>Subthreshold leakage是当gate为off状态时，由drain到source的沟道泄漏电流，这种状态造成了在沟道区域的微弱反型层。</strong></p>
-<p><img src="https://i.loli.net/2020/02/28/qmrVH6kYvJ3T175.png" alt="memory3.2.png"></p>
-<p>Fig.2 Standby leakagecurrents in an advanced technology SRAM cell of conventional design</p>
-<p>图2中描述了随着工艺进步，使用传统设计方式的SRAM cell中的主要泄漏电流。在传统设计方式中，bit lines（BT，BB）和power line（VDDI）为1.5v，word line 和VSS 为0v。</p>
-<p>在整个cell中，<strong>2个gate-tunnel leakage currents，5个GIDL currents和3个subthreshold leakage currents</strong> 组成了主要的漏电流<strong>。</strong></p>
-<p><strong>使用高阈值电压的MOS器件能够直接有效的减少subthreshold leakage currents ，虽然存储单元的读电流也会减小。</strong></p>
-<p><strong>然而，通过简单的改变器件结构很难去减小tunnel leakage 和GIDL currents.</strong></p>
-<h1 id="Gate-Tunnel-Leakage-and-GIDL-Currents"><a href="#Gate-Tunnel-Leakage-and-GIDL-Currents" class="headerlink" title="Gate-Tunnel Leakage and GIDL Currents"></a><em>Gate-Tunnel Leakage and GIDL Currents</em></h1><p>这小节描述了gate-tunnel leakage 和GIDL currents。在图3中给出了<strong>gate-tunnel leakage current 随着栅压（gate voltage） 变化的曲线</strong>，同时<strong>栅氧化层厚度（Tox）作为一个参变量对比分析</strong>。</p>
-<p><strong>Tox 每增长2-°A，gate-tunnel leakagecurrent 会增长十倍</strong>。随着工艺的进步，这种电流成为了泄漏电流的主要组成。</p>
-<p>另一方面，<strong>栅电流随着栅压减小而减小，减小电压0.5v（从1.5到1.0v）能减小这种泄漏电流的95%</strong>。这是因为tunnel leakage current能随着栅氧化层的电场强度变化而简单的减小。</p>
-<p><img src="https://i.loli.net/2020/02/28/KRAyngmhox23SPE.png" alt="memory3.3.png"></p>
-<p>Fig.3 Gate-tunnel leakage current as a function of gate voltage with the thickness ofthe gate oxide (Tox) varied as a parameter</p>
-<p>图4描述了漏端电流由栅电压（VG）作用的电流曲线。<strong>实线</strong>是漏端电压（VD）为1.0V时的漏端电流曲线，<strong>虚线</strong>为1.5v时漏端电流曲线。当<strong>VG大于0v</strong>时，<strong>subthreshold leakage currents 占主导地位</strong>。当<strong>VG小于0V</strong>时<strong>，GIDL currents 占主导地位</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/28/7c3LNTH5Jml6xMI.png" alt="memory3.4.png"></p>
-<p>Fig.4 GIDL and subthreshold leakage currents</p>
-<p><strong>在使用中提升阈值电压</strong>，在VG=0v时subthreshold leakage currents 相比于GIDL current的强度是可以忽略的。</p>
-<p><strong>GIDL current（IGIDL）对于电场强度F非常敏感</strong>。GIDL current 对数曲线线性反比于栅压，栅压直接影响栅氧化层下的电场强度。GIDL current的大小由栅和漏的压差（VGD）决定，VGD由1.5减小到1.0v，电场强度减小，在器件中the GIDL current减小大约90%。</p>
-<p>如果<strong>阈值电压很低，</strong>主要的泄漏电流是subthreshold leakage current。通过应用negative VGS，或者negativeVBB back-body bias voltage可以减小subthreshold leakage。具体实现电路和SRAM芯片架构下一期再接着介绍^_^</p>
+<h1 id="Slow-to-Fast-Clock-Domains"><a href="#Slow-to-Fast-Clock-Domains" class="headerlink" title="Slow to Fast Clock Domains"></a>Slow to Fast Clock Domains</h1><p>按下列命令定义Clock:</p>
+<p><code>create_clock -name CLKM -period 20 -waveform {0 10} [get_ports CLKM]</code></p>
+<p><code>create_clock -name CLKP -period 5 -waveform {0 2.5} [get_ports CLKP]</code></p>
+<p><em>Path from a slow clock to a faster clock</em></p>
+<p><img src="https://i.loli.net/2020/03/01/x7XgV3cKHMfas9Y.png" alt="STA4.1.png"> </p>
+<p>当 launch flip-flop 和capture flip-flop时钟频率不同时，STA首先需要确定公共的周期</p>
+<p> <em>Setup and hold checks with slow to fast path</em></p>
+<p><img src="https://i.loli.net/2020/03/01/JFPeac2AMBQkV5p.png" alt="STA4.2.png"></p>
+<p>如上图所示，在快时钟的第一个时钟周期进行setup/hold检查，这也是最严苛的检查，有如下结果。</p>
+<p>Setup time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/xeDVXNYmaWhs7KP.png" alt="STA4.3.png"></p>
+<p>hold time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/TkYIrztawg2l3M5.png" alt="STA4.4.png"></p>
+<p>但是实际情况中，组合逻辑延时可能会很大，远大于一个快时钟周期。因此用快时钟的第一个时钟周期来检查时序，是不合理的。根据实际延时，我们可以通过特殊指令，指定在后面第几个时钟周期进行检查。</p>
+<p><code>set_multicycle_path 4 -setup -from [get_clocks CLKM] -to [get_clocks CLKP] -end</code></p>
 <blockquote>
-<p> Ref:Low power and reliable SRAM memory cell and array design[M]. Springer Science &amp; Business Media, 2011.</p>
+<p>The -end specifies that the multicycle of 4 refers to the end point or the capture clock.</p>
 </blockquote>
+<p><em>Multicycle of 4 between clock domains</em><br><img src="https://i.loli.net/2020/03/01/CxLa2IE5ijuNB8R.png" alt="STA4.5.png"> </p>
+<p>通过上述命令后，setup time check 在20ns时刻，hold time check 在15ns时刻。</p>
+<p>Setup time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/lzbyeaXTuxOPhQm.png" alt="STA4.6.png"></p>
+<p>hold time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/6LAiWREQpydqMob.png" alt="STA4.7.png"></p>
+<p>在hold time check 的报告中，可以发现slack为负值，是违例的。在大多数设计中，数据的保持时间都比较短，所以在第一个时钟边沿，即launch edge 对应的时间边沿处检查是更能符合实际的。为实现这一点，我们需要hold time check做如下约束。</p>
+<p><code>set_multicycle_path 3 -hold  -from [get_clocks CLKM] -to [get_clocks CLKP] -end</code></p>
+<p> <em>Hold time relaxed with multicycle hold specification</em></p>
+<p><img src="https://i.loli.net/2020/03/01/CPNjQ5eBEvWzRUL.png" alt="STA4.8.png"></p>
+<p>hold time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/ZDqOS7jEbTrPa5t.png" alt="STA4.9.png"></p>
+<p>总结一下，慢时钟到快时钟周期进行检查，可以设置在第N个快时钟周期来检查setup，同样也可以设置在第N个时钟周期对应的hold time check时间点的前N-1个时钟周期进行hold检查，这样更能贴合保持时间检查的实际情况。</p>
+<h1 id="Fast-to-slow-Clock-Domains"><a href="#Fast-to-slow-Clock-Domains" class="headerlink" title="Fast to slow Clock Domains"></a>Fast to slow Clock Domains</h1><p>通过下列命令，定义快时钟CLKP和慢时钟CLKM：</p>
+<p><code>create_clock -name CLKM -period 20 -waveform {0 10} [get_ports CLKM]</code></p>
+<p><code>create_clock -name CLKP -period 5 -waveform {0 2.5} [get_ports CLKP]</code></p>
+<p>Path from fast clock to slow clock domain如下图所示，存在4种setup timing checks possible，以最严格的setup4为例检查setup time。</p>
+<p><img src="https://i.loli.net/2020/03/01/ofS3F1UvID4Ri9Y.png" alt="STA4.10.png"></p>
+<p>Setup time check 时序报告：</p>
+<p> <img src="https://i.loli.net/2020/03/01/5OLJNHDsfRwPBEV.png" alt="STA4.11.png"></p>
+<p>最严格的保持时间检查是在快时钟的第一个时钟周期setup1 0ns时，确保capture edge 在0ns时不会捕获到launch flip-flop将要改变的数据。</p>
+<p><img src="https://i.loli.net/2020/03/01/rwCXEFpYBSyj8fW.png" alt="STA4.12.png"></p>
+<p>同slow to fast clock domains setup/hold time check一样，我们可以通过设置约束调整快时钟的默认周期的数据发射边沿，设置其在第几个时钟周期进行建立时间检查，让慢时钟进行建立时间检查。</p>
+<p><code>set_multicycle_path 2 -setup -from [get_clocks CLKP] -to [get_clocks CLKM] -start</code></p>
+<p><code>set_multicycle_path 1 -hold -from [get_clocks CLKP] -to [get_clocks CLKM] -start</code></p>
+<blockquote>
+<p>The -start option refers to the launch clock and is the default for a multicycle hold.</p>
+</blockquote>
+<p>As expected, the launch clock edge is at 10ns and the capture clock edge is at 20ns，The hold check is at 0ns where both the capture and launch clocks have rising edges.</p>
+<p><em>Setup multicycle of 2</em></p>
+<p><img src="https://i.loli.net/2020/03/01/Eh4GYrVkie2unDF.png" alt="STA4.13.png"></p>
 
     </div>
 
@@ -330,7 +351,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.sliu.info/2020-02-28-SRAM-leakage-current/" title="SRAM leakage current">http://www.sliu.info/2020-02-28-SRAM-leakage-current/</a>
+    <a href="http://www.sliu.info/2020-03-01-Timing-across-Clock-Domains/" title="Timing across Clock Domains">http://www.sliu.info/2020-03-01-Timing-across-Clock-Domains/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -352,7 +373,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/Memory/" rel="tag"><i class="fa fa-tag"></i> Memory</a>
+              <a href="/tags/STA/" rel="tag"><i class="fa fa-tag"></i> STA</a>
           </div>
 
         
@@ -361,13 +382,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020-02-22-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/" rel="prev" title="RTL编码中考虑面积">
-      <i class="fa fa-chevron-left"></i> RTL编码中考虑面积
+    <a href="/2020-02-29-%E5%8D%95%E5%91%A8%E6%9C%9F%E8%B7%AF%E5%BE%84%E7%9A%84setup-hold-time-check/" rel="prev" title="单周期路径的setup/hold time check">
+      <i class="fa fa-chevron-left"></i> 单周期路径的setup/hold time check
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020-02-28-Balance-in-circuit-design/" rel="next" title="Balance in circuit design">
-      Balance in circuit design <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -432,7 +450,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#leakage-Currents-in-Conventional-Design"><span class="nav-number">1.</span> <span class="nav-text">leakage Currents in Conventional Design</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gate-Tunnel-Leakage-and-GIDL-Currents"><span class="nav-number">2.</span> <span class="nav-text">Gate-Tunnel Leakage and GIDL Currents</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Slow-to-Fast-Clock-Domains"><span class="nav-number">1.</span> <span class="nav-text">Slow to Fast Clock Domains</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fast-to-slow-Clock-Domains"><span class="nav-number">2.</span> <span class="nav-text">Fast to slow Clock Domains</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
