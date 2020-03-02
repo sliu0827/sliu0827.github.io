@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Multiple Clocks</title>
+    <url>/Multiple-Clocks/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>多时钟交互路径如何检查建立时间和保持时间。</p>
+<a id="more"></a>
+
+<h2 id="Integer-Multiples"><a href="#Integer-Multiples" class="headerlink" title="Integer Multiples"></a>Integer Multiples</h2><p>设计中经常会定义出现成整数倍数关系的时钟。这样的例子中，我们在相关的时钟（related clocks）中找出公共的时钟周期来进行STA分析。</p>
+<blockquote>
+<p>two clocks are related if they have a data path between their domains)</p>
+</blockquote>
+<p>Here is an example that shows four related clocks:</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">create_clock -name CLKM -period <span class="number">20</span> -waveform &#123;<span class="number">0</span> <span class="number">10</span>&#125; [get_ports CLKM]</span><br><span class="line">create_clock -name CLKQ -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125;</span><br><span class="line">create_clock -name CLKP -period <span class="number">5</span> -waveform &#123;<span class="number">0</span> <span class="number">2.5</span>&#125; [get_ports CLKP]</span><br></pre></td></tr></table></figure>
+
+<p>当分析CLKP和CLKM时钟域时，公共的时钟基本周期为20ns，如下图所示。</p>
+<p><em>Integer multiple clocks</em></p>
+<p><img src="/../sliu0827.github.io/source/_posts/Multiple-Clocks/STA5.1.png" alt="STA5.1"></p>
+<blockquote>
+<p>Expanding clock ‘CLKP’ to base period of 20.00 (old period was<br>5.00, added 6 edges).<br>Expanding clock ‘CLKQ’ to base period of 20.00 (old period was<br>10.00, added 2 edges).</p>
+</blockquote>
+<p>简单分析可知，在 CLKP 15ns时刻出发至CLKM 20ns时刻捕获进行setup time check 最为严苛。而在CLKP&amp;CLKM 0ns时刻进行hold time check最为合理。时序报告这里不再贴出。</p>
+<h2 id="Non-Integer-Multiples"><a href="#Non-Integer-Multiples" class="headerlink" title="Non-Integer Multiples"></a>Non-Integer Multiples</h2>]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>STA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Timing across Clock Domains</title>
     <url>/2020-03-01-Timing-across-Clock-Domains/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>快慢时钟交互路径如何检查建立时间和保持时间</p>
