@@ -97,7 +97,7 @@ Hold time 要求flip-flop在时钟的有效沿之后的指定时间段内，被�
 
 > The hold check is from one active edge of the clock in the launch flip-flop to the same clock edge at the capture flip-flop.
 >
-> ** Thus, a hold check is independent of the clock period. **
+> Thus, a hold check is independent of the clock period. 
 >
 > The hold check is carried out on each active edge of the clock of the capture flip-flop.
 
