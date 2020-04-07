@@ -1,8 +1,416 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>亚稳态</title>
+    <url>/2020/%E4%BA%9A%E7%A8%B3%E6%80%81/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\child\assets\css\APlayer.min.css"><script src="\child\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>亚稳态的概念，常见的三种同步器，电平同步器、边沿检查同步器和脉冲同步器。</p>
+<a id="more"></a>
+
+<h2 id="同步电路和域异步电路"><a href="#同步电路和域异步电路" class="headerlink" title="同步电路和域异步电路"></a>同步电路和域异步电路</h2><p><strong>同步电路的定义</strong></p>
+<p>电路中的所有受时钟控制的单元（例如flip-flop，register），全部由一个统一的全局时钟控制</p>
+<p><img src="https://i.loli.net/2020/03/06/BcNd6LzaCu5XhEY.png" alt="亚稳态1.1.png"></p>
+<p><strong>同步电路设计的优点</strong></p>
+<ul>
+<li><p>在同步设计中，EDA工具可以保证电路系统的时序收敛，有效避免了电路设计中竞争冒险现象；</p>
+</li>
+<li><p>由于触发器只有在时钟边缘才改变取值，很大限度地减少了整个电路受毛刺和噪声影响的可能。 </p>
+</li>
+</ul>
+<p><strong>同步电路设计的缺点</strong></p>
+<ul>
+<li><p>时钟偏斜（clock skew）</p>
+</li>
+<li><p>时钟抖动（clock jitter）</p>
+</li>
+<li><p>时钟树综合，需要加入大量的延迟单元，使得电路的面积和功耗大大增加。</p>
+</li>
+</ul>
+<p><strong>全局异步电路的定义</strong></p>
+<p>电路中的数据传输可以在任何时候发生，电路中没有一个全局的或者局部的控制时钟。</p>
+<p><img src="https://i.loli.net/2020/03/06/xfFjSt4iXmLBH5a.png" alt="亚稳态1.2.png"></p>
+<p><strong>异步电路设计的优点</strong></p>
+<ul>
+<li>模块化特性突出</li>
+<li>对信号的延迟不敏感</li>
+<li>没有时钟偏斜问题</li>
+<li>有潜在的高性能特性</li>
+<li>好的电磁兼容性</li>
+<li>具有低功耗特性</li>
+</ul>
+<p><strong>异步电路设计的缺点</strong></p>
+<ul>
+<li>设计复杂</li>
+<li>缺少相应的EDA工具支持</li>
+<li>在大规模集成电路设计中应该避免采用异步电路设计</li>
+</ul>
+<p>同步时钟异步时钟的差别在于，同步时钟来源于统一锁相环PLL生成，这些时钟的相位和倍数都是可控的，如果来源于不同的PLL，即使两个时钟的频率相同也属于异步时钟。</p>
+<h2 id="亚稳态相关概念和原理"><a href="#亚稳态相关概念和原理" class="headerlink" title="亚稳态相关概念和原理"></a>亚稳态相关概念和原理</h2><ul>
+<li>亚稳态是指触发器无法在某个规定时间段内达到一个可确认的状态；</li>
+<li>当一个触发器进入亚稳态时，既无法预测该单元的输出电平，也无法预测何时输出才能稳定在某个正确的电平上；</li>
+<li>在此期间，触发器输出一些中间级电平，或者可能处于振荡状态，并且这种无用的输出电平可以沿信号通道上的各个触发器级联式传播下去</li>
+</ul>
+<p>亚稳态不能从根本上消除，但可以通过采取一定的措施使其对电路的影响降低。下面的公式用于表征亚稳态的影响：</p>
+<img src="https://i.loli.net/2020/03/06/ecyjG7C4lENb3Uv.png" alt="亚稳态1.3png.png" style="zoom: 50%;" />
+
+<p>故障间隔平均时间MTBF越大，亚稳态的影响越小</p>
+<blockquote>
+<p>tmet -寄存器从时钟上升沿触发后的时序余量时间</p>
+<p>fclk - 接收时钟域的时钟频率</p>
+<p>fdata - 数据的变化频率</p>
+<p>C1、C2 - 与器件有关的参数（固定值）</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/03/06/2Zskwl4OycgvqMD.png" alt="亚稳态1.4png.png"></p>
+<p>Tmet时间是指正常没有亚稳态情况下，寄存器输出信号从源寄存器到目的寄存器的建立时间余量。</p>
+<blockquote>
+<p>Tmet = 采样时钟周期时间  - 输出信号正常的Tcq时间 - 数据到达下一级寄存器的输入端口的其他延时时间T_data - 下一级寄存器T_su时间</p>
+</blockquote>
+<p>由于Tcq和Tsu都由器件本身的工艺和工作环境决定，如果在时钟频率fclk和数据变化率固定的情况下，要增大Tmet值，那么设计者要做的只能是<strong>减小T_data值</strong>。</p>
+<p><strong>最大程度的减小T_data，只能是不再两个寄存器之间添加任何逻辑。</strong></p>
+<h2 id="同步策略—双锁存器电平同步器"><a href="#同步策略—双锁存器电平同步器" class="headerlink" title="同步策略—双锁存器电平同步器"></a>同步策略—双锁存器电平同步器</h2><p>一个信号在过渡到另一个时钟域时，如果仅仅用一个触发器将其锁存，那么用一个触发器进行采样的结果可能是亚稳态。</p>
+<p>双锁存器法，即在一个信号进入另一个时钟域之前，将信号用两个锁存器连续锁存两次，最后得到的采样结果可以消除亚稳态问题。</p>
+<p><em>亚稳态现象</em></p>
+<p><img src="https://i.loli.net/2020/03/06/bWxNAZf7ywGIV5F.png" alt="亚稳态1.5.png"></p>
+<p><em>亚稳态信号的传播</em></p>
+<p><img src="https://i.loli.net/2020/03/06/7M4qCkdSUmW8LBR.png" alt="亚稳态1.6.png"></p>
+<p><em>亚稳态的解决及RTL实现</em></p>
+<p><img src="https://i.loli.net/2020/03/06/bKAWFl5EOhNT9Bk.png" alt="亚稳态1.7.png"></p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span>  synchronizer (   </span><br><span class="line">              bclk,          	<span class="comment">//目的时钟，与aclk异步的时钟</span></span><br><span class="line">              reset_b,        	<span class="comment">//全局异步复位信号</span></span><br><span class="line">              adat,         	<span class="comment">//异步输入信号，工作在aclk</span></span><br><span class="line">              bdat,         	<span class="comment">//同步器输出</span></span><br><span class="line">         );</span><br><span class="line"><span class="keyword">input</span>     bclk;</span><br><span class="line"><span class="keyword">input</span>     reset_b;</span><br><span class="line"><span class="keyword">input</span>     adapt;</span><br><span class="line"><span class="keyword">output</span>    bdat;</span><br><span class="line"><span class="keyword">wire</span>     bdat;</span><br><span class="line"><span class="keyword">reg</span>      bdat1;</span><br><span class="line"><span class="keyword">reg</span>      bdat2;</span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> bclk <span class="keyword">or</span> <span class="keyword">negedge</span> reset_b)</span><br><span class="line"><span class="keyword">if</span> (reset_b)</span><br><span class="line">    &#123;bdat2,bdat1&#125; &lt;= <span class="number">2</span> ' b0;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    &#123;bdat2,bdat1&#125; &lt;= &#123;bdat1,adat&#125;;</span><br><span class="line"><span class="keyword">assign</span> bdat = bdat2;</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+
+<p>优点是结构简单，易实现，但是增加了两级触发器延时。而且当快时钟域转到慢时钟域时，易造成慢时钟采样丢失（还未来得及采样，数据就变化了）。<strong>故常用于慢时钟转到快时钟域。</strong></p>
+<p>使用条件：（慢时钟域–&gt;快时钟域）</p>
+<ul>
+<li>{clk_slow的周期} &gt; {(clk-fast的周期) + (路径延时)}，确保信号可以被clk_fast采样到（假设clk_fast&amp;clk_slow起始时刻相同求得）；</li>
+<li>{data 数据变化间隔} &gt; {(clk_slow的周期) + 2*(clk_fast的周期) + (路径延时)}，确保所有的数据变化均能采集到。</li>
+</ul>
+<p>结论：</p>
+<ul>
+<li>两级触发器已经将MTBF变得足够大；</li>
+<li>三级或者更多级虽然能将亚稳态出现概率降得更低，但影响电路效率；</li>
+<li>增加寄存器进行同步的方法只是不断降低亚稳态出现的概率</li>
+</ul>
+<h2 id="亚稳态—单bit信号的跨时钟域传输"><a href="#亚稳态—单bit信号的跨时钟域传输" class="headerlink" title="亚稳态—单bit信号的跨时钟域传输"></a>亚稳态—单bit信号的跨时钟域传输</h2><h3 id="慢时钟域–-gt-快时钟域"><a href="#慢时钟域–-gt-快时钟域" class="headerlink" title="慢时钟域–&gt;快时钟域"></a>慢时钟域–&gt;快时钟域</h3><p>由慢时钟到快时钟域的传输，主要采用边沿检测同步器电路，可以检测输入信号的上升沿或下降沿。</p>
+<p><img src="https://i.loli.net/2020/03/06/Rpl7SFvCEr3ayjK.png" alt="亚稳态1.8.png"></p>
+<p>边沿检查电路实现的电路功能实际上是将慢时钟下一个周期的脉冲，搬移并缩小为快时钟下一个周期宽的脉冲。</p>
+<p><img src="https://i.loli.net/2020/03/06/pt4owY1VFjacNmA.png" alt="亚稳态1.9.png"></p>
+<p>适用条件：</p>
+<p>输入数据的宽度必须比一个接收时钟周期加上一个同步触发器的hold时间要长，最安全的就是两个同步周期宽度。<em>慢时钟域的脉冲足够保持到被快时钟的同步器拿到</em></p>
+<h3 id="快时钟域–-gt-慢时钟域"><a href="#快时钟域–-gt-慢时钟域" class="headerlink" title="快时钟域–&gt;慢时钟域"></a>快时钟域–&gt;慢时钟域</h3><p>通常采用脉冲同步器，基本功能是：从某个时钟域取出一个单时钟宽度脉冲，然后在新的时钟域中建立另一个单时钟宽度的脉冲。</p>
+<p><img src="https://i.loli.net/2020/03/06/XuUxinRSgDtKPyW.png" alt="亚稳态1.10.png"></p>
+<p>使用慢时钟直接去采集快时钟域下input信号采集不到，因此使用toggle 电路子啊快时钟域下对输入信号有效标定，获得toggle信号。随后，使用同步器同步toggle信号，在慢时钟域下最终获得两个有效的单周期脉冲output。</p>
+<p><img src="https://i.loli.net/2020/03/06/FuXNlkeiyL9YPAK.png" alt="亚稳态1.11.png"></p>
+<p>使用条件：</p>
+<ul>
+<li>输入脉冲之间的最小间隔必须等于两个同步器时钟周期；</li>
+<li>如果输入脉冲相互过近，则新时钟域中的输出脉冲也紧密相邻，结果是输出脉冲宽度比 一个时钟周期宽；</li>
+<li>当输入脉冲时钟周期大于两个同步器时钟周期时，这个问题更加严重；</li>
+<li>这种情况下，如果输入脉冲相邻太近，则同步器就不能检测到每个脉冲。</li>
+</ul>
+<h2 id="三种同步器对比"><a href="#三种同步器对比" class="headerlink" title="三种同步器对比"></a>三种同步器对比</h2><p><img src="https://i.loli.net/2020/03/06/XGbjk4R79xuEYsJ.png" alt="亚稳态1.12.png"></p>
+]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>STA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Multiple Clocks</title>
+    <url>/2020/Multiple-Clocks/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\child\assets\css\APlayer.min.css"><script src="\child\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>多时钟交互路径如何检查建立时间和保持时间。</p>
+<a id="more"></a>
+
+<h2 id="Integer-Multiples"><a href="#Integer-Multiples" class="headerlink" title="Integer Multiples"></a>Integer Multiples</h2><p>设计中经常会定义出现成整数倍数关系的时钟。这样的例子中，我们在相关的时钟（related clocks）中找出公共的时钟周期来进行STA分析。</p>
+<blockquote>
+<p>two clocks are related if they have a data path between their domains</p>
+</blockquote>
+<p>Here is an example that shows four related clocks:</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">create_clock -name CLKM -period <span class="number">20</span> -waveform &#123;<span class="number">0</span> <span class="number">10</span>&#125; [get_ports CLKM]</span><br><span class="line">create_clock -name CLKQ -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125;</span><br><span class="line">create_clock -name CLKP -period <span class="number">5</span> -waveform &#123;<span class="number">0</span> <span class="number">2.5</span>&#125; [get_ports CLKP]</span><br></pre></td></tr></table></figure>
+
+<p>当分析CLKP和CLKM时钟域时，公共的时钟基本周期为20ns，如下图所示。</p>
+<p><em>Integer multiple clocks</em></p>
+<p><img src="https://i.loli.net/2020/03/03/NMK1kfpQEFdYScy.png" alt="STA5.1.png"></p>
+<blockquote>
+<p>Expanding clock ‘CLKP’ to base period of 20.00 (old period was 5.00, added 6 edges).<br>Expanding clock ‘CLKQ’ to base period of 20.00 (old period was 10.00, added 2 edges).</p>
+</blockquote>
+<p>简单分析可知，在 CLKP 15ns时刻出发至CLKM 20ns时刻捕获进行setup time check 最为严苛。而在CLKP&amp;CLKM 0ns时刻进行hold time check最为合理。时序报告这里不再贴出。</p>
+<h2 id="Non-Integer-Multiples"><a href="#Non-Integer-Multiples" class="headerlink" title="Non-Integer Multiples"></a>Non-Integer Multiples</h2><p>考虑数据路径中两个clock domains的频率不成倍数关系时，例如，the launch<br>clock is divide-by-8 of a common clock and the capture clock is divide-by-5<br>of the common clock ，如下图所示。</p>
+<p><em>Non-integer multiple clocks</em></p>
+<p><img src="https://i.loli.net/2020/03/03/zXHKlTM8Gd9qije.png" alt="STA5.2.png"></p>
+<p>时钟定义指令如下：</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">create_clock -name CLKM -period <span class="number">8</span> -waveform &#123;<span class="number">0</span> <span class="number">4</span>&#125; [get_ports CLKM]</span><br><span class="line">create_clock -name CLKQ -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125;</span><br><span class="line">create_clock -name CLKP -period <span class="number">5</span> -waveform &#123;<span class="number">0</span> <span class="number">2.5</span>&#125; [get_ports CLKP]</span><br></pre></td></tr></table></figure>
+
+<p>STA分析时需寻找related clock的common period。例如，common period 分别有CLKQ&amp;CLKP：10ns，CLKM&amp;CLKQ：40ns，CLKM&amp;CLKP：40ns。 </p>
+<p>下面考虑CLKM clock domain 和CLKP clock domain，公共的周期为40ns。</p>
+<blockquote>
+<p>Expanding clock ‘CLKM’ to base period of 40.00 (old period was 8.00, added 8 edges).<br>Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 14 edges).</p>
+</blockquote>
+<p><em>Setup and hold checks for non-integer multiple clocks</em></p>
+<p><img src="https://i.loli.net/2020/03/03/tLM8K6wW7mgebjo.png" alt="STA5.3.png"></p>
+<p>setup check 中必须要满足launch edge和capture edge 的clock最小时间要求。</p>
+<ul>
+<li><p>如果时序路径由CLKM 到CLKP，则在CLKM 24ns launch ，CLKP 25ns时capture最严苛；</p>
+</li>
+<li><p>如果时序路径由CLKP到CLKM，在CLKP 15ns，CLKM 16ns 时最严苛。</p>
+</li>
+</ul>
+<p>hold check中时钟是在0ns时刻检查最严苛。</p>
+<p>时序报告在此不一一列出。</p>
+<h2 id="Phase-Shifted"><a href="#Phase-Shifted" class="headerlink" title="Phase Shifted"></a>Phase Shifted</h2><p>下面两个时钟相差90度相移。</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">create_clock -period <span class="number">2.0</span> -waveform &#123;<span class="number">0</span> <span class="number">1.0</span>&#125; [get_ports CKM]</span><br><span class="line">create_clock -period <span class="number">2.0</span> -waveform &#123;<span class="number">0.5</span> <span class="number">1.5</span>&#125; [get_ports CKM90]</span><br></pre></td></tr></table></figure>
+
+<p><em>Phase-shifted clocks</em></p>
+<p><img src="https://i.loli.net/2020/03/03/LOBXpFRM8dQa3Zb.png" alt="STA5.4.png"></p>
+<p>对于setup time 而言，数据在CKM 0ns建立，于CKM90 0.5ns时进行建立时间检查。</p>
+<p>对于hold check而言，我们得在建立时间检查中capture edge 的前一个周期时刻点进行检查。例如在launch 2ns时刻，此时于2.5ns时刻进行setup check，因此在前一个capture edge 0.5ns时刻进行hold check。</p>
+<p>因此该例中对于hold check 是十分有利的，因为hold time check中，数据捕获路径clock的时刻早于数据建立clock的时间。</p>
+<h2 id="Half-Cycle-Paths"><a href="#Half-Cycle-Paths" class="headerlink" title="Half-Cycle Paths"></a>Half-Cycle Paths</h2><p>设计中同时存在negative-edge triggered flip-flops(active clock edge is falling edge)和positive-edge triggered flip-flops (active clock edge is rising edge)时，就可能属于half-cycle paths。</p>
+<blockquote>
+<p>A half-cycle path could be from a rising edge flip-flop to a falling edge flip-flop, or vice versa.</p>
+</blockquote>
+<p><em>A half-cycle path</em></p>
+<p><img src="https://i.loli.net/2020/03/03/XpQrmiOVIovRUzD.png" alt="STA5.5.png"></p>
+<p>下降沿出现在6ns时刻，上升沿在12ns时刻。因此，数据经过半个时钟周期，6ns，传输到捕获路径触发器 ，在半个时钟周期内进行建立时间检查。</p>
+<p>保持时间检查中，通常于捕获边沿的前一个时钟周期检查。因此，12ns时刻捕获，前一个捕获边沿是0ns时刻。这样，实际上为保持时间检查增加了half-cycle margin，使保持检查结果有很大的positive slack。</p>
+<p><em>the setup timing check path report</em></p>
+<p><img src="https://i.loli.net/2020/03/03/ZbQUXJrzFI4VmjA.png" alt="STA5.6.png"></p>
+<p><em>the hold timing path</em></p>
+<p><img src="https://i.loli.net/2020/03/03/7ERZPQrKIxYAbwM.png" alt="STA5.7.png"></p>
+<h2 id="False-Path"><a href="#False-Path" class="headerlink" title="False Path"></a>False Path</h2><p>电路中某些timing paths有可能是不存在或者在设计中没有实际作用的。这些路径我们可以设置为false paths，使得STA在分析过程中忽略掉。</p>
+<p>False paths的例子：</p>
+<ul>
+<li>from one clock domain to another clock domain;</li>
+<li>from a clock pin of a flip-flop to the input of another flip-flop;</li>
+<li>through a pin of a cell;</li>
+<li>through pins of multiple cells;</li>
+<li>or a combination of these</li>
+</ul>
+<p>A false path is set using the set_false_path specification. Here are some examples.</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_false_path -from [get_clocks SCAN_CLK] \</span><br><span class="line">-to [get_clocks CORE_CLK]</span><br><span class="line"><span class="comment"># Any path starting from the SCAN_CLK domain to the</span></span><br><span class="line"><span class="comment"># CORE_CLK domain is a false path.</span></span><br><span class="line">set_false_path -through [get_pins UMUX0/S]</span><br><span class="line"><span class="comment"># Any path going through this pin is false.</span></span><br><span class="line">set_false_path \</span><br><span class="line">-through [get_pins SAD_CORE/RSTN]]</span><br><span class="line"><span class="comment"># The false path specifications can also be specified to,</span></span><br><span class="line"><span class="comment"># through, or from a module pin instance.</span></span><br><span class="line">set_false_path -to [get_ports TEST_REG*]</span><br><span class="line"><span class="comment"># All paths that end in port named TEST_REG* are false paths.</span></span><br><span class="line">set_false_path -through UINV/Z -through UAND0/Z</span><br><span class="line"><span class="comment"># Any path that goes through both of these pins</span></span><br><span class="line"><span class="comment"># in this order is false.</span></span><br></pre></td></tr></table></figure>
+
+<p><em>Few recommendations on setting false paths are given below.</em></p>
+<p> To set a false path between two clock domains, use:</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_false_path -from [get_clocks clockA] \</span><br><span class="line">-to [get_clocks clockB]</span><br></pre></td></tr></table></figure>
+
+<p>instead of:</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_false_path -from [get_pins &#123;regA_*&#125;/CP] \</span><br><span class="line">-to [get_pins &#123;regB_*&#125;/D]</span><br></pre></td></tr></table></figure>
+
+<p><strong>The second form is much slower.</strong></p>
+<p><strong>Another recommendation is to minimize the usage of -through options, as it adds unnecessary runtime complexity.</strong> The -through option should only be used where it is absolutely necessary and there is no alternate way to specify the false path.</p>
+<p><strong>From an optimization perspective, another guideline is to not use a false path when a multicycle path is the real intent.</strong> If a signal is sampled at a known or predictable time, no matter how far out, a multicycle path specification should be used so that the path has some constraint and gets optimized to meet the multicycle constraint.</p>
+]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>STA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Timing across Clock Domains</title>
+    <url>/2020/2020-03-01-Timing-across-Clock-Domains/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>快慢时钟交互路径如何检查建立时间和保持时间</p>
+ <a id="more"></a>
+
+<h1 id="Slow-to-Fast-Clock-Domains"><a href="#Slow-to-Fast-Clock-Domains" class="headerlink" title="Slow to Fast Clock Domains"></a>Slow to Fast Clock Domains</h1><p>按下列命令定义Clock:</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">create_clock -name CLKM -period <span class="number">20</span> -waveform &#123;<span class="number">0</span> <span class="number">10</span>&#125; [get_ports CLKM]</span><br><span class="line">create_clock -name CLKP -period <span class="number">5</span> -waveform &#123;<span class="number">0</span> <span class="number">2.5</span>&#125; [get_ports CLKP]</span><br></pre></td></tr></table></figure>
+
+<p><em>Path from a slow clock to a faster clock</em></p>
+<p><img src="https://i.loli.net/2020/03/01/x7XgV3cKHMfas9Y.png" alt="STA4.1.png"> </p>
+<p>当 launch flip-flop 和capture flip-flop时钟频率不同时，STA首先需要确定公共的周期</p>
+<p> <em>Setup and hold checks with slow to fast path</em></p>
+<p><img src="https://i.loli.net/2020/03/01/JFPeac2AMBQkV5p.png" alt="STA4.2.png"></p>
+<p>如上图所示，在快时钟的第一个时钟周期进行setup/hold检查，这也是最严苛的检查，有如下结果。</p>
+<p>Setup time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/xeDVXNYmaWhs7KP.png" alt="STA4.3.png"></p>
+<p>hold time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/TkYIrztawg2l3M5.png" alt="STA4.4.png"></p>
+<p>但是实际情况中，组合逻辑延时可能会很大，远大于一个快时钟周期。因此用快时钟的第一个时钟周期来检查时序，是不合理的。根据实际延时，我们可以通过特殊指令，指定在后面第几个时钟周期进行检查。</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_multicycle_path <span class="number">4</span> -setup -from [get_clocks CLKM] -to [get_clocks CLKP] -end</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>The -end specifies that the multicycle of 4 refers to the end point or the capture clock.</p>
+</blockquote>
+<p><em>Multicycle of 4 between clock domains</em><br><img src="https://i.loli.net/2020/03/01/CxLa2IE5ijuNB8R.png" alt="STA4.5.png"> </p>
+<p>通过上述命令后，setup time check 在20ns时刻，hold time check 在15ns时刻。</p>
+<p>Setup time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/lzbyeaXTuxOPhQm.png" alt="STA4.6.png"></p>
+<p>hold time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/6LAiWREQpydqMob.png" alt="STA4.7.png"></p>
+<p>在hold time check 的报告中，可以发现slack为负值，是违例的。在大多数设计中，数据的保持时间都比较短，所以在第一个时钟边沿，即launch edge 对应的时间边沿处检查是更能符合实际的。为实现这一点，我们需要hold time check做如下约束。</p>
+ <figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_multicycle_path <span class="number">3</span> -hold  -from [get_clocks CLKM] -to [get_clocks CLKP] -end</span><br></pre></td></tr></table></figure>
+
+<p> <em>Hold time relaxed with multicycle hold specification</em></p>
+<p><img src="https://i.loli.net/2020/03/01/CPNjQ5eBEvWzRUL.png" alt="STA4.8.png"></p>
+<p>hold time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/ZDqOS7jEbTrPa5t.png" alt="STA4.9.png"></p>
+<p>总结一下，慢时钟到快时钟周期进行检查，可以设置在第N个快时钟周期来检查setup，同样也可以设置在第N个时钟周期对应的hold time check时间点的前N-1个时钟周期进行hold检查，这样更能贴合保持时间检查的实际情况。</p>
+<h1 id="Fast-to-slow-Clock-Domains"><a href="#Fast-to-slow-Clock-Domains" class="headerlink" title="Fast to slow Clock Domains"></a>Fast to slow Clock Domains</h1><p>通过下列命令，定义快时钟CLKP和慢时钟CLKM：</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">create_clock -name CLKM -period <span class="number">20</span> -waveform &#123;<span class="number">0</span> <span class="number">10</span>&#125; [get_ports CLKM]</span><br><span class="line">create_clock -name CLKP -period <span class="number">5</span> -waveform &#123;<span class="number">0</span> <span class="number">2.5</span>&#125; [get_ports CLKP]</span><br></pre></td></tr></table></figure>
+
+<p>Path from fast clock to slow clock domain如下图所示，存在4种setup timing checks possible，以最严格的setup4为例检查setup time。</p>
+<p><img src="https://i.loli.net/2020/03/01/ofS3F1UvID4Ri9Y.png" alt="STA4.10.png"> </p>
+<p>Setup time check 时序报告：</p>
+<p><img src="https://i.loli.net/2020/03/01/5OLJNHDsfRwPBEV.png" alt="STA4.11.png"></p>
+<p>最严格的保持时间检查是在快时钟的第一个时钟周期setup1 0ns时，确保capture edge 在0ns时不会捕获到launch flip-flop将要改变的数据。</p>
+<p><img src="https://i.loli.net/2020/03/01/rwCXEFpYBSyj8fW.png" alt="STA4.12.png"></p>
+<p>同slow to fast clock domains setup/hold time check一样，我们可以通过设置约束调整快时钟的默认周期的数据发射边沿，设置其在第几个时钟周期进行建立时间检查，让慢时钟进行建立时间检查。 </p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_multicycle_path <span class="number">2</span> -setup -from [get_clocks CLKP] -to [get_clocks CLKM] -start</span><br><span class="line">set_multicycle_path <span class="number">1</span> -hold -from [get_clocks CLKP] -to [get_clocks CLKM] -start</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>The -start option refers to the launch clock and is the default for a multicycle hold.</p>
+</blockquote>
+<p>As expected, the launch clock edge is at 10ns and the capture clock edge is at 20ns，The hold check is at 0ns where both the capture and launch clocks have rising edges.</p>
+<p><em>Setup multicycle of 2</em></p>
+<p><img src="https://i.loli.net/2020/03/01/Eh4GYrVkie2unDF.png" alt="STA4.13.png"></p>
+]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>STA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单周期路径的setup/hold time check</title>
+    <url>/2020/2020-02-29-%E5%8D%95%E5%91%A8%E6%9C%9F%E8%B7%AF%E5%BE%84%E7%9A%84setup-hold-time-check/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>主要分析单周期时序路径下setup/hold time check</p>
+<a id="more"></a>
+
+<h1 id="单周期路径下setup-time-check"><a href="#单周期路径下setup-time-check" class="headerlink" title="单周期路径下setup time check"></a>单周期路径下setup time check</h1><h2 id="Input-to-Flip-flop-Path"><a href="#Input-to-Flip-flop-Path" class="headerlink" title="Input to Flip-flop Path"></a>Input to Flip-flop Path</h2><p> 时序报告：</p>
+<p><img src="https://i.loli.net/2020/02/29/dFhK1PumQM674z5.png" alt="STA3.1.png"></p>
+<p>input port clocked by VIRTUAL_CLKM，可以认为是由一个在设计外面的imaginary（virtual）flip-flop驱动的input port。另外，从该clock pin到达input port INA的max delay 可以被定义为一个确定的数值，在报告中为input external delay。通过以下SDC commands可以实现上述操作：</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">create_clock -name VIRTUAL_CLKM -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125;</span><br><span class="line"></span><br><span class="line">set_input_delay -<span class="keyword">clock</span> VIRTUAL_CLKM -max <span class="number">2.55</span> [get_ports INA]</span><br></pre></td></tr></table></figure>
+
+<p>同时可以注意到DUA中经过input port INA，和其连接的第一个cell UINV1，可以通过specifying the driving cell of the input port INA计算delay：</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_driving_cell -lib_cell BUFF -library lib013lwc [get_ports INA]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Setup-check-for-the-path-through-input-port"><a href="#Setup-check-for-the-path-through-input-port" class="headerlink" title="Setup check for the path through input port"></a>Setup check for the path through input port</h3><p><img src="https://i.loli.net/2020/02/29/uyT9sEJf4aIpPFv.png" alt="STA3.2.png"></p>
+<h2 id="Flip-flop-to-Output-Path"><a href="#Flip-flop-to-Output-Path" class="headerlink" title="Flip-flop to Output Path"></a>Flip-flop to Output Path</h2><p>类似于input port 约束，output port 也可以受virtual clock，internal clock of the design，input clock port，output clock port约束。下面是output pin ROUT constraint with respect to a virtual clock。如下：</p>
+ <figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_output_delay -<span class="keyword">clock</span> VIRTUAL_CLKP -max <span class="number">5.1</span> [get_ports ROUT]</span><br><span class="line">set_load <span class="number">0.02</span> [get_ports ROUT]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>To determine the delay of the last cell connected to the output port correctly,one needs to specify the load on this port. </p>
+<p>The output load is specified above using the <em>set_load</em> command.</p>
+</blockquote>
+<h3 id="Setup-check-for-path-through-output-port"><a href="#Setup-check-for-path-through-output-port" class="headerlink" title="Setup check for path through output port"></a>Setup check for path through output port</h3><p><img src="https://i.loli.net/2020/02/29/WNVHDpCyTtdJ3u5.png" alt="STA3.3.png"></p>
+<p>时序报告：</p>
+<p><img src="https://i.loli.net/2020/02/29/ONaM34jEuR7lVfG.png" alt="STA3.4.png"></p>
+<blockquote>
+<p>Notice that the output delay specified appears as output external delay and behaves like a required setup time for the virtual flip-flop</p>
+</blockquote>
+<p>因为 output external delay应该对应于virtual flip-flop的launch path中，但此处路径已在ROUT终止，因此将其放于capture path中，表现为负值。</p>
+<p>总结：</p>
+<p><code>slack = （Tcapture + Tcycle - Tuncertainty - Tsetup - Toutput_dealy）- （Tlaunch + Tck2q + Tdp）</code></p>
+<h2 id="Input-to-Output-Path"><a href="#Input-to-Output-Path" class="headerlink" title="Input to Output Path"></a>Input to Output Path</h2><p>和先前input path、output path类似，使用Virtual clocks来约束input&amp;output ports。通过以下指令进行约束：</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_input_delay -<span class="keyword">clock</span> VIRTUAL_CLKM -max <span class="number">3.6</span> [get_ports INB]</span><br><span class="line">set_output_delay -<span class="keyword">clock</span> VIRTUAL_CLKM -max <span class="number">5.8</span> [get_ports POUT]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Combinational-path-from-input-to-output-port"><a href="#Combinational-path-from-input-to-output-port" class="headerlink" title="Combinational path from input to output port"></a>Combinational path from input to output port</h3><p><img src="https://i.loli.net/2020/02/29/HSAJg9DBMGdphuV.png" alt="STA3.5.png"></p>
+<p>时序报告：</p>
+<p><img src="https://i.loli.net/2020/02/29/FJOdvztUEQjZYoC.png" alt="STA3.6.png"></p>
+<h1 id="单周期路径下hold-time-check"><a href="#单周期路径下hold-time-check" class="headerlink" title="单周期路径下hold time check"></a>单周期路径下hold time check</h1><p>Hold timing check确保使flip-flop能够捕获其原始的正确数据，保证前一级flip-flop输出值变化不会经过capture flip-flop，覆盖输出数据 。</p>
+<p>Hold time 要求flip-flop在时钟的有效沿之后的指定时间段内，被锁存的数据应保持稳定。</p>
+<p><img src="https://i.loli.net/2020/02/29/QYsN1Fc2GlKyOdi.png" alt="STA3.7.png"></p>
+<p> hold timing check 和setup timing check 有如下差别：</p>
+<blockquote>
+<p>The hold check is from one active edge of the clock in the launch flip-flop to the same clock edge at the capture flip-flop.</p>
+<p>** Thus, a hold check is independent of the clock period. **</p>
+<p>The hold check is carried out on each active edge of the clock of the capture flip-flop.</p>
+</blockquote>
+<p> <img src="https://i.loli.net/2020/02/29/npwRDSoOLria3CF.png" alt="STA3.8.png"></p>
+<p> <img src="https://i.loli.net/2020/02/29/uQOK72X1WxaHctR.png" alt="STA3.9.png"> </p>
+<p>The hold check can be mathematically expressed as:</p>
+<p><img src="https://i.loli.net/2020/02/29/iHVeXdlkhg1fFEW.png" alt="STA3.10.png"></p>
+<p><code>Slack = (Tlaunch + Tck2q + Tdp) - (Tcapture + Thold)</code></p>
+<p>Hold time check 对capture flip-flop上数据引脚的路径施加了下限或最小值限制。需要确定到捕获触发器D引脚的最快路径。 这意味着将始终使用最短路径来验证hold checks。 因此，通常在fast timing corner 中执行hold checks。</p>
+<h2 id="Hold-time-check-和setup-time-check-之间的关系"><a href="#Hold-time-check-和setup-time-check-之间的关系" class="headerlink" title="Hold time check 和setup time check 之间的关系"></a>Hold time check 和setup time check 之间的关系</h2><p>如下图所示，hold timing check 确保:</p>
+<ul>
+<li><em>Data from the subsequent launch edge must not be captured by the setup receiving edge.</em></li>
+<li><em>Data from the setup launch edge must not be captured by the preceding receiving edge.</em></li>
+</ul>
+<p><strong>Two hold checks for one setup check</strong></p>
+<p><img src="https://i.loli.net/2020/02/29/lRH74hbNPJdvOsn.png" alt="STA3.11.png"></p>
+<blockquote>
+<p>UFF0 ：launch flip-flop，UFF1：capture flip-flop</p>
+<p>Setup check：setup launch edge –&gt; setup receiving edge </p>
+</blockquote>
+<p><strong>The subsequent launch edge must not propagate data so fast that the setup receiving edge does not have time to capture its data reliably.</strong></p>
+<p><strong>The setup launch edge must not propagate data so fast that the preceding receiving edge does not get a chance to capture its data.</strong> </p>
+<p>While setup violations can cause the operating frequency of the design to be lowered, the hold violations can kill a design, that is, make the design inoperable at any frequency. Thus it is very important to understand the hold timing checks and resolve any violations.</p>
+<p>[^Ref]:  Static Timing Analysis for Nanometer Designs A Practical Approach</p>
+]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>STA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>reg2reg setup time 分析</title>
+    <url>/2020/2020-02-29-Path-reg2reg-setup-time-%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>简单地对<em>寄存器到寄存器路径</em>建立时间的报告进行了分析</p>
+<a id="more"></a>
+
+<h2 id="理想的时钟网络"><a href="#理想的时钟网络" class="headerlink" title="理想的时钟网络"></a>理想的时钟网络</h2><p><img src="https://i.loli.net/2020/02/29/ec9qmofu2OEhbXv.png" alt="STA2.1.png"> </p>
+<p>可以先分析出下面几个问题：</p>
+<blockquote>
+<p>1.what are the start point and the end point of this path？</p>
+<p>2.Which Path Group is this path belong to？</p>
+<p>3.Path Type？</p>
+<p>4.Constrain？</p>
+</blockquote>
+<p> 分析可知，</p>
+<ul>
+<li><p>Start point: the launch flip-flop UFF0;End point: the capture flip-flop UFF1</p>
+</li>
+<li><p>Path group:归属于CLKM</p>
+</li>
+<li><p>Path Type ：max，意味着报告中所有路径区最大延时，对应setup time check</p>
+</li>
+<li><p>Constraints:</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">  create_clock -name CLKM -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125; [get_ports CLKM]</span><br><span class="line">  set_clock_uncertainty -setup <span class="number">0.3</span> [all_clocks]</span><br><span class="line">  set_clock_transition -rise <span class="number">0.2</span> [all_clocks]</span><br><span class="line">set_clock_transition -fall <span class="number">0.15</span> [all_clocks]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>设置 clock uncertainty可以加紧约束</p>
+</blockquote>
+</li>
+</ul>
+<p>总结报告，对于flip-flop path：</p>
+<ul>
+<li><p>launch path： 时钟由源点出发，经过Tlaunch = 0，经过flip-flop CLK2Q 延时Tck2q = 0.16，经过组合逻辑延时Tdp=0.04+0.05，最终到达时序路径终点UFF1/D，Data arrival time = 0.26；</p>
+</li>
+<li><p>Capture path：时钟源点加上一个时钟周期，经过理想的时钟网络，最终到达终点UFF1/CK。data required time 还需要减掉 clock uncertainty 和 library setup time，得到data required time = 9.66；</p>
+</li>
+<li><p>Slack = data required time - data arrival time，slack 大于0则满足约束，具体公式总结如下图所示。</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/29/UavV19MIKOT32cR.png" alt="STA2.2.png"></p>
+<h2 id="时钟网络有一个确定的延时值"><a href="#时钟网络有一个确定的延时值" class="headerlink" title="时钟网络有一个确定的延时值"></a>时钟网络有一个确定的延时值</h2><p>上面报告中clock network delay是一个理想的值（marked as ideal），这意味着clock trees被认为是理想的，即clock path上所有的buffer delay都为0。显然，当时钟树被建立之后，clock paths会先显示真实的delays（marked as propagated），如下图所示。</p>
+<p><img src="https://i.loli.net/2020/02/29/efwkadL7CAlOmNx.png" alt="STA2.3.png"> </p>
+<p><strong>后一个时钟为0.12比前一个触发器的时钟要晚到一点，差值012-0.11=0.01称之为时钟的<em>偏斜</em>。</strong></p>
+<p><strong>另外时序报告中标有“r”和“f”，分别代表clock或数据信号的rising and falling edge。</strong>因为是建立时间检查，所以通常取上升或下降沿延迟中的最大延迟值。 </p>
+<h3 id="两种类型的clock-latencies"><a href="#两种类型的clock-latencies" class="headerlink" title="两种类型的clock latencies"></a>两种类型的clock latencies</h3><p><em>clock source latency &amp; clock network latency</em></p>
+<ul>
+<li><p>Clock source latency：也称insertion delay，是由时钟源传播至当前分析时钟定义点所花费的时间。</p>
+<p>Source latency 不会影响内部设计的时序分析，因为它被同时加到launch clock 和capture clock。</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_clock_latency -<span class="keyword">source</span> -rise <span class="number">0.7</span> [get_clocks CLKM]</span><br><span class="line"></span><br><span class="line">set_clock_latency -<span class="keyword">source</span> -fall <span class="number">0.65</span> [get_clocks CLKM]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Clock network latency：如果不使用 -source 命令，命令定义的则为clock network latency，是由DUA中时钟定义点到flip-flop clock pin的时间。</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/29/xhVU1BYlvqLASFe.png" alt="STA2.4.png"></p>
+]]></content>
+      <categories>
+        <category>书籍文档</category>
+      </categories>
+      <tags>
+        <tag>STA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>静态时序分析(STA)基础</title>
-    <url>/2020-02-28-%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90-STA-%E5%9F%BA%E7%A1%80/</url>
+    <url>/2020/2020-02-28-%E9%9D%99%E6%80%81%E6%97%B6%E5%BA%8F%E5%88%86%E6%9E%90-STA-%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="什么是静态时序分析？"><a href="#什么是静态时序分析？" class="headerlink" title="什么是静态时序分析？"></a>什么是静态时序分析？</h1><p>静态时序分析是一种不使用动态仿真，来检查电路是否满足时序约束的分析方法。</p>
 <ul>
 <li>Much faster than timing-driven，gate-level simulation</li>
@@ -13,7 +421,7 @@
 
 <p><strong>STA Flow</strong></p>
 <p><img src="https://i.loli.net/2020/02/28/X5Znv6eS2cNU1rM.png" alt="STA1.1.png"></p>
-<p><strong>STA VS Event Simulation(互补)</strong></p>
+<p><strong>STA VS Event Simulation(互补)</strong> </p>
 <p><img src="https://i.loli.net/2020/02/28/orh4VdtEMfavs9J.png" alt="STA1.2.png"></p>
 <h1 id="How-STA-Work？"><a href="#How-STA-Work？" class="headerlink" title="How STA Work？"></a>How STA Work？</h1><blockquote>
 <p>Three Steps in Static Timing Analysis</p>
@@ -61,12 +469,12 @@
 <p>A setup timing check verifies the timing relationship between the clock and the data pin of a flip-flop so that the setup requirement is met.</p>
 </blockquote>
 <p>换句话说，建立时间的检查可以确保在flip-flop时钟有效沿到来时 ，数据到达flip-flop输入引脚时刻是稳定的。</p>
-<p> <img src="https://i.loli.net/2020/02/28/KeVuSCLax68nFMz.png" alt="STA1.9.png"></p>
+<p><img src="https://i.loli.net/2020/02/28/KeVuSCLax68nFMz.png" alt="STA1.9.png"></p>
 <p>下面举一个简单的例子，如图所示，Launch &amp; capture flip-flop使用的是同一个时钟CLKM。</p>
 <p>第一个时钟上升沿，CLKM 经Tlaunch延时到达launch flip-flop UFF0,通过该时钟沿在时刻Tlaunch + Tck2q + Tdp数据被建立。</p>
 <p>第二个时钟沿(setup is normally checked after one cycle)在时刻Tcycle + Tcapture到达capture flip-flop UFF1。</p>
 <p>以上两条路径之间的时间差别需要满足大于flip-flop的setup time，这样才能使得数据稳定的捕获到flip-flop中。</p>
-<p><img src="https://i.loli.net/2020/02/28/RAZpB7gIHcxQhvC.png" alt="STA1.10.png"></p>
+<p><img src="https://i.loli.net/2020/02/28/RAZpB7gIHcxQhvC.png" alt="STA1.10.png"> </p>
 <p> <img src="https://i.loli.net/2020/02/28/eBmcAXLkiQT69Js.png" alt="STA1.11.png"></p>
 <p>The setup check can be mathematically expressed as:</p>
 <p><img src="https://i.loli.net/2020/02/28/Ss4h9WpCB5o8vmJ.png" alt="STA1.12.png"></p>
@@ -82,7 +490,7 @@
 </li>
 </ul>
 </blockquote>
-<p>​        <strong>“<span style="color:red;"><u>  Since the setup check poses a max1 constraint, the setup check always uses the longest or the max timing path. </u> </span>For the same reason, this check is normally verified at the slow corner where the delays are the largest.”</strong></p>
+<p>​        <strong>“<span style="color:red;"><u>  Since the setup check poses a max constraint, the setup check always uses the longest or the max timing path. </u> </span>For the same reason, this check is normally verified at the slow corner where the delays are the largest.”</strong></p>
 <p>[^1]: Static Timing Analysis for Nanometer Designs A Practical Approach<br>[^2]: <a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
 ]]></content>
       <tags>
@@ -91,7 +499,7 @@
   </entry>
   <entry>
     <title>RTL设计指导原则</title>
-    <url>/2020-02-28-RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/</url>
+    <url>/2020/2020-02-28-RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="RTL级设计的评判标准"><a href="#RTL级设计的评判标准" class="headerlink" title="RTL级设计的评判标准"></a>RTL级设计的评判标准</h1><p>时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配</p>
 <p> <strong>指导原则：面积与速度互换 、乒乓操作、 流水线设计</strong></p>
  <a id="more"></a>
@@ -181,7 +589,7 @@
   </entry>
   <entry>
     <title>Balance in circuit design</title>
-    <url>/2020-02-28-Balance-in-circuit-design/</url>
+    <url>/2020/2020-02-28-Balance-in-circuit-design/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><em>01.EFR Scheme for Low Power SRAM；</em></p>
 <p><em>02.Chip Architecture；</em></p>
 <p><em>03.Results；</em></p>
@@ -245,7 +653,7 @@
   </entry>
   <entry>
     <title>SRAM leakage current</title>
-    <url>/2020-02-28-SRAM-leakage-current/</url>
+    <url>/2020/2020-02-28-SRAM-leakage-current/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><em>01.Leakage Currents in an SRAM of Conventional Design；</em></p>
 <p><em>02.Gate-Tunnel Leakage and GIDL Currents</em></p>
 <a id="more"></a>
@@ -289,7 +697,7 @@
   </entry>
   <entry>
     <title>RTL编码中考虑面积</title>
-    <url>/2020-02-22-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/</url>
+    <url>/2020/2020-02-22-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E9%9D%A2%E7%A7%AF/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>减少设计面积，意味着成本降低、功耗降低。特别是对于FPGA的设计，直接决定着FPGA的选型。</p>
 <p>为了减少设计面积，首先得估算设计使用资源的数量，例如触发器、加法器、乘法器等。其中，触发器的数量由功能决定，很难减少，其面积也比较好估计。因此，RTL设计中的组合逻辑，对应的各种操作符在使用的时候应该加以重视。例如，加减法、乘除法以及条件语句中的比较运算。</p>
 <a id="more"></a> 
@@ -344,7 +752,7 @@
   </entry>
   <entry>
     <title>RTL编码中考虑延时</title>
-    <url>/2020-02-18-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/</url>
+    <url>/2020/2020-02-18-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>列举了5个实例。</p>
 <a id="more"></a>
 
@@ -396,7 +804,7 @@
   </entry>
   <entry>
     <title>SRAM_cell电学稳定性分析</title>
-    <url>/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/</url>
+    <url>/2020/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><em>在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。</em></p>
 <a id="more"></a>
 
@@ -448,7 +856,7 @@
   </entry>
   <entry>
     <title>SRAM 基础</title>
-    <url>/2020-02-12-SRAM%E5%9F%BA%E7%A1%80/</url>
+    <url>/2020/2020-02-12-SRAM%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>“</strong> 介绍SRAM基本存储单元，也分析了其设计和读写过程。<strong>”</strong></p>
 <p><em>01.最常见的SRAM cell，the full CMOS 6T 类型；</em></p>
 <p><em>02.SRAM的读写过程；</em></p>
@@ -506,7 +914,7 @@
   </entry>
   <entry>
     <title>CMOS反相器之动态特性</title>
-    <url>/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/</url>
+    <url>/2020/2020-02-10-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%B9%8B%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><strong>CMOS反相器的性能：动态特性</strong></p>
 <hr>
 <p>CMOS反相器的传播延时取决于它分别通过PMOS和NMOS管充放电负载电容C<sub>L</sub>所需要的时间。使C<sub>L</sub>尽可能小是实现高性能CMOS电路的关键。</p>
@@ -591,7 +999,7 @@
   </entry>
   <entry>
     <title>Verilog HDL 基础</title>
-    <url>/2020-02-09-Verilog%20HDL%E5%9F%BA%E7%A1%80/</url>
+    <url>/2020/2020-02-09-Verilog%20HDL%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="Verilog-HDL-语言的特点"><a href="#Verilog-HDL-语言的特点" class="headerlink" title="Verilog HDL 语言的特点"></a>Verilog HDL 语言的特点</h1><p><strong>互连（connectivity）</strong>：网络数据类型表示结构实体（例如门）之间的物理连接，不能存储值，由驱动器（例如门或连续赋值语句，assign）驱动。常见类型包括wire型和tri型。</p>
 <p><strong>并发</strong>（concurrency）：可以有效地描述并行的硬件系统 </p>
 <p><strong>时间</strong>（time）：定义了绝对和相对的时间度量，可综合操作符具有物理延迟</p>
@@ -656,7 +1064,7 @@
   </entry>
   <entry>
     <title>CMOS反相器介绍</title>
-    <url>/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/</url>
+    <url>/2020/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="CMOS设计指标"><a href="#CMOS设计指标" class="headerlink" title="CMOS设计指标"></a>CMOS设计指标</h1><p><strong>设计指标：</strong></p>
 <ul>
 <li>成本：用复杂性和面积来表示</li>
@@ -715,7 +1123,7 @@
   </entry>
   <entry>
     <title>sed实例</title>
-    <url>/2020-02-07-sed%E5%AE%9E%E4%BE%8B/</url>
+    <url>/2020/2020-02-07-sed%E5%AE%9E%E4%BE%8B/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="GNU-sed实例教程"><a href="#GNU-sed实例教程" class="headerlink" title="GNU sed实例教程"></a>GNU sed实例教程</h1><blockquote>
 <p>sed (stream editor) is a non-interactive command-line text editor.</p>
 </blockquote>

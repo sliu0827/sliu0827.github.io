@@ -13,10 +13,10 @@ timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://www.sliu.info
+url: https://www.sliu.info
 root: /
 #permalink: :year/:month/:day/:title/
-permalink: :title/
+permalink: :year/:title/
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -99,10 +99,13 @@ theme: next
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git 
-  repository: https://github.com/sliu0827/sliu0827.github.io
+- type: git
+  repo: git@github.com:sliu0827/sliu0827.github.io.git
   branch: master
-
+ 
+- type: git
+  repo: git@e.coding.net:sliu0827/sliu0827.coding.me.git
+  branch: master
 
 baidusitemap:
   path: baidusitemap.xml
