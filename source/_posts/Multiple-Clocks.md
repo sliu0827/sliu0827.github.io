@@ -176,3 +176,16 @@ set_false_path -from [get_pins {regA_*}/CP] \
 **Another recommendation is to minimize the usage of -through options, as it adds unnecessary runtime complexity.** The -through option should only be used where it is absolutely necessary and there is no alternate way to specify the false path.
 
 **From an optimization perspective, another guideline is to not use a false path when a multicycle path is the real intent.** If a signal is sampled at a known or predictable time, no matter how far out, a multicycle path specification should be used so that the path has some constraint and gets optimized to meet the multicycle constraint.
+
+ 
+
+
+
+------
+
+*Reference*： 
+
+1.[Static Timing Analysis for Nanometer Designs A Practical Approach](https://link.springer.com/content/pdf/bfm%3A978-0-387-93820-2%2F1.pdf)
+
+2.[芯动力—硬件加速设计方法](https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209)
+

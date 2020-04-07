@@ -83,3 +83,16 @@ set_clock_transition -fall 0.15 [all_clocks]
 - Clock network latency：如果不使用 -source 命令，命令定义的则为clock network latency，是由DUA中时钟定义点到flip-flop clock pin的时间。
 
 ![STA2.4.png](https://i.loli.net/2020/02/29/xhVU1BYlvqLASFe.png)
+
+ 
+
+
+
+------
+
+*Reference*： 
+
+1.[Static Timing Analysis for Nanometer Designs A Practical Approach](https://link.springer.com/content/pdf/bfm%3A978-0-387-93820-2%2F1.pdf)
+
+2.[芯动力—硬件加速设计方法](https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209)
+

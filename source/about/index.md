@@ -2,9 +2,12 @@
 title: about
 date: 2020-02-25 16:09:15
 type: about
+comments: false 
 ---
 
 ### 关于我
+
+------
 
 我是一个即将毕业的准ICer。
 
@@ -14,19 +17,14 @@ type: about
 
 也欢迎你关注我的微信公众号：ICerAShuang
 
-<img src="https://sliu0827.github.io/images/ICerAShuang.png"  align="left" alt="img" style="zoom:20%;" />	
-
-​								
-
-​			
-
+<img src="https://i.loli.net/2020/03/27/PeUhCzdYOtBacjW.png" alt="ICerAShuang.png" align="left" alt="img" style="zoom:20%;" />
 ​	
 
-
-
-
+<br></br>
 
 ### 我们的博客 
+
+***
 
 
 在这里，请畅所欲言吧，我们一起进步！
@@ -43,6 +41,8 @@ type: about
 
 
 ### 如何联系我
+
+---
 
 
 <p> 

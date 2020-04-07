@@ -138,4 +138,13 @@ While setup violations can cause the operating frequency of the design to be low
 
 
 
-[^Ref]:  Static Timing Analysis for Nanometer Designs A Practical Approach
+
+
+------
+
+*Reference*： 
+
+1.[Static Timing Analysis for Nanometer Designs A Practical Approach](https://link.springer.com/content/pdf/bfm%3A978-0-387-93820-2%2F1.pdf)
+
+2.[芯动力—硬件加速设计方法](https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209)
+

@@ -99,10 +99,13 @@ theme: next
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git 
-  repository: https://github.com/sliu0827/sliu0827.github.io
+- type: git
+  repo: git@github.com:sliu0827/sliu0827.github.io.git
   branch: master
-
+ 
+- type: git
+  repo: git@e.coding.net:sliu0827/sliu0827.coding.me.git
+  branch: master
 
 baidusitemap:
   path: baidusitemap.xml
