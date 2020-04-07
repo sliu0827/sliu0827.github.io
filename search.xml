@@ -3,7 +3,7 @@
   <entry>
     <title>芯片验证概述</title>
     <url>/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述的。</p>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述。</p>
 <a id="more"></a>
 
 <p>验证和设计是协作进行的，验证和设计都需要认真阅读功能描述文档。设计将功能文档翻译为RTL模型，验证则会按照其功能发送激励和比较结果。</p>
@@ -16,7 +16,7 @@
 <li>Monitor：观察DUT的输入输出</li>
 <li>Checker：对DUT的输出数据与预期数据进行比对</li>
 </ul>
-<p>除此以外，clock/reset完成时钟的发起以及复位工作。最终，测试平台会报告检查结果。</p>
+<p>除此以外，clock/reset完成时钟的发起以及复位工作。最终，测试平台还会报告检查结果。</p>
 <h2 id="什么是SystemVerilog？"><a href="#什么是SystemVerilog？" class="headerlink" title="什么是SystemVerilog？"></a>什么是SystemVerilog？</h2><hr>
 <p>SystemVerilog是一种新的硬件描述和验证语言（HDVL， Hardware Description and Verification Language）。</p>
 <p><strong>SV语言的核心特性</strong></p>
@@ -30,7 +30,7 @@
 <li>断言（assertion）</li>
 </ul>
 <h2 id="什么是UVM？"><a href="#什么是UVM？" class="headerlink" title="什么是UVM？"></a>什么是UVM？</h2><hr>
-<p>UVM（Universal Verification Methodology），该验证方法学可适用于大多数的项目。它自身提供的基础类库和验证结构可以让具有不同软件编程经验的验证工程师能够快速构建起一个可靠的验证框架；其框架构建类和测试类能够减轻环境构建的负担，进而将精力集中在如何制定验证计划和创建测试场景上。</p>
+<p>UVM（Universal Verification Methodology），是一种可适用于大多数项目的验证方法学。它自身提供的基础类库和验证结构可以让具有不同软件编程经验的验证工程师能够快速构建起一个可靠的验证框架；其框架构建类和测试类能够减轻环境构建的负担，进而将精力集中在如何制定验证计划和创建测试场景上。</p>
 <p>学习UVM时，可以遵循以下步骤：</p>
 <ul>
 <li>认识UVM世界的版图（类库）和核心机制</li>
@@ -39,7 +39,7 @@
 <li>深入UVM测试场景的构成</li>
 <li>UVM的寄存器模型应用</li>
 </ul>
-<p><strong>UVM的类大致包括一下几类：</strong></p>
+<p><strong>UVM的类大致包括以下几类：</strong></p>
 <ul>
 <li>核心基类</li>
 <li>工厂（factory）类</li>
