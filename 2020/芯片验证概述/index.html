@@ -24,18 +24,24 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="你好呀">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Shuang&#39;Blog">
-<meta property="og:url" content="https://www.sliu.info/archives/2020/03/index.html">
+  <meta name="description" content="芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="芯片验证概述">
+<meta property="og:url" content="https://www.sliu.info/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="你好呀">
+<meta property="og:description" content="芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述的。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/07/KAmrWBp1lGdUZkY.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/07/bHLy5WuARsGMhCK.png">
+<meta property="article:published_time" content="2020-04-07T13:01:51.000Z">
+<meta property="article:modified_time" content="2020-04-07T14:11:36.690Z">
 <meta property="article:author" content="Shuang liu">
-<meta property="article:tag" content="ICer">
+<meta property="article:tag" content="SystemVerilog">
+<meta property="article:tag" content="UVM">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/07/KAmrWBp1lGdUZkY.png">
 
-<link rel="canonical" href="https://www.sliu.info/archives/2020/03/">
+<link rel="canonical" href="https://www.sliu.info/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/">
 
 
 <script id="page-configurations">
@@ -43,11 +49,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>归档 | Shuang'Blog</title>
+  <title>芯片验证概述 | Shuang'Blog</title>
   
 
 
@@ -201,173 +207,210 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 23 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.sliu.info/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Shuang liu">
+      <meta itemprop="description" content="你好呀">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shuang'Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          芯片验证概述
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-07 21:01:51 / 修改时间：22:11:36" itemprop="dateCreated datePublished" datetime="2020-04-07T21:01:51+08:00">2020-04-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">芯片验证基础</span></a>
+                </span>
+            </span>
+
+          
+		  
+		  <!-- 添加time count 2020.02.26 -->
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
+		  </span>本文字数: 609</span>
+	
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount">
+		  <span class="post-meta-item-icon">
+			<i class="fa fa-clock-o"></i>
+		  </span>阅读时长 &asymp; 2 分钟</span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h2 class="collection-header">2020</h2>
-    </div>
+        <p>芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述的。</p>
+<a id="more"></a>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-03-27T14:21:12+08:00"
-              content="2020-03-27">
-          03-27
-        </time>
-      </div>
-
-      <h3 class="post-title">
-          <a class="post-title-link" href="/2020/%E5%A4%8D%E4%BD%8D%E7%94%B5%E8%B7%AF/" itemprop="url">
-            <span itemprop="name">复位电路</span>
-          </a>
-      </h3>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-03-26T21:39:10+08:00"
-              content="2020-03-26">
-          03-26
-        </time>
-      </div>
-
-      <h3 class="post-title">
-          <a class="post-title-link" href="/2020/FIFO-%E4%BB%8B%E7%BB%8D2/" itemprop="url">
-            <span itemprop="name">FIFO 介绍2</span>
-          </a>
-      </h3>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-03-14T23:10:01+08:00"
-              content="2020-03-14">
-          03-14
-        </time>
-      </div>
-
-      <h3 class="post-title">
-          <a class="post-title-link" href="/2020/FIFO-%E4%BB%8B%E7%BB%8D1/" itemprop="url">
-            <span itemprop="name">FIFO 介绍1</span>
-          </a>
-      </h3>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-03-12T19:43:59+08:00"
-              content="2020-03-12">
-          03-12
-        </time>
-      </div>
-
-      <h3 class="post-title">
-          <a class="post-title-link" href="/2020/%E4%BF%A1%E5%8F%B7%E7%9A%84%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/" itemprop="url">
-            <span itemprop="name">信号的跨时钟域传输问题</span>
-          </a>
-      </h3>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-03-03T19:35:38+08:00"
-              content="2020-03-03">
-          03-03
-        </time>
-      </div>
-
-      <h3 class="post-title">
-          <a class="post-title-link" href="/2020/%E4%BA%9A%E7%A8%B3%E6%80%81/" itemprop="url">
-            <span itemprop="name">亚稳态</span>
-          </a>
-      </h3>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-03-02T16:10:50+08:00"
-              content="2020-03-02">
-          03-02
-        </time>
-      </div>
-
-      <h3 class="post-title">
-          <a class="post-title-link" href="/2020/Multiple-Clocks/" itemprop="url">
-            <span itemprop="name">Multiple Clocks</span>
-          </a>
-      </h3>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-03-01T12:52:38+08:00"
-              content="2020-03-01">
-          03-01
-        </time>
-      </div>
-
-      <h3 class="post-title">
-          <a class="post-title-link" href="/2020/2020-03-01-Timing-across-Clock-Domains/" itemprop="url">
-            <span itemprop="name">Timing across Clock Domains</span>
-          </a>
-      </h3>
-
-    </header>
-  </article>
-
+<p>验证和设计是协作进行的，验证和设计都需要认真阅读功能描述文档。设计将功能文档翻译为RTL模型，验证则会按照其功能发送激励和比较结果。</p>
+<p><img src="https://i.loli.net/2020/04/07/KAmrWBp1lGdUZkY.png" alt="验证概述1.1.png"></p>
+<h2 id="什么是验证测试平台？"><a href="#什么是验证测试平台？" class="headerlink" title="什么是验证测试平台？"></a>什么是验证测试平台？</h2><hr>
+<p><img src="https://i.loli.net/2020/04/07/bHLy5WuARsGMhCK.png" alt="验证概述1.2.png"></p>
+<p>如图所示，测试平台主要包括的模块有时钟/重置（clock/reset）、激励发生器（stimulator）、检测器（monitor）、比较器（checker）以及待测设计（DUT）。其中：</p>
+<ul>
+<li>Stimulator：对DUT创建测试序列</li>
+<li>Monitor：观察DUT的输入输出</li>
+<li>Checker：对DUT的输出数据与预期数据进行比对</li>
+</ul>
+<p>除此以外，clock/reset完成时钟的发起以及复位工作。最终，测试平台会报告检查结果。</p>
+<h2 id="什么是SystemVerilog？"><a href="#什么是SystemVerilog？" class="headerlink" title="什么是SystemVerilog？"></a>什么是SystemVerilog？</h2><hr>
+<p>SystemVerilog是一种新的硬件描述和验证语言（HDVL， Hardware Description and Verification Language）。</p>
+<p><strong>SV语言的核心特性</strong></p>
+<ul>
+<li>接口（interface）</li>
+<li>面向对象编程（class&amp;package）</li>
+<li>约束随机（constrained random）</li>
+<li>线程控制和通信（process control）</li>
+<li>功能覆盖率（function coverage）</li>
+<li>外部语言编程接口（Direct Programming Interface）</li>
+<li>断言（assertion）</li>
+</ul>
+<h2 id="什么是UVM？"><a href="#什么是UVM？" class="headerlink" title="什么是UVM？"></a>什么是UVM？</h2><hr>
+<p>UVM（Universal Verification Methodology），该验证方法学可适用于大多数的项目。它自身提供的基础类库和验证结构可以让具有不同软件编程经验的验证工程师能够快速构建起一个可靠的验证框架；其框架构建类和测试类能够减轻环境构建的负担，进而将精力集中在如何制定验证计划和创建测试场景上。</p>
+<p>学习UVM时，可以遵循以下步骤：</p>
+<ul>
+<li>认识UVM世界的版图（类库）和核心机制</li>
+<li>学习核心的UVM组件和层次构建方式</li>
+<li>了解常见的UVM组件间的通信方式</li>
+<li>深入UVM测试场景的构成</li>
+<li>UVM的寄存器模型应用</li>
+</ul>
+<p><strong>UVM的类大致包括一下几类：</strong></p>
+<ul>
+<li>核心基类</li>
+<li>工厂（factory）类</li>
+<li>事务（transaction）和序列（sequence）类</li>
+<li>结构创建（structure creation）类</li>
+<li>环境组件（environment component）类</li>
+<li>通信管道（channel）类</li>
+<li>信息报告（message report）类</li>
+<li>寄存器模型（register model）类</li>
+<li>线程同步（thread synchronization）类</li>
+<li>事务接口（transaction interface）类</li>
+</ul>
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
 
     </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thank you for your accept！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/wechatpay.jpg" alt="Shuang liu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/alipay.jpg" alt="Shuang liu 支付宝">
+        <p>支付宝</p>
+      </div>
+
   </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Shuang liu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.sliu.info/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/" title="芯片验证概述">https://www.sliu.info/2020/芯片验证概述/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+	  
+	  <div>
+		
+		  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	  </div>
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/SystemVerilog/" rel="tag"><i class="fa fa-tag"></i> SystemVerilog</a>
+              <a href="/tags/UVM/" rel="tag"><i class="fa fa-tag"></i> UVM</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/%E7%8A%B6%E6%80%81%E6%9C%BA/" rel="prev" title="状态机基础介绍">
+      <i class="fa fa-chevron-left"></i> 状态机基础介绍
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
   
   
 
-  
-
+  </div>
 
 
           </div>
           
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODU0NS8yNTAzOQ"></div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -414,6 +457,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是验证测试平台？"><span class="nav-number">1.</span> <span class="nav-text">什么是验证测试平台？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是SystemVerilog？"><span class="nav-number">2.</span> <span class="nav-text">什么是SystemVerilog？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是UVM？"><span class="nav-number">3.</span> <span class="nav-text">什么是UVM？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -586,6 +630,21 @@
 
   
 
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+	refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+	var j, e = d.getElementsByTagName(s)[0];
+	if (typeof LivereTower === 'function') { return; }
+	j = d.createElement(s);
+	j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+	j.async = true;
+	e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
 
 
 </body>

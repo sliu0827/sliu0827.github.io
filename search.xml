@@ -1,6 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>芯片验证概述</title>
+    <url>/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述的。</p>
+<a id="more"></a>
+
+<p>验证和设计是协作进行的，验证和设计都需要认真阅读功能描述文档。设计将功能文档翻译为RTL模型，验证则会按照其功能发送激励和比较结果。</p>
+<p><img src="https://i.loli.net/2020/04/07/KAmrWBp1lGdUZkY.png" alt="验证概述1.1.png"></p>
+<h2 id="什么是验证测试平台？"><a href="#什么是验证测试平台？" class="headerlink" title="什么是验证测试平台？"></a>什么是验证测试平台？</h2><hr>
+<p><img src="https://i.loli.net/2020/04/07/bHLy5WuARsGMhCK.png" alt="验证概述1.2.png"></p>
+<p>如图所示，测试平台主要包括的模块有时钟/重置（clock/reset）、激励发生器（stimulator）、检测器（monitor）、比较器（checker）以及待测设计（DUT）。其中：</p>
+<ul>
+<li>Stimulator：对DUT创建测试序列</li>
+<li>Monitor：观察DUT的输入输出</li>
+<li>Checker：对DUT的输出数据与预期数据进行比对</li>
+</ul>
+<p>除此以外，clock/reset完成时钟的发起以及复位工作。最终，测试平台会报告检查结果。</p>
+<h2 id="什么是SystemVerilog？"><a href="#什么是SystemVerilog？" class="headerlink" title="什么是SystemVerilog？"></a>什么是SystemVerilog？</h2><hr>
+<p>SystemVerilog是一种新的硬件描述和验证语言（HDVL， Hardware Description and Verification Language）。</p>
+<p><strong>SV语言的核心特性</strong></p>
+<ul>
+<li>接口（interface）</li>
+<li>面向对象编程（class&amp;package）</li>
+<li>约束随机（constrained random）</li>
+<li>线程控制和通信（process control）</li>
+<li>功能覆盖率（function coverage）</li>
+<li>外部语言编程接口（Direct Programming Interface）</li>
+<li>断言（assertion）</li>
+</ul>
+<h2 id="什么是UVM？"><a href="#什么是UVM？" class="headerlink" title="什么是UVM？"></a>什么是UVM？</h2><hr>
+<p>UVM（Universal Verification Methodology），该验证方法学可适用于大多数的项目。它自身提供的基础类库和验证结构可以让具有不同软件编程经验的验证工程师能够快速构建起一个可靠的验证框架；其框架构建类和测试类能够减轻环境构建的负担，进而将精力集中在如何制定验证计划和创建测试场景上。</p>
+<p>学习UVM时，可以遵循以下步骤：</p>
+<ul>
+<li>认识UVM世界的版图（类库）和核心机制</li>
+<li>学习核心的UVM组件和层次构建方式</li>
+<li>了解常见的UVM组件间的通信方式</li>
+<li>深入UVM测试场景的构成</li>
+<li>UVM的寄存器模型应用</li>
+</ul>
+<p><strong>UVM的类大致包括一下几类：</strong></p>
+<ul>
+<li>核心基类</li>
+<li>工厂（factory）类</li>
+<li>事务（transaction）和序列（sequence）类</li>
+<li>结构创建（structure creation）类</li>
+<li>环境组件（environment component）类</li>
+<li>通信管道（channel）类</li>
+<li>信息报告（message report）类</li>
+<li>寄存器模型（register model）类</li>
+<li>线程同步（thread synchronization）类</li>
+<li>事务接口（transaction interface）类</li>
+</ul>
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
+]]></content>
+      <categories>
+        <category>芯片验证基础</category>
+      </categories>
+      <tags>
+        <tag>SystemVerilog</tag>
+        <tag>UVM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>状态机基础介绍</title>
     <url>/2020/%E7%8A%B6%E6%80%81%E6%9C%BA/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>状态机的本质是对具有逻辑顺序或时序规律事件的一种描述方法。</p>
