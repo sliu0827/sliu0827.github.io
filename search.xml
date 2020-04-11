@@ -95,7 +95,8 @@
 <h2 id="接口（interface）"><a href="#接口（interface）" class="headerlink" title="接口（interface）"></a>接口（interface）</h2><hr>
 <p>verilog中模块之间的通信需要例化端口和连线来完成，大型的设计中大量的端口让设计冗长和容易出错。因此，SV在Verilog基础上扩展了接口（interface）。</p>
 <p>接口提供了一种新型的对抽象级建模的方式，可以使简化建模和验证大型设计。</p>
-<p>fig1</p>
+<img src="https://i.loli.net/2020/04/11/iFX7IP4tlkGZsMh.png" alt="SV语法基本类型2.1.png" style="zoom:80%;" />
+
 <p><strong>优势：</strong></p>
 <ul>
 <li>允许多个信号被整合到一起表示一个单一的抽象端口；</li>
