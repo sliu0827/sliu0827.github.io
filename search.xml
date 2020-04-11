@@ -1,13 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>SystemVerilog 数组介绍</title>
+    <url>/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>什么是组合型数组？什么又是非组合型数组？</p>
+<a id="more"></a>
+
+<h2 id="组合型和非组合型数组"><a href="#组合型和非组合型数组" class="headerlink" title="组合型和非组合型数组"></a>组合型和非组合型数组</h2><hr>
+<h3 id="非组合型（unpacked）"><a href="#非组合型（unpacked）" class="headerlink" title="非组合型（unpacked）"></a>非组合型（unpacked）</h3><p>verilog中通常定义例如<code>reg [15:0] RAM[0:4095];</code>，这种数组定义为memory array用作数据存储。SV将这种声明数组的方式称作非组合型数组，即数组中的成员之间存储数据都是互相独立的。</p>
+<p>例如作以下定义：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">wire</span> [<span class="number">7</span>:<span class="number">0</span>] <span class="keyword">table</span> [<span class="number">3</span>:<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>对应的存储结构为：</p>
+<p><img src="https://i.loli.net/2020/04/11/PvsCz36pwLSZYrm.png" alt="SV数组介绍3.1.png"></p>
+<h3 id="组合型（packed）"><a href="#组合型（packed）" class="headerlink" title="组合型（packed）"></a>组合型（packed）</h3><p>SV中将具有向量结构的数组声明方式作为组合型。其相对于非组合型在声明时的差别在于，其索引在数组名的左侧，数组维度从左到右来识别。</p>
+<p>例如作如下定义：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] data;<span class="comment">//2维组合声明</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的存储结构为：</p>
+<p><img src="https://i.loli.net/2020/04/11/kFmCXt6IansPUY1.png" alt="SV数组介绍3.2.png"></p>
+<h3 id="区别分析"><a href="#区别分析" class="headerlink" title="区别分析"></a>区别分析</h3><p>初始化时，组合型（packed）存储值是连续的，可以对所有元素统一赋值；非组合型（unpacked）中则需要分别对每一个维度进行赋值。</p>
+<p>例如：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="comment">//packed</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] a = <span class="number">32</span>’h0; <span class="comment">// vector assignment</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] b = &#123;<span class="number">16</span>’hz,<span class="number">16</span>’h0&#125;; <span class="comment">// concatenate operator</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] c = &#123;<span class="number">16</span>&#123;<span class="number">2</span>’b01&#125;&#125;; <span class="comment">// replicate operator</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//unpacked</span></span><br><span class="line"><span class="keyword">int</span> d [<span class="number">0</span>:<span class="number">1</span>][<span class="number">0</span>:<span class="number">3</span>] = ’&#123; ’&#123;<span class="number">7</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">5</span>&#125;, ’&#123;<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">6</span>&#125; &#125;;</span><br><span class="line"><span class="comment">// d[0][0] = 7  d[0][1] = 3  d[0][2] = 0  d[0][3] = 5</span></span><br><span class="line"><span class="comment">// d[1][0] = 2  d[1][1] = 0  d[1][2] = 1  d[1][3] = 6</span></span><br></pre></td></tr></table></figure>
+
+<p>非组合型数组中，若两个数组进行拷贝和赋值时，左右两边数组的维度和大小必须严格一致；组合型数组中，赋值左右两侧操作数的大小和维度不同时，也可以做赋值，会采用截取或者扩展的方式进行赋值。</p>
+<p>非组合型和组合型之间无法直接地互相赋值。</p>
+<h3 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h3><ul>
+<li><p>添加了foreach循环结构，用于遍历一维或多维数组，不需要指定该数组的大小。</p>
+</li>
+<li><p>添加了系统函数，例如：</p>
+<p><code>$dimensions(array_name)</code>,返回数组的维度；</p>
+<p><code>$left(array_name,dimensions)</code>,返回指定维度的最左索引值；</p>
+<p><code>$size(array_name,dimensions)</code>，返回指定维度的尺寸大小等等</p>
+</li>
+</ul>
+<h2 id="其他数组类型"><a href="#其他数组类型" class="headerlink" title="其他数组类型"></a>其他数组类型</h2><hr>
+<h3 id="动态数组"><a href="#动态数组" class="headerlink" title="动态数组"></a>动态数组</h3><p>动态数组在声明时使用“[]”，且不会为限制数组尺寸。动态数组一开始为空，使用new[]为其分配空间。同时，内建方法size(),delete()可以对动态数组进行操作。</p>
+<h3 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h3><p>SV引入了队列，结合了数组和链表。通过“[$]”声明队列，索引值从0到$，常用的内建函数包括push_back(val)、push_front(val)、pop_back()和pop_front()来顺序添加或者移除并且获得数据成员。</p>
+<h3 id="关联数组"><a href="#关联数组" class="headerlink" title="关联数组"></a>关联数组</h3><p>用于存放散列的数据成员，散列的索引类型除了为整形外还可以为字符串或者其它类型，散列的存储数据也可以为任意类型。</p>
+<p><img src="https://i.loli.net/2020/04/11/J8IzFPNGb3Z52W1.png" alt="SV数组介绍3.3.png"></p>
+<h2 id="数组操作方法"><a href="#数组操作方法" class="headerlink" title="数组操作方法"></a>数组操作方法</h2><hr>
+<p>常见的包括以下几类：</p>
+<ul>
+<li>缩减方法，sum、product、and、or和xor；</li>
+<li>定位方法，min、max和unique等，foreach实现数组搜索或者find..width查找满足条件的数据成员；</li>
+<li>排序方法，reverse、sort、rsort和shuffle等。</li>
+</ul>
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
+]]></content>
+      <categories>
+        <category>芯片验证基础</category>
+      </categories>
+      <tags>
+        <tag>SystemVerilog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SystemVerilog 语法基本类型</title>
+    <url>/2020/SystemVerilog-%E8%AF%AD%E6%B3%95%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>SystemVerilog中语法基本类型的简单介绍</p>
+<a id="more"></a>
+
+<h2 id="数据类型中四值-amp-二值逻辑的区分"><a href="#数据类型中四值-amp-二值逻辑的区分" class="headerlink" title="数据类型中四值&amp;二值逻辑的区分"></a>数据类型中四值&amp;二值逻辑的区分</h2><hr>
+<p><strong>verilog中数据类型均为四值逻辑</strong>，包括变量类型（variables）和线网类型（nets）。</p>
+<ul>
+<li><p>variables类型包括例如reg、integer和time等，用来存储组合或者时序逻辑的值；</p>
+</li>
+<li><p>nets类型包括例如wire、wor和wand等，主要用于生成连线实现模块间连接以及提供特殊的线网逻辑解决方案等。</p>
+</li>
+</ul>
+<p><strong>SystemVerilog将数据类型分为四值逻辑（logic）和二值逻辑（bit）。</strong></p>
+<ul>
+<li>四值逻辑硬件信号中变量或者线网类型，统一可以用logic声明。logic默认为变量类型（variable），也可以显示声明为线网型（nets）；</li>
+<li>二值数据类型，用来对于比RTL更高抽象级的模型建模，这些模型中Z和X很少被使用。包括，bit(1-bit)/byte(8-bit)/shortint(16-bit)/int(32-bit)/longint(64-bit)。</li>
+</ul>
+<h2 id="自定义类型"><a href="#自定义类型" class="headerlink" title="自定义类型"></a>自定义类型</h2><hr>
+<p>SV中通过自定义类型使得代码自身的可读性更好，也使得用户可以构建更高抽象层的数据类型。常见的包括：</p>
+<ul>
+<li>typedef,创建用户自定义类型；</li>
+<li>enum，创建枚举类型，描述变量的合法值范围；</li>
+<li>struct，创建结构体类型。</li>
+</ul>
+<p>typedef又可以对enum，struct实现自定义枚举或结构体类型。</p>
+<h2 id="字符串类型"><a href="#字符串类型" class="headerlink" title="字符串类型"></a>字符串类型</h2><hr>
+<p>SV引入了string类型来容纳可变长度的字符串，同时包括一些字符串内建的方法，例如返回字符串长度str.len(),返回地i个字符串str.getc(i)等等。</p>
+<p>SV字符串类型有以下特点：</p>
+<ul>
+<li>存储单元为byte类型；</li>
+<li>不同于c函数，没有空字符，长度为N，则索引为0~N-1；</li>
+<li>内存是动态分配的</li>
+</ul>
+<h2 id="接口（interface）"><a href="#接口（interface）" class="headerlink" title="接口（interface）"></a>接口（interface）</h2><hr>
+<p>verilog中模块之间的通信需要例化端口和连线来完成，大型的设计中大量的端口让设计冗长和容易出错。因此，SV在Verilog基础上扩展了接口（interface）。</p>
+<p>接口提供了一种新型的对抽象级建模的方式，可以使简化建模和验证大型设计。</p>
+<p>fig1</p>
+<p><strong>优势：</strong></p>
+<ul>
+<li>允许多个信号被整合到一起表示一个单一的抽象端口；</li>
+<li>多个模块可以使用同一个interface，避免分散的多个端口信号连接；</li>
+<li>验证中，利用接口可以将测试平台同DUT连接在一起。</li>
+</ul>
+<p>接口不同于模块（module）的地方在于，接口不允许包含设计层次，即接口无法例化module，但可以例化接口。进一步的，可以通过modport来约束不同模块连接时的信号方向。</p>
+<p><strong>小结：</strong></p>
+<ul>
+<li>接口有利于设计复用，减少了模块之间错误连接的可能性；</li>
+<li>如需添加新的信号，可直接在接口中声明。因此，使用信号时需要添加一个层次（接口实例名）；</li>
+<li>接口一般将相关的信号集合在一起，设计中会包含多各接口实例。</li>
+</ul>
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
+]]></content>
+      <categories>
+        <category>芯片验证基础</category>
+      </categories>
+      <tags>
+        <tag>SystemVerilog</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>芯片验证概述</title>
     <url>/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述。</p>
 <a id="more"></a>
 
 <p>验证和设计是协作进行的，验证和设计都需要认真阅读功能描述文档。设计将功能文档翻译为RTL模型，验证则会按照其功能发送激励和比较结果。</p>
-<p><img src="https://i.loli.net/2020/04/07/KAmrWBp1lGdUZkY.png" alt="验证概述1.1.png"></p>
+<img src="https://i.loli.net/2020/04/07/KAmrWBp1lGdUZkY.png" alt="验证概述1.1.png" style="zoom: 67%;" />
+
+<p><strong>验证的周期</strong></p>
+<p>功能验证有着一整套完备的流程，从硬件系统定义贯穿到硅后测试部分。</p>
+<p><img src="https://i.loli.net/2020/04/09/5eGZx9tBqIz8Xyk.png" alt="验证概述1.3.png"></p>
 <h2 id="什么是验证测试平台？"><a href="#什么是验证测试平台？" class="headerlink" title="什么是验证测试平台？"></a>什么是验证测试平台？</h2><hr>
 <p><img src="https://i.loli.net/2020/04/07/bHLy5WuARsGMhCK.png" alt="验证概述1.2.png"></p>
 <p>如图所示，测试平台主要包括的模块有时钟/重置（clock/reset）、激励发生器（stimulator）、检测器（monitor）、比较器（checker）以及待测设计（DUT）。其中：</p>

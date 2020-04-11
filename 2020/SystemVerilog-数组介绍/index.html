@@ -24,34 +24,24 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="快慢时钟交互路径如何检查建立时间和保持时间">
+  <meta name="description" content="什么是组合型数组？什么又是非组合型数组？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Timing across Clock Domains">
-<meta property="og:url" content="https://www.sliu.info/2020/2020-03-01-Timing-across-Clock-Domains/index.html">
+<meta property="og:title" content="SystemVerilog 数组介绍">
+<meta property="og:url" content="https://www.sliu.info/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="快慢时钟交互路径如何检查建立时间和保持时间">
+<meta property="og:description" content="什么是组合型数组？什么又是非组合型数组？">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/x7XgV3cKHMfas9Y.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/JFPeac2AMBQkV5p.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/xeDVXNYmaWhs7KP.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/TkYIrztawg2l3M5.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/CxLa2IE5ijuNB8R.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/lzbyeaXTuxOPhQm.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/6LAiWREQpydqMob.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/CPNjQ5eBEvWzRUL.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/ZDqOS7jEbTrPa5t.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/ofS3F1UvID4Ri9Y.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/5OLJNHDsfRwPBEV.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/rwCXEFpYBSyj8fW.png">
-<meta property="og:image" content="https://i.loli.net/2020/03/01/Eh4GYrVkie2unDF.png">
-<meta property="article:published_time" content="2020-03-01T04:52:38.000Z">
-<meta property="article:modified_time" content="2020-04-07T09:05:41.559Z">
+<meta property="og:image" content="https://i.loli.net/2020/04/11/PvsCz36pwLSZYrm.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/11/kFmCXt6IansPUY1.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/11/J8IzFPNGb3Z52W1.png">
+<meta property="article:published_time" content="2020-04-11T06:11:35.000Z">
+<meta property="article:modified_time" content="2020-04-11T11:17:51.280Z">
 <meta property="article:author" content="Shuang liu">
-<meta property="article:tag" content="STA">
+<meta property="article:tag" content="SystemVerilog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/03/01/x7XgV3cKHMfas9Y.png">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/11/PvsCz36pwLSZYrm.png">
 
-<link rel="canonical" href="https://www.sliu.info/2020/2020-03-01-Timing-across-Clock-Domains/">
+<link rel="canonical" href="https://www.sliu.info/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/">
 
 
 <script id="page-configurations">
@@ -63,7 +53,7 @@
   };
 </script>
 
-  <title>Timing across Clock Domains | Shuang'Blog</title>
+  <title>SystemVerilog 数组介绍 | Shuang'Blog</title>
   
 
 
@@ -222,7 +212,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.sliu.info/2020/2020-03-01-Timing-across-Clock-Domains/">
+    <link itemprop="mainEntityOfPage" href="https://www.sliu.info/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -235,7 +225,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          Timing across Clock Domains
+          SystemVerilog 数组介绍
         </h2>
 
         <div class="post-meta">
@@ -244,23 +234,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-03-01 12:52:38" itemprop="dateCreated datePublished" datetime="2020-03-01T12:52:38+08:00">2020-03-01</time>
+              <time title="创建时间：2020-04-11 14:11:35 / 修改时间：19:17:51" itemprop="dateCreated datePublished" datetime="2020-04-11T14:11:35+08:00">2020-04-11</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-07 17:05:41" itemprop="dateModified" datetime="2020-04-07T17:05:41+08:00">2020-04-07</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B9%A6%E7%B1%8D%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">书籍文档</span></a>
+                  <a href="/categories/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">芯片验证基础</span></a>
                 </span>
             </span>
 
@@ -269,7 +253,7 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 798</span>
+		  </span>本文字数: 819</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
@@ -286,64 +270,52 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>快慢时钟交互路径如何检查建立时间和保持时间</p>
- <a id="more"></a>
+        <p>什么是组合型数组？什么又是非组合型数组？</p>
+<a id="more"></a>
 
-<h1 id="Slow-to-Fast-Clock-Domains"><a href="#Slow-to-Fast-Clock-Domains" class="headerlink" title="Slow to Fast Clock Domains"></a>Slow to Fast Clock Domains</h1><p>按下列命令定义Clock:</p>
-<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create_clock -name CLKM -period <span class="number">20</span> -waveform &#123;<span class="number">0</span> <span class="number">10</span>&#125; [get_ports CLKM]</span><br><span class="line">create_clock -name CLKP -period <span class="number">5</span> -waveform &#123;<span class="number">0</span> <span class="number">2.5</span>&#125; [get_ports CLKP]</span><br></pre></td></tr></table></figure>
+<h2 id="组合型和非组合型数组"><a href="#组合型和非组合型数组" class="headerlink" title="组合型和非组合型数组"></a>组合型和非组合型数组</h2><hr>
+<h3 id="非组合型（unpacked）"><a href="#非组合型（unpacked）" class="headerlink" title="非组合型（unpacked）"></a>非组合型（unpacked）</h3><p>verilog中通常定义例如<code>reg [15:0] RAM[0:4095];</code>，这种数组定义为memory array用作数据存储。SV将这种声明数组的方式称作非组合型数组，即数组中的成员之间存储数据都是互相独立的。</p>
+<p>例如作以下定义：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">wire</span> [<span class="number">7</span>:<span class="number">0</span>] <span class="keyword">table</span> [<span class="number">3</span>:<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
 
-<p><em>Path from a slow clock to a faster clock</em></p>
-<p><img src="https://i.loli.net/2020/03/01/x7XgV3cKHMfas9Y.png" alt="STA4.1.png"> </p>
-<p>当 launch flip-flop 和capture flip-flop时钟频率不同时，STA首先需要确定公共的周期</p>
-<p> <em>Setup and hold checks with slow to fast path</em></p>
-<p><img src="https://i.loli.net/2020/03/01/JFPeac2AMBQkV5p.png" alt="STA4.2.png"></p>
-<p>如上图所示，在快时钟的第一个时钟周期进行setup/hold检查，这也是最严苛的检查，有如下结果。</p>
-<p>Setup time check 时序报告：</p>
-<p><img src="https://i.loli.net/2020/03/01/xeDVXNYmaWhs7KP.png" alt="STA4.3.png"></p>
-<p>hold time check 时序报告：</p>
-<p><img src="https://i.loli.net/2020/03/01/TkYIrztawg2l3M5.png" alt="STA4.4.png"></p>
-<p>但是实际情况中，组合逻辑延时可能会很大，远大于一个快时钟周期。因此用快时钟的第一个时钟周期来检查时序，是不合理的。根据实际延时，我们可以通过特殊指令，指定在后面第几个时钟周期进行检查。</p>
-<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_multicycle_path <span class="number">4</span> -setup -from [get_clocks CLKM] -to [get_clocks CLKP] -end</span><br></pre></td></tr></table></figure>
+<p>对应的存储结构为：</p>
+<p><img src="https://i.loli.net/2020/04/11/PvsCz36pwLSZYrm.png" alt="SV数组介绍3.1.png"></p>
+<h3 id="组合型（packed）"><a href="#组合型（packed）" class="headerlink" title="组合型（packed）"></a>组合型（packed）</h3><p>SV中将具有向量结构的数组声明方式作为组合型。其相对于非组合型在声明时的差别在于，其索引在数组名的左侧，数组维度从左到右来识别。</p>
+<p>例如作如下定义：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] data;<span class="comment">//2维组合声明</span></span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>The -end specifies that the multicycle of 4 refers to the end point or the capture clock.</p>
-</blockquote>
-<p><em>Multicycle of 4 between clock domains</em><br><img src="https://i.loli.net/2020/03/01/CxLa2IE5ijuNB8R.png" alt="STA4.5.png"> </p>
-<p>通过上述命令后，setup time check 在20ns时刻，hold time check 在15ns时刻。</p>
-<p>Setup time check 时序报告：</p>
-<p><img src="https://i.loli.net/2020/03/01/lzbyeaXTuxOPhQm.png" alt="STA4.6.png"></p>
-<p>hold time check 时序报告：</p>
-<p><img src="https://i.loli.net/2020/03/01/6LAiWREQpydqMob.png" alt="STA4.7.png"></p>
-<p>在hold time check 的报告中，可以发现slack为负值，是违例的。在大多数设计中，数据的保持时间都比较短，所以在第一个时钟边沿，即launch edge 对应的时间边沿处检查是更能符合实际的。为实现这一点，我们需要hold time check做如下约束。</p>
- <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_multicycle_path <span class="number">3</span> -hold  -from [get_clocks CLKM] -to [get_clocks CLKP] -end</span><br></pre></td></tr></table></figure>
+<p>对应的存储结构为：</p>
+<p><img src="https://i.loli.net/2020/04/11/kFmCXt6IansPUY1.png" alt="SV数组介绍3.2.png"></p>
+<h3 id="区别分析"><a href="#区别分析" class="headerlink" title="区别分析"></a>区别分析</h3><p>初始化时，组合型（packed）存储值是连续的，可以对所有元素统一赋值；非组合型（unpacked）中则需要分别对每一个维度进行赋值。</p>
+<p>例如：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//packed</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] a = <span class="number">32</span>’h0; <span class="comment">// vector assignment</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] b = &#123;<span class="number">16</span>’hz,<span class="number">16</span>’h0&#125;; <span class="comment">// concatenate operator</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] c = &#123;<span class="number">16</span>&#123;<span class="number">2</span>’b01&#125;&#125;; <span class="comment">// replicate operator</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//unpacked</span></span><br><span class="line"><span class="keyword">int</span> d [<span class="number">0</span>:<span class="number">1</span>][<span class="number">0</span>:<span class="number">3</span>] = ’&#123; ’&#123;<span class="number">7</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">5</span>&#125;, ’&#123;<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">6</span>&#125; &#125;;</span><br><span class="line"><span class="comment">// d[0][0] = 7  d[0][1] = 3  d[0][2] = 0  d[0][3] = 5</span></span><br><span class="line"><span class="comment">// d[1][0] = 2  d[1][1] = 0  d[1][2] = 1  d[1][3] = 6</span></span><br></pre></td></tr></table></figure>
 
-<p> <em>Hold time relaxed with multicycle hold specification</em></p>
-<p><img src="https://i.loli.net/2020/03/01/CPNjQ5eBEvWzRUL.png" alt="STA4.8.png"></p>
-<p>hold time check 时序报告：</p>
-<p><img src="https://i.loli.net/2020/03/01/ZDqOS7jEbTrPa5t.png" alt="STA4.9.png"></p>
-<p>总结一下，慢时钟到快时钟周期进行检查，可以设置在第N个快时钟周期来检查setup，同样也可以设置在第N个时钟周期对应的hold time check时间点的前N-1个时钟周期进行hold检查，这样更能贴合保持时间检查的实际情况。</p>
-<h1 id="Fast-to-slow-Clock-Domains"><a href="#Fast-to-slow-Clock-Domains" class="headerlink" title="Fast to slow Clock Domains"></a>Fast to slow Clock Domains</h1><p>通过下列命令，定义快时钟CLKP和慢时钟CLKM：</p>
-<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create_clock -name CLKM -period <span class="number">20</span> -waveform &#123;<span class="number">0</span> <span class="number">10</span>&#125; [get_ports CLKM]</span><br><span class="line">create_clock -name CLKP -period <span class="number">5</span> -waveform &#123;<span class="number">0</span> <span class="number">2.5</span>&#125; [get_ports CLKP]</span><br></pre></td></tr></table></figure>
-
-<p>Path from fast clock to slow clock domain如下图所示，存在4种setup timing checks possible，以最严格的setup4为例检查setup time。</p>
-<p><img src="https://i.loli.net/2020/03/01/ofS3F1UvID4Ri9Y.png" alt="STA4.10.png"> </p>
-<p>Setup time check 时序报告：</p>
-<p><img src="https://i.loli.net/2020/03/01/5OLJNHDsfRwPBEV.png" alt="STA4.11.png"></p>
-<p>最严格的保持时间检查是在快时钟的第一个时钟周期setup1 0ns时，确保capture edge 在0ns时不会捕获到launch flip-flop将要改变的数据。</p>
-<p><img src="https://i.loli.net/2020/03/01/rwCXEFpYBSyj8fW.png" alt="STA4.12.png"></p>
-<p>同slow to fast clock domains setup/hold time check一样，我们可以通过设置约束调整快时钟的默认周期的数据发射边沿，设置其在第几个时钟周期进行建立时间检查，让慢时钟进行建立时间检查。 </p>
-<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set_multicycle_path <span class="number">2</span> -setup -from [get_clocks CLKP] -to [get_clocks CLKM] -start</span><br><span class="line">set_multicycle_path <span class="number">1</span> -hold -from [get_clocks CLKP] -to [get_clocks CLKM] -start</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>The -start option refers to the launch clock and is the default for a multicycle hold.</p>
-</blockquote>
-<p>As expected, the launch clock edge is at 10ns and the capture clock edge is at 20ns，The hold check is at 0ns where both the capture and launch clocks have rising edges.</p>
-<p><em>Setup multicycle of 2</em></p>
-<p><img src="https://i.loli.net/2020/03/01/Eh4GYrVkie2unDF.png" alt="STA4.13.png"></p>
+<p>非组合型数组中，若两个数组进行拷贝和赋值时，左右两边数组的维度和大小必须严格一致；组合型数组中，赋值左右两侧操作数的大小和维度不同时，也可以做赋值，会采用截取或者扩展的方式进行赋值。</p>
+<p>非组合型和组合型之间无法直接地互相赋值。</p>
+<h3 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h3><ul>
+<li><p>添加了foreach循环结构，用于遍历一维或多维数组，不需要指定该数组的大小。</p>
+</li>
+<li><p>添加了系统函数，例如：</p>
+<p><code>$dimensions(array_name)</code>,返回数组的维度；</p>
+<p><code>$left(array_name,dimensions)</code>,返回指定维度的最左索引值；</p>
+<p><code>$size(array_name,dimensions)</code>，返回指定维度的尺寸大小等等</p>
+</li>
+</ul>
+<h2 id="其他数组类型"><a href="#其他数组类型" class="headerlink" title="其他数组类型"></a>其他数组类型</h2><hr>
+<h3 id="动态数组"><a href="#动态数组" class="headerlink" title="动态数组"></a>动态数组</h3><p>动态数组在声明时使用“[]”，且不会为限制数组尺寸。动态数组一开始为空，使用new[]为其分配空间。同时，内建方法size(),delete()可以对动态数组进行操作。</p>
+<h3 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h3><p>SV引入了队列，结合了数组和链表。通过“[$]”声明队列，索引值从0到$，常用的内建函数包括push_back(val)、push_front(val)、pop_back()和pop_front()来顺序添加或者移除并且获得数据成员。</p>
+<h3 id="关联数组"><a href="#关联数组" class="headerlink" title="关联数组"></a>关联数组</h3><p>用于存放散列的数据成员，散列的索引类型除了为整形外还可以为字符串或者其它类型，散列的存储数据也可以为任意类型。</p>
+<p><img src="https://i.loli.net/2020/04/11/J8IzFPNGb3Z52W1.png" alt="SV数组介绍3.3.png"></p>
+<h2 id="数组操作方法"><a href="#数组操作方法" class="headerlink" title="数组操作方法"></a>数组操作方法</h2><hr>
+<p>常见的包括以下几类：</p>
+<ul>
+<li>缩减方法，sum、product、and、or和xor；</li>
+<li>定位方法，min、max和unique等，foreach实现数组搜索或者find..width查找满足条件的数据成员；</li>
+<li>排序方法，reverse、sort、rsort和shuffle等。</li>
+</ul>
 <hr>
 <p><em>Reference</em>： </p>
-<p>1.<a href="https://link.springer.com/content/pdf/bfm%3A978-0-387-93820-2%2F1.pdf" target="_blank" rel="noopener">Static Timing Analysis for Nanometer Designs A Practical Approach</a></p>
-<p>2.<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
 
     </div>
 
@@ -379,7 +351,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.sliu.info/2020/2020-03-01-Timing-across-Clock-Domains/" title="Timing across Clock Domains">https://www.sliu.info/2020/2020-03-01-Timing-across-Clock-Domains/</a>
+    <a href="https://www.sliu.info/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/" title="SystemVerilog 数组介绍">https://www.sliu.info/2020/SystemVerilog-数组介绍/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -401,7 +373,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/STA/" rel="tag"><i class="fa fa-tag"></i> STA</a>
+              <a href="/tags/SystemVerilog/" rel="tag"><i class="fa fa-tag"></i> SystemVerilog</a>
           </div>
 
         
@@ -410,13 +382,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/2020-02-29-%E5%8D%95%E5%91%A8%E6%9C%9F%E8%B7%AF%E5%BE%84%E7%9A%84setup-hold-time-check/" rel="prev" title="单周期路径的setup/hold time check">
-      <i class="fa fa-chevron-left"></i> 单周期路径的setup/hold time check
+    <a href="/2020/SystemVerilog-%E8%AF%AD%E6%B3%95%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B/" rel="prev" title="SystemVerilog 语法基本类型">
+      <i class="fa fa-chevron-left"></i> SystemVerilog 语法基本类型
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/Multiple-Clocks/" rel="next" title="Multiple Clocks">
-      Multiple Clocks <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -481,7 +450,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Slow-to-Fast-Clock-Domains"><span class="nav-number">1.</span> <span class="nav-text">Slow to Fast Clock Domains</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fast-to-slow-Clock-Domains"><span class="nav-number">2.</span> <span class="nav-text">Fast to slow Clock Domains</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#组合型和非组合型数组"><span class="nav-number">1.</span> <span class="nav-text">组合型和非组合型数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#非组合型（unpacked）"><span class="nav-number">1.1.</span> <span class="nav-text">非组合型（unpacked）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合型（packed）"><span class="nav-number">1.2.</span> <span class="nav-text">组合型（packed）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#区别分析"><span class="nav-number">1.3.</span> <span class="nav-text">区别分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他特性"><span class="nav-number">1.4.</span> <span class="nav-text">其他特性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他数组类型"><span class="nav-number">2.</span> <span class="nav-text">其他数组类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#动态数组"><span class="nav-number">2.1.</span> <span class="nav-text">动态数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列"><span class="nav-number">2.2.</span> <span class="nav-text">队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关联数组"><span class="nav-number">2.3.</span> <span class="nav-text">关联数组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组操作方法"><span class="nav-number">3.</span> <span class="nav-text">数组操作方法</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
