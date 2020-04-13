@@ -3,7 +3,8 @@
   <entry>
     <title>SystemVerilog 类和包介绍</title>
     <url>/2020/SystemVerilog-%E7%B1%BB%E5%92%8C%E5%8C%85%E4%BB%8B%E7%BB%8D/</url>
-    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><a id="more"></a>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>类是一种可以包含数据和方法的类型。通过类的使用，实现面向对象编程（OOP，Object-Oriented Programming）……</p>
+<a id="more"></a>
 
 <h2 id="类的封装"><a href="#类的封装" class="headerlink" title="类的封装"></a>类的封装</h2><hr>
 <p>类是一种可以包含数据和方法的类型。通过类的使用，实现面向对象编程（OOP，Object-Oriented Programming） ,用户可以创建复杂的数据类型，在更加抽象的层次建立测试平台和系统级模型，通过调用函数可以执行一个动作而不仅是完成电平的改变。</p>
