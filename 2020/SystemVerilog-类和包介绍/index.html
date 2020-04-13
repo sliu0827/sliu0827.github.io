@@ -24,31 +24,22 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。">
+  <meta name="description" content="类的封装 类是一种可以包含数据和方法的类型。通过类的使用，实现面向对象编程（OOP，Object-Oriented Programming） ,用户可以创建复杂的数据类型，在更加抽象的层次建立测试平台和系统级模型，通过调用函数可以执行一个动作而不仅是完成电平的改变。 OOP术语：  类（class）：包含成员变量和成员方法； 对象（object）：类在例化后的实例； 句柄（handle）：指向">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SRAM_cell电学稳定性分析">
-<meta property="og:url" content="https://www.sliu.info/2020/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/index.html">
+<meta property="og:title" content="SystemVerilog 类和包介绍">
+<meta property="og:url" content="https://www.sliu.info/2020/SystemVerilog-%E7%B1%BB%E5%92%8C%E5%8C%85%E4%BB%8B%E7%BB%8D/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。">
+<meta property="og:description" content="类的封装 类是一种可以包含数据和方法的类型。通过类的使用，实现面向对象编程（OOP，Object-Oriented Programming） ,用户可以创建复杂的数据类型，在更加抽象的层次建立测试平台和系统级模型，通过调用函数可以执行一个动作而不仅是完成电平的改变。 OOP术语：  类（class）：包含成员变量和成员方法； 对象（object）：类在例化后的实例； 句柄（handle）：指向">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/hypWa23on9Y6SUT.jpg">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/ZR5cD8Ar6dQg4kG.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/M3QP6qGIwLU9YgH.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/hCbrwNcd1UKqRvm.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/YmZqEtu4s8oUaxd.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/qJ4Bnw86Dpi1TRN.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/rtyBeKJo1u25UgE.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png">
-<meta property="og:image" content="https://i.loli.net/2020/02/27/9fPUMrCs7QpLxA6.png">
-<meta property="article:published_time" content="2020-02-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-02-28T16:07:14.031Z">
+<meta property="og:image" content="https://i.loli.net/2020/04/13/bkE2rxFoIqsuCej.png">
+<meta property="article:published_time" content="2020-04-12T10:53:02.000Z">
+<meta property="article:modified_time" content="2020-04-13T08:33:22.333Z">
 <meta property="article:author" content="Shuang liu">
-<meta property="article:tag" content="Memory">
+<meta property="article:tag" content="SystemVerilog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/13/bkE2rxFoIqsuCej.png">
 
-<link rel="canonical" href="https://www.sliu.info/2020/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/">
+<link rel="canonical" href="https://www.sliu.info/2020/SystemVerilog-%E7%B1%BB%E5%92%8C%E5%8C%85%E4%BB%8B%E7%BB%8D/">
 
 
 <script id="page-configurations">
@@ -60,7 +51,7 @@
   };
 </script>
 
-  <title>SRAM_cell电学稳定性分析 | Shuang'Blog</title>
+  <title>SystemVerilog 类和包介绍 | Shuang'Blog</title>
   
 
 
@@ -219,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.sliu.info/2020/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="https://www.sliu.info/2020/SystemVerilog-%E7%B1%BB%E5%92%8C%E5%8C%85%E4%BB%8B%E7%BB%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -232,7 +223,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          SRAM_cell电学稳定性分析
+          SystemVerilog 类和包介绍
         </h2>
 
         <div class="post-meta">
@@ -242,14 +233,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-15T00:00:00+08:00">2020-02-15</time>
+              <time title="创建时间：2020-04-12 18:53:02" itemprop="dateCreated datePublished" datetime="2020-04-12T18:53:02+08:00">2020-04-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-29 00:07:14" itemprop="dateModified" datetime="2020-02-29T00:07:14+08:00">2020-02-29</time>
+                <time title="修改时间：2020-04-13 16:33:22" itemprop="dateModified" datetime="2020-04-13T16:33:22+08:00">2020-04-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -257,7 +248,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%B9%A6%E7%B1%8D%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">书籍文档</span></a>
+                  <a href="/categories/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">芯片验证基础</span></a>
                 </span>
             </span>
 
@@ -266,13 +257,13 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 1.2k</span>
+		  </span>本文字数: 961</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
 		  <span class="post-meta-item-icon">
 			<i class="fa fa-clock-o"></i>
-		  </span>阅读时长 &asymp; 4 分钟</span>
+		  </span>阅读时长 &asymp; 3 分钟</span>
 
         </div>
       </header>
@@ -283,47 +274,61 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><em>在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。</em></p>
-<a id="more"></a>
+        <a id="more"></a>
 
+<h2 id="类的封装"><a href="#类的封装" class="headerlink" title="类的封装"></a>类的封装</h2><hr>
+<p>类是一种可以包含数据和方法的类型。通过类的使用，实现面向对象编程（OOP，Object-Oriented Programming） ,用户可以创建复杂的数据类型，在更加抽象的层次建立测试平台和系统级模型，通过调用函数可以执行一个动作而不仅是完成电平的改变。</p>
+<p><strong>OOP术语：</strong></p>
+<ul>
+<li>类（class）：包含成员变量和成员方法；</li>
+<li>对象（object）：类在例化后的实例；</li>
+<li>句柄（handle）：指向对象的指针；</li>
+<li>原型（prototype）：程序的声明部分，包含程序名、返回类型和参数列表</li>
+</ul>
+<p><strong>如何创建一个类（class）？</strong></p>
+<p>将class的声明和创建分开。</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Transaction tr; <span class="comment">//声明一个句柄</span></span><br><span class="line">tr = <span class="keyword">new</span>(); <span class="comment">//为一个Transaction对象分配空间</span></span><br></pre></td></tr></table></figure>
 
+<p>首先，为对象创建一个句柄，在声明时会被初始化为特殊值null。</p>
+<p>接下来，调用构造函数new()函数来创建Transaction对象。new函数为Transaction分配空间，将变量初始化为默认值（二值变量为0，四值变量为X），并返回一个指向类对象的句柄，其类型就是类本身。</p>
+<p><strong>赋值和拷贝</strong></p>
+<ul>
+<li><p>浅拷贝（shallow copy）与深拷贝（deep copy）</p>
+<p>浅拷贝（shallow copy），在创建P2对象时，调用new函数进行复制，Packet 对象中的成员变量例如整数、字符串和句柄等被拷贝，但如果类中包含一个指向另一个类的句柄则不会被复制。</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Packet P1;</span><br><span class="line">Packet P2;</span><br><span class="line">P1 = <span class="keyword">new</span>;</span><br><span class="line">P2 = <span class="keyword">new</span> P1;</span><br></pre></td></tr></table></figure>
 
-<h3 id="Read-and-Write-Operatioins"><a href="#Read-and-Write-Operatioins" class="headerlink" title="Read and Write Operatioins"></a><strong>Read and Write Operatioins</strong></h3><hr>
-<p><img src="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png" alt="memory2.1.png"></p>
-<p>Fig.1 SRAM memory cell<br>图1为CMOS 6-T SRAM电路图，图2为其读写操作波形。</p>
-<p><img src="https://i.loli.net/2020/02/27/hypWa23on9Y6SUT.jpg" alt="memory2.2.png"></p>
-<p>Fig.2 Fundamental waveform of SRAM operation</p>
-<p><strong>当写**</strong>入数据“0”(W“0”)**时，word line(WL)被激活，bit line根据输入数据值被驱动到“H”和“L”状态。存储节点的电压发生翻转，输入数据写入到数据存储节点中。 </p>
-<p><strong>当从ce**</strong>ll中读“0”(R“0”)**时，所有bit line被预充为“H”，激活WL。原先保存在数据节点的数据使bit lines出现电压差。电压差通过灵敏放大器(sense amplifier)放大，保持的数据(retained data)被读出。</p>
-<p><strong>当写入数据“1”到cell中，**</strong>且写入失败(W “1” write failure case)**时，存储节点(N0/N1)的电压没有翻转，正确的数据没有写入cell中。在下一个读周期，不正确的数据“0”被读出。</p>
-<p><strong>当读数据“1”，**</strong>且读出失败(R1 read failure case<strong>**)</strong>时，存储节点的电压(N0/N1)发生翻转，存储节点的保持数据(retained data)被破坏。</p>
-<p>图3为SRAM memory保持数据情形，存储节点N0和N1，保持相反的状态，“H”和“L”。word line 为“L”。</p>
-<p><img src="https://i.loli.net/2020/02/27/ZR5cD8Ar6dQg4kG.png" alt="memory2.3.png"></p>
-<p>Fig.3 SRAM cell condition during data retention</p>
-<p>如下图4所示，Memory cell读过程中，右边的节点N1，状态为”H”，左边的节点状态为”L”。在读之前，bit lines被预充电到”H”状态。读的过程中，word lines变为”H”状态，存取管(access MOSs)导通打开。读cell电流Iread从access MOS到“L”-state的存储节点流动，对预充的bit line放电。</p>
-<p><img src="https://i.loli.net/2020/02/27/M3QP6qGIwLU9YgH.png" alt="memory2.4.png"></p>
-<p>Fig.4 Read operation of SRAM cell</p>
-<p>图5a电压波形是SRAM cell在正常读数据的过程中，每个存储节点的电压变化。正常读数据时，存储节点的电压不会发生翻转。图5b为memory cell正常操作的butterfly cruves，用来评估静态噪声裕量(SNM)。两条线之间有两个密闭空隙（space），意味着SRAM读操作的SNM是足够的。</p>
-<p><img src="https://i.loli.net/2020/02/27/hCbrwNcd1UKqRvm.png" alt="memory2.5.png"></p>
-<p>Fig.5 Voltage waveforms and butterfly curves during normal read operation.<br> (a) SRAM cell nodes during normal read operation.<br>(b) Butterfly curves to estimate SNM</p>
-<p><strong>在读操作期间，由于access MOS和driver MOS之间的电阻分压</strong>，存储节点的“L”-state被提升。<strong>如果存储节点电压“L”-state的提升值超过了由driver MOS,DR1和loadMOS，LD1组成的反相器的逻辑中点电压，保持数据将翻转**</strong>，被破坏(6a)**。这种情况就是memory cell读失败。图6b是memory cell读数据失败对应的butterfly curves，两条曲线之间只有一个空隙，SRAM能正常读的SNM是不够的。</p>
-<p><img src="https://i.loli.net/2020/02/27/YmZqEtu4s8oUaxd.png" alt="memory2.6.png"></p>
-<p>Fig.6 Voltage waveforms and butterfly curves during failure read operation.<br>(a) SRAM cell nodes during failureread operation.<br>(b) Butterfly curves to estimate SNM</p>
-<p><img src="https://i.loli.net/2020/02/27/qJ4Bnw86Dpi1TRN.png" alt="memory2.7.png"></p>
-<p>Fig.7 Write operation of SRAM cell</p>
-<p>关于写操作，如图7，在写之前，左边存储节点N0是“H” state，右边存储节点N1是“L” state。当要写的数据到达bit lines时，“H” state存储节点经过access MOS放电，写操作cell电流Iwrite,在图中用实线箭头标出。当“H”电位节点被放电至“L”电位时，节点的电压此时发生翻转，写操作完成(图8)。</p>
-<p><strong>在写的过程中，load MOS通过上拉电流Ipullup充电</strong>，如图3.7中虚线箭头所示。因此，<strong>如果load MOS充电的电流比access MOS放电电流大的话，存储节点“H”电位不会放电，节点电压不发生翻转，写操作失败(图9)</strong>。</p>
-<p><img src="https://i.loli.net/2020/02/27/rtyBeKJo1u25UgE.png" alt="memory2.8.png"></p>
-<p>Fig.8 SRAM cell nodes during normal write operation</p>
-<p><img src="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png" alt="memory2.9.png"></p>
-<p>Fig.9 SRAM cell nodes during failure write operation</p>
-<h3 id="Sum"><a href="#Sum" class="headerlink" title="Sum"></a><strong>Sum</strong></h3><hr>
-<p><strong>在SRAM cell 中，加强读操作和写操作稳定性的设计方法是一个矛盾的关系</strong>。例如，在表1中促使读操作和写操作更稳定的方法。所以，<strong>很难同时提高读和写操作的稳定性</strong>。在所有的130nm之前的传统制造工艺中，在SRAM cell中有更大的电压工作空间，可以同时保证稳定性，不会出问题。在更近的制造工艺中，随着MOSFETs中Vth变化(variation)，电压工作空间(operation margin)减小，SRAM cell中MOSFET电流随着Vth变化而波动(fluctuated)。</p>
-<p>除此之外，Vth variations会破坏在读和写操作期间MOSFET电流的平衡。因此，在SRAM cell设计阶段，最大化SRAM cell的operatingmargin，包括读和写的margin是必不可少的。Vth是MOSFET的一个很好的参数表征，它几乎完全可以指示晶体管的性能。</p>
-<p>Table.1 Drivability change to enhancestability of each operation</p>
-<p><img src="https://i.loli.net/2020/02/27/9fPUMrCs7QpLxA6.png" alt="memory2.10.png"></p>
-<p>为了实现最大化的operating-margins，需要更准确的SRAM operating margins，在本书第3章中，对于受MOSFET Vth variation而影响的SRAM operating margins分析做了进一步描述，这里不再细说。</p>
-<p>[^Ref]: <em>Low power and reliable SRAM memory cell and array design[M]. Springer Science &amp; Business Media, 2011.</em></p>
+<p>深拷贝（deep copy），对对象中的句柄指向的对象也做相应的拷贝，即做递归的拷贝。用户需要自己定义深拷贝的函数才能实现这种需求。</p>
+<p>例如有下列代码，</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> rgb;</span><br><span class="line">    <span class="keyword">byte</span> red;</span><br><span class="line">    <span class="keyword">byte</span> green;</span><br><span class="line">    <span class="keyword">byte</span> blue;</span><br><span class="line"><span class="keyword">endclass</span>:rgb</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> pixel;</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">int</span> y;</span><br><span class="line">    </span><br><span class="line">    rgb color;</span><br><span class="line"><span class="keyword">endclass</span>:pixel</span><br><span class="line">pixel dot = <span class="keyword">new</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/04/13/bkE2rxFoIqsuCej.png" alt="SV类和包介绍4.1.png"></p>
+<p>图中(a)，利用new函数拷贝对象时，只能对color句柄做拷贝，而不会对其指向的对象也做拷贝，因此拷贝的类和原先的pixel都指向同一rgb对象，属于浅拷贝（shallow copy）。</p>
+</li>
+</ul>
+<p><strong>其他特征</strong></p>
+<ul>
+<li>静态成员（变量/方法）,类的成员默认是动态的，可添加关键字static创建共享的静态成员变量或者方法</li>
+<li>使用this来索引当前所在对象的成员（变量/参数/方法）</li>
+<li>数据的隐藏，使得类的测试和维护变得简单。例如local，protected</li>
+</ul>
+<h2 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h2><hr>
+<p>SV中通过使用关键词extends，可以扩展一个新的类继承于先前定义过的类，包括其所有的成员（变量/方法）。</p>
+<p><strong>成员的覆盖</strong></p>
+<p>子类可以继承父类的成员。当父类句柄指向子类的对象时，例如：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LinkedPacket lp = <span class="keyword">new</span>;</span><br><span class="line">Packet p = lp;</span><br></pre></td></tr></table></figure>
+
+<p>因为子类中声明了与父类同名的成员（变量/方法），其同名成员的访问都将指向子类，而父类的成员将被隐藏。</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Packet;</span><br><span class="line">  <span class="keyword">integer</span> i = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="keyword">integer</span> get();</span><br><span class="line">    get = i;</span><br><span class="line">  <span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> LinkedPacket <span class="keyword">extends</span> Packet;</span><br><span class="line">  <span class="keyword">integer</span> i = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="keyword">integer</span> get();</span><br><span class="line">    get = -i;</span><br><span class="line">  <span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"></span><br><span class="line">LinkedPacket lp = <span class="keyword">new</span>;</span><br><span class="line">Packet p = lp;</span><br><span class="line"></span><br><span class="line">j = p<span class="variable">.i</span>; <span class="comment">// j = 1, not 2</span></span><br><span class="line">j = p<span class="variable">.get</span>(); <span class="comment">// j = 1, not -1 or –2</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>super 的使用</strong></p>
+<p>用于访问当前对象的父类成员，尤其当子类与父类的成员同名时，可以使用其指定访问父类成员，而非默认的子类成员。</p>
+<h2 id="包的使用"><a href="#包的使用" class="headerlink" title="包的使用"></a>包的使用</h2><hr>
+<p>为了使得可以在多个模块（硬件）或者类（软件）之间共享用户定义的类型，SV添加了包（package）。</p>
+<p>module、interface、class等可以使用包中定义或者声明的内容。</p>
+<p>可以通过域的索引符::号直接引用,或者通过通配符*来将包中所有的类别导入到指定容器中。</p>
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
 
     </div>
 
@@ -359,7 +364,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.sliu.info/2020/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/" title="SRAM_cell电学稳定性分析">https://www.sliu.info/2020/2020-02-15-SRAM_cell电学稳定性分析/</a>
+    <a href="https://www.sliu.info/2020/SystemVerilog-%E7%B1%BB%E5%92%8C%E5%8C%85%E4%BB%8B%E7%BB%8D/" title="SystemVerilog 类和包介绍">https://www.sliu.info/2020/SystemVerilog-类和包介绍/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -381,7 +386,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/Memory/" rel="tag"><i class="fa fa-tag"></i> Memory</a>
+              <a href="/tags/SystemVerilog/" rel="tag"><i class="fa fa-tag"></i> SystemVerilog</a>
           </div>
 
         
@@ -390,13 +395,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/2020-02-12-SRAM%E5%9F%BA%E7%A1%80/" rel="prev" title="SRAM 基础">
-      <i class="fa fa-chevron-left"></i> SRAM 基础
+    <a href="/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/" rel="prev" title="SystemVerilog 数组介绍">
+      <i class="fa fa-chevron-left"></i> SystemVerilog 数组介绍
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/2020-02-18-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/" rel="next" title="RTL编码中考虑延时">
-      RTL编码中考虑延时 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -461,7 +463,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Read-and-Write-Operatioins"><span class="nav-number">1.</span> <span class="nav-text">Read and Write Operatioins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sum"><span class="nav-number">2.</span> <span class="nav-text">Sum</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#类的封装"><span class="nav-number">1.</span> <span class="nav-text">类的封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类的继承"><span class="nav-number">2.</span> <span class="nav-text">类的继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包的使用"><span class="nav-number">3.</span> <span class="nav-text">包的使用</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
