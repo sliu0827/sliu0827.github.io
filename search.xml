@@ -1,6 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>SystemVerilog 线程控制</title>
+    <url>/2020/SystemVerilog-%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>介绍SV中的任务和函数，线程控制和线程间的同步和通信的基本概念</p>
+<a id="more"></a>
+
+<h2 id="任务和函数"><a href="#任务和函数" class="headerlink" title="任务和函数"></a>任务和函数</h2><hr>
+<h3 id="函数（function）"><a href="#函数（function）" class="headerlink" title="函数（function）"></a>函数（function）</h3><p>首要目的在于为运算表达式提供返回值，其次可以简化代码，使得大型代码的维护更加容易。</p>
+<p>函数的参数列表主要有input、output、inout和ref。</p>
+<p><strong>函数的返回方式包括return直接返回，或者将值赋给与函数同名的变量。</strong></p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> [<span class="number">15</span>:<span class="number">0</span>] myfunc1 (<span class="keyword">input</span> [<span class="number">7</span>:<span class="number">0</span>] x,y);</span><br><span class="line">  myfunc1 = x * y - <span class="number">1</span>; </span><br><span class="line"><span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">function</span> [<span class="number">15</span>:<span class="number">0</span>] myfunc2 (<span class="keyword">input</span> [<span class="number">7</span>:<span class="number">0</span>] x,y);</span><br><span class="line">  <span class="keyword">return</span> x * y - <span class="number">1</span>; </span><br><span class="line"><span class="keyword">endfunction</span></span><br></pre></td></tr></table></figure>
+
+<p>如果调用具有返回值的函数，但是又不使用该返回值，可以添加void’()进行转换。</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span>'(some_function());</span><br></pre></td></tr></table></figure>
+
+<h3 id="任务（task）"><a href="#任务（task）" class="headerlink" title="任务（task）"></a>任务（task）</h3><p>任务的定义同样可以指定函数中包括的各种参数，但任务可以消耗仿真时间。同时，任务可以调用其它任务或者函数。</p>
+<p>task没有返回值，但我们依然可以利用return来使task结束。</p>
+<h3 id="二值区别"><a href="#二值区别" class="headerlink" title="二值区别"></a>二值区别</h3><ul>
+<li>function不会消耗仿真时间，而task则可能会消耗仿真时间；</li>
+<li>function无法调用task，而task可以调用function；</li>
+<li>一个可以返回数据的function只能返回一个单一数值，而任务或者void function不会返回数值；</li>
+<li>一个可以返回数据的function可以作为一个表达式中的操作数，该操作数的值即function的返回值。</li>
+</ul>
+<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><p>参数传递的过程只发生在方法的调用和返回时。</p>
+<p><strong>ref参数在传递时不会发生值拷贝，而是将变量“指针”传递到方法中，在方法内部对该参数的操作将会同时影响外部变量。</strong></p>
+<p>如果为了避免外部传入的ref参数会被方法修改，则可以添加const修饰符，来表示变量是只读变量。</p>
+<p>SV中允许参数声明自己的默认值。方法被调用时，可由参数位置顺序在调用方法时传递参数，也可以由参数名字调用方式时绑定参数。</p>
+<h2 id="线程控制"><a href="#线程控制" class="headerlink" title="线程控制"></a>线程控制</h2><hr>
+<p><strong>并行线程</strong></p>
+<p>Verilog中与顺序线程begin…end相对的是并行线程fork…join，SV引入了两种新新的创建线程的方法，fork…join_none和fork…join_any。</p>
+<p><img src="https://i.loli.net/2020/04/17/a3kyPvwTEzx7KjQ.png" alt="SV线程控制6.1.png"></p>
+<p>fork…join需要所有并行的线程都结束以后才会继续执行;</p>
+<p>fork…join_any则会等到任何一个线程结束以后就继续执行;</p>
+<p>fork…join_none则不会等待其子线程而继续执行。</p>
+<p>对于并行线程中，例如fork…join_any和fork…join_none继续执行后，未完成的后台子程序，可以通过使用wait fork或disable fork来等待或者终止这些子程序。</p>
+<p><strong>时序控制</strong></p>
+<p>SV可以通过延迟控制或者事件等待来对过程块完成时序控制。</p>
+<ul>
+<li><p>延迟控制即通过#来完成</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#10 rega &#x3D; regb;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>时间（event）控制即通过@来完成</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line">@r rega = regb;</span><br><span class="line">@(<span class="keyword">posedge</span> clock) rega = regb;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>wait语句也可以与事件或者表达式结合来完成</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">real</span> AOR[];</span><br><span class="line"><span class="keyword">initial</span> <span class="keyword">wait</span>(AOR<span class="variable">.size</span>() &gt; <span class="number">0</span>)...;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="线程的同步和通信"><a href="#线程的同步和通信" class="headerlink" title="线程的同步和通信"></a>线程的同步和通信</h2><hr>
+<p> 测试平台中的所有线程都需要同步并交换数据。例如，一个线程等待另外一个，验证环境需要等待所有激励结束、比较结束才可以结束仿真。</p>
+<h3 id="事件（event）"><a href="#事件（event）" class="headerlink" title="事件（event）"></a>事件（event）</h3><p>event可以用来控制进程的同步。</p>
+<p>一般通过使用event来声明event变量，通过-&gt;来触发事件。其他等待该事件的进程可以通过@操作符或者wait()来检查event触发状态来完成。</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">event</span> done, blast; <span class="comment">// declare two new events</span></span><br><span class="line"><span class="keyword">event</span> done_too = done; <span class="comment">// done_too as alias to done</span></span><br><span class="line"><span class="keyword">task</span> trigger( <span class="keyword">event</span> ev );</span><br><span class="line">  -&gt; ev;</span><br><span class="line"><span class="keyword">endtask</span></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">fork</span></span><br><span class="line">  @ done_too; <span class="comment">// wait for done through done_too</span></span><br><span class="line">  #<span class="number">1</span> trigger( done ); <span class="comment">// trigger done</span></span><br><span class="line"><span class="keyword">join</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fork</span></span><br><span class="line">  -&gt; blast;</span><br><span class="line">  <span class="keyword">wait</span> ( blast<span class="variable">.triggered</span> );</span><br><span class="line"><span class="keyword">join</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="wait-order-方法"><a href="#wait-order-方法" class="headerlink" title="wait_order()方法"></a>wait_order()方法</h3><p>对于较多的事件时，wait_order可以使得进程保持等待，直到在参数列表中的事件event按照顺序从左到右依次完成。</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">wait_order</span>( a, b, c);</span><br><span class="line"></span><br><span class="line"><span class="keyword">wait_order</span>( a, b, c ) <span class="keyword">else</span> <span class="built_in">$display</span>( <span class="string">"Error: events out of order"</span> );</span><br><span class="line"></span><br><span class="line"><span class="keyword">bit</span> success;</span><br><span class="line"><span class="keyword">wait_order</span>( a, b, c ) success = <span class="number">1</span>; <span class="keyword">else</span> success = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="旗语（semaphore）"><a href="#旗语（semaphore）" class="headerlink" title="旗语（semaphore）"></a>旗语（semaphore）</h3><p>多个线程对同一资源进行访问时，使用旗语来实现对同一资源的访问控制，也称为“互斥访问”。其可以确保线程A在访问的时候，线程B是无法访问的，A退出后，B才可以访问。</p>
+<p>旗语的基本操作包括：</p>
+<ul>
+<li>new方法创建一个带单个或多个钥匙的旗语；</li>
+<li>get获取一个或多个钥匙；</li>
+<li>put则可以返回一个或多个钥匙</li>
+</ul>
+<p>如果试图获取一个旗语而不被阻塞，则可以使用try_get()函数，返回1则表示有足够的钥匙。</p>
+<p>如果一个线程请求“钥匙”不足，则会一直阻塞，多个阻塞的线程会以先进先出（FIFO）的方式进行排队。</p>
+<h3 id="信箱（mailbox）"><a href="#信箱（mailbox）" class="headerlink" title="信箱（mailbox）"></a>信箱（mailbox）</h3><p>信箱mailbox可以使得进程之间的信息得以交换，数据可以由一个进程写入信箱，再由另外一个进程获得。</p>
+<p><strong>信箱的内建方法：</strong></p>
+<ul>
+<li>创建信箱：new()</li>
+<li>将信息写入信箱：put()，试着写入信箱但不会阻塞：try_put()</li>
+<li>获取信息：get()同时会取出数据，peek()不会取出数据</li>
+<li>试着从信箱取出数据但不会阻塞：try_get()/try_peek()</li>
+<li>获取信箱信息的数目：num()</li>
+</ul>
+<p>信箱的参数设置，没有指定参数时可以存放任何类型的数据，但一般不推荐这种操作。参数化信箱的方式可以使得在编译时就能够检查出类型不匹配的情况。</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> mailbox <span class="variable">#(string)</span> s_mbox;</span><br><span class="line">s_mbox sm = <span class="keyword">new</span>;</span><br><span class="line"><span class="keyword">string</span> s;</span><br><span class="line">sm<span class="variable">.put</span>( <span class="string">"hello"</span> );</span><br><span class="line">...</span><br><span class="line">sm<span class="variable">.get</span>( s ); <span class="comment">// s &lt;- "hello"</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
+]]></content>
+      <categories>
+        <category>芯片验证基础</category>
+      </categories>
+      <tags>
+        <tag>SystemVerilog</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SystemVerilog 随机约束</title>
     <url>/2020/SystemVerilog-%E9%9A%8F%E6%9C%BA%E7%BA%A6%E6%9D%9F/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>随着设计变得越来越大，要产生一个完整的激励来测试设计的功能也变得越来越困难。随机-约束，两个词组合在一起就构成了目前动态仿真验证的主流方法。</p>
