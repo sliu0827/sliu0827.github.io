@@ -17,7 +17,7 @@
 
 <h3 id="任务（task）"><a href="#任务（task）" class="headerlink" title="任务（task）"></a>任务（task）</h3><p>任务的定义同样可以指定函数中包括的各种参数，但任务可以消耗仿真时间。同时，任务可以调用其它任务或者函数。</p>
 <p>task没有返回值，但我们依然可以利用return来使task结束。</p>
-<h3 id="二值区别"><a href="#二值区别" class="headerlink" title="二值区别"></a>二值区别</h3><ul>
+<h3 id="二者区别"><a href="#二者区别" class="headerlink" title="二者区别"></a>二者区别</h3><ul>
 <li>function不会消耗仿真时间，而task则可能会消耗仿真时间；</li>
 <li>function无法调用task，而task可以调用function；</li>
 <li>一个可以返回数据的function只能返回一个单一数值，而任务或者void function不会返回数值；</li>
@@ -29,7 +29,7 @@
 <p>SV中允许参数声明自己的默认值。方法被调用时，可由参数位置顺序在调用方法时传递参数，也可以由参数名字调用方式时绑定参数。</p>
 <h2 id="线程控制"><a href="#线程控制" class="headerlink" title="线程控制"></a>线程控制</h2><hr>
 <p><strong>并行线程</strong></p>
-<p>Verilog中与顺序线程begin…end相对的是并行线程fork…join，SV引入了两种新新的创建线程的方法，fork…join_none和fork…join_any。</p>
+<p>Verilog中与顺序线程begin…end相对的是并行线程fork…join，SV引入了两种新的创建线程的方法，fork…join_none和fork…join_any。</p>
 <p><img src="https://i.loli.net/2020/04/17/a3kyPvwTEzx7KjQ.png" alt="SV线程控制6.1.png"></p>
 <p>fork…join需要所有并行的线程都结束以后才会继续执行;</p>
 <p>fork…join_any则会等到任何一个线程结束以后就继续执行;</p>
@@ -50,7 +50,7 @@
 </li>
 </ul>
 <h2 id="线程的同步和通信"><a href="#线程的同步和通信" class="headerlink" title="线程的同步和通信"></a>线程的同步和通信</h2><hr>
-<p> 测试平台中的所有线程都需要同步并交换数据。例如，一个线程等待另外一个，验证环境需要等待所有激励结束、比较结束才可以结束仿真。</p>
+<p> 测试平台中的所有线程都需要同步并交换数据。例如，一个线程等待另外一个，验证环境需要等待所有激励结束、比较结束才可以结束仿真。又有，监测器需要将监测到的数据发送至比较器，比较器又需要从不同的缓存获取数据进行比较。</p>
 <h3 id="事件（event）"><a href="#事件（event）" class="headerlink" title="事件（event）"></a>事件（event）</h3><p>event可以用来控制进程的同步。</p>
 <p>一般通过使用event来声明event变量，通过-&gt;来触发事件。其他等待该事件的进程可以通过@操作符或者wait()来检查event触发状态来完成。</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">event</span> done, blast; <span class="comment">// declare two new events</span></span><br><span class="line"><span class="keyword">event</span> done_too = done; <span class="comment">// done_too as alias to done</span></span><br><span class="line"><span class="keyword">task</span> trigger( <span class="keyword">event</span> ev );</span><br><span class="line">  -&gt; ev;</span><br><span class="line"><span class="keyword">endtask</span></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">fork</span></span><br><span class="line">  @ done_too; <span class="comment">// wait for done through done_too</span></span><br><span class="line">  #<span class="number">1</span> trigger( done ); <span class="comment">// trigger done</span></span><br><span class="line"><span class="keyword">join</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fork</span></span><br><span class="line">  -&gt; blast;</span><br><span class="line">  <span class="keyword">wait</span> ( blast<span class="variable">.triggered</span> );</span><br><span class="line"><span class="keyword">join</span></span><br></pre></td></tr></table></figure>
