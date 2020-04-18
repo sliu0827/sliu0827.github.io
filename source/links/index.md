@@ -10,7 +10,7 @@ comments: false
 
 <font size=3 color=Tan> **关于友情链接：** </font>
 
-> <font size=3 face="隶书" color=LightSlateBlue>除了自己的关注外，也给有需要的童鞋提供多一个链接~
+> <font size=3 face="隶书" color=LightSlateBlue>除自己关注外，也为需要的童鞋提供一些链接~
 >
 > 欢迎看得上小破站的朋友们联系互粉呀，
 >
