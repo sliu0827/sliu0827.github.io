@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#222">
+  <link rel="manifest" href="/images/favicon/site.webmanifest">
+  <meta name="msapplication-config" content="/images/favicon/browserconfig.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="快时钟域向慢时钟域过渡时如何采用“结绳法”进行过渡以及多bit指示信号和多bit数据流的跨时钟域处理方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="信号的跨时钟域传输问题">
+<meta property="og:url" content="https://www.sliu.info/2020/%E4%BF%A1%E5%8F%B7%E7%9A%84%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/index.html">
+<meta property="og:site_name" content="Shuang&#39;Blog">
+<meta property="og:description" content="快时钟域向慢时钟域过渡时如何采用“结绳法”进行过渡以及多bit指示信号和多bit数据流的跨时钟域处理方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/ctnbpkZzIdNQPf7.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/lPrhXa2InBcKo15.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/lRY7ZKf19seCdSb.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/f1wyv9tr5BeH2Xz.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/qysCvDAuLJ2FVlh.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/rZtiKzgWPwFJvOp.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/qQm6bYljCcKgJaM.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/uoz4bkJXtyfNFlj.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/9bOxfk3SRXqaudc.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/CPA7MctDQSjaRYs.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/14/M4bmUsfjvAeDKW3.png">
+<meta property="article:published_time" content="2020-03-12T11:43:59.000Z">
+<meta property="article:modified_time" content="2020-04-07T09:05:41.561Z">
+<meta property="article:author" content="Shuang liu">
+<meta property="article:tag" content="数字IC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/14/ctnbpkZzIdNQPf7.png">
+
+<link rel="canonical" href="https://www.sliu.info/2020/%E4%BF%A1%E5%8F%B7%E7%9A%84%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>信号的跨时钟域传输问题 | Shuang'Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a933439cb409d34608a69b99e6339a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shuang'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-comments"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.sliu.info/2020/%E4%BF%A1%E5%8F%B7%E7%9A%84%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Shuang liu">
+      <meta itemprop="description" content="你好呀">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shuang'Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          信号的跨时钟域传输问题
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-12 19:43:59" itemprop="dateCreated datePublished" datetime="2020-03-12T19:43:59+08:00">2020-03-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-07 17:05:41" itemprop="dateModified" datetime="2020-04-07T17:05:41+08:00">2020-04-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E5%AD%97IC%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">数字IC设计基础</span></a>
+                </span>
+            </span>
+
+          
+		  
+		  <!-- 添加time count 2020.02.26 -->
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
+		  </span>本文字数: 1.8k</span>
+	
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount">
+		  <span class="post-meta-item-icon">
+			<i class="fa fa-clock-o"></i>
+		  </span>阅读时长 &asymp; 6 分钟</span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>快时钟域向慢时钟域过渡时如何采用“结绳法”进行过渡以及多bit指示信号和多bit数据流的跨时钟域处理方法</p>
+<a id="more"></a>
+
+<h2 id="结绳法（快时钟–-gt-慢时钟）"><a href="#结绳法（快时钟–-gt-慢时钟）" class="headerlink" title="结绳法（快时钟–&gt;慢时钟）"></a>结绳法（快时钟–&gt;慢时钟）</h2><hr>
+<p>信号从快时钟域到慢时钟域过渡时，慢时钟将可能无法对变化太快的信号实现正确采样，前述同步器对两个时钟之间的关系要求很严格，采用“结绳法”则适合任何时钟的过渡。</p>
+<p><strong>原理：</strong></p>
+<ul>
+<li>将时钟信号的脉冲周期延长，等到慢时钟同步采样后再“解绳”，还原为原来的脉冲周期宽度。</li>
+</ul>
+<p><strong>结绳法1：</strong></p>
+<p>利用数据的边沿作时钟（图中上升沿）。数据作为Din_ClkA，当有数据有上升沿（0–&gt;1）时，寄存器1稳定在高电平。等待CLKB采样，采样后寄存器4输出高电平，若此时Din_ClkA为低电平，即完成复位，开始下一次采样等待。</p>
+<p><img src="https://i.loli.net/2020/03/14/ctnbpkZzIdNQPf7.png" alt="跨时钟域2.1.png"></p>
+<p><strong>注意：</strong></p>
+<p>数据来临时，CLKB需要等待3个周期，最终通过寄存器4反馈数据信息完成复位。如果Din_CLKA变化较快，即持续时间短于3个CLKB，也就是频率大于1/3 CLKB，此时Din_CLKA的变化将无法被采样到，因为CLKB域需要3个CLKB周期才能完成采样，并且此时DIN_CLKA必须是低电平才能复位，采用异步复位。</p>
+<p>在慢时钟采样快时钟的时候，结绳法适合采样数据较少（即脉冲间隔较大）的控制信号。即脉冲间隔Ta &gt; 3Tb;即等待3个CLKB时钟后，完成复位，才允许下一个输入脉冲。</p>
+<p><strong>结绳法2：</strong></p>
+<p>利用数据作为异步复位，置位信号。</p>
+<p><img src="https://i.loli.net/2020/03/14/lPrhXa2InBcKo15.png" alt="跨时钟域2.2.png">)<img src="https://i.loli.net/2020/03/14/lRY7ZKf19seCdSb.png" alt="跨时钟域2.3.png"></p>
+<p><strong>结绳法3：</strong></p>
+<p>利用握手协议</p>
+<p>下图描述了实现方法，主要包括三个基本单元：Pluse2Toggle, Synchronizer 和Toggle2Pluse：</p>
+<ol>
+<li>Pluse2Toggle模块负责将两个脉冲信号“结绳”，即将单脉冲信号延长；</li>
+<li>Synchronizer模块即用双锁存器法将得到的信号过渡到另一个时钟域；</li>
+<li>Toggle2Pluse模块是Pluse2Toggle功能相对，即将延长的脉冲信号还原为单脉冲，这里用到了异或门</li>
+</ol>
+<p>整体的设计思想即用Pluse2Toggle将信号延长，用Synchronizer过渡，用Toggle2Pluse还原，以保证另一个时钟域可以正确采到，而接收方用相反的流程送回响应信号。</p>
+<p><img src="https://i.loli.net/2020/03/14/f1wyv9tr5BeH2Xz.png" alt="跨时钟域2.4.png"></p>
+<p>“结绳法”波形示意图如下所示。</p>
+<p><img src="https://i.loli.net/2020/03/14/qysCvDAuLJ2FVlh.png" alt="跨时钟域2.5.png"></p>
+<blockquote>
+<p>在两次src_req_clk1之间被src_vld_clk1“结绳”(pluse2toggle)，在将src_vld_clk1用双锁存器同步以后，将该信号转换为dst_req_clk2(toggle2pluse)。同理，用dst_vld_clk2将dst_req_clk2“结绳”，dst_vld_clk2表明在clk2时钟域中，src_dat_clk1已经可以进行正确采样了。最后将dst_vld_clk2转换为dst_ack_clk1(synchronizer and toggle2pluse), dst_ack_clk1表明src_dat_clk1已经被clk2正确采样了， 此后clk1时钟域就可以安全地传输下一个数据了。可以看出，“结绳法”关键是将信号结绳以后，使其保持了足够长的时间，以便另一个时钟可以正确地采样。</p>
+</blockquote>
+<p><strong>小结：</strong></p>
+<ol>
+<li><p>结绳就是将单脉冲延长，以方便采集到的数据；</p>
+</li>
+<li><p>方法可归结为2类，利用脉冲的边沿做时钟；利用脉冲的电平（部分场合要求最小脉冲宽度）做选择器或者异步复位；</p>
+</li>
+<li><p>关键点在于是什么时候结绳结束；</p>
+</li>
+<li><p>操作方法有2种，利用采集到的脉冲做异步复位，置位；利用采集到的脉冲再次结绳采集做握手响应信号；</p>
+</li>
+<li><p>结绳法可以解决快时钟域向慢时钟域过渡的问题，且其适用范围很广；</p>
+</li>
+<li><p>结绳法实现较为复杂，特别是效率不高，在对设计性能要求较高的场合应该慎用。</p>
+</li>
+</ol>
+<h2 id="考虑两个问题"><a href="#考虑两个问题" class="headerlink" title="考虑两个问题"></a>考虑两个问题</h2><hr>
+<ol>
+<li><p>采样中“快到慢”与“慢到快”在考虑问题时有什么区别？</p>
+<p>慢到快，只需要考虑亚稳态问题；</p>
+<p>快到慢，除亚稳态问题外，还需要考虑慢时钟的采样速率问题。。</p>
+</li>
+<li><p>为什么不能用慢时钟直接采样快时钟域的信号？</p>
+<p>因为根据采样定理，采样频率低于信号最高频率2倍的时候，是无法完整采样的</p>
+</li>
+</ol>
+<h2 id="多bit指示信号的跨时钟域传输"><a href="#多bit指示信号的跨时钟域传输" class="headerlink" title="多bit指示信号的跨时钟域传输"></a>多bit指示信号的跨时钟域传输</h2><hr>
+<p>同时传递两个信号（b_load &amp; b-en）,如下图所示。</p>
+<p><img src="https://i.loli.net/2020/03/14/rZtiKzgWPwFJvOp.png" alt="跨时钟域2.6.png"></p>
+<p>图中b_load 和b_en同步至a_clk时钟域，如果这两个信号有一个小的skew，将导致a_clk时钟域中两个信号并不是在同一个时刻起作用，与两个信号在b_clk时钟域中的逻辑关系不同。</p>
+<p><strong>多个控制信号跨时钟域仅仅通过简单的同步器同步有可能是不安全的</strong></p>
+<p>解决方法：将b_load和b_en信号在b_clk时钟域中合并成一个信号b_lden,然后同步至a_clk中</p>
+<p><img src="https://i.loli.net/2020/03/14/qQm6bYljCcKgJaM.png" alt="跨时钟域2.7.png"></p>
+<p>如果遇到不能同步的情况，如译码信号，如下图所示。</p>
+<p><img src="https://i.loli.net/2020/03/14/uoz4bkJXtyfNFlj.png" alt="跨时钟域2.8.png"></p>
+<p>解决方法1：建议加入另一个控制信号，确保bdec[0]、bec[1]稳定时再进行采样。</p>
+<p><img src="https://i.loli.net/2020/03/14/9bOxfk3SRXqaudc.png" alt="跨时钟域2.8.1.png"></p>
+<p>解决方法2：在发送时钟域解码，通过同步器来同步发送时钟域的输出到新的时钟域。<strong>在新的时钟域内，使用状态机确定何时被同步的输入有效。</strong></p>
+<p><img src="https://i.loli.net/2020/03/14/CPA7MctDQSjaRYs.png" alt="跨时钟域2.8.2.png"></p>
+<h2 id="多bit数据流的跨时钟域传输"><a href="#多bit数据流的跨时钟域传输" class="headerlink" title="多bit数据流的跨时钟域传输"></a>多bit数据流的跨时钟域传输</h2><hr>
+<p>数据流和指示信号的区别：</p>
+<ul>
+<li>数据流大多具有连续性，即背靠背传输；</li>
+<li>数据流要求信号具有较快的传输速度</li>
+</ul>
+<p><strong>解决方法：SRAM、FIFO</strong></p>
+<h3 id="FIFO基本介绍"><a href="#FIFO基本介绍" class="headerlink" title="FIFO基本介绍"></a>FIFO基本介绍</h3><p>FIFO（first in first out），是一种先进先出的存储结构。与普通存储器相比没有外部的读写地址线，使用简单。</p>
+<p>缺点在于只能顺序写入数据，顺序的读出数据，其数据地址由内部读写指针自动加1完成，不能像普通存储器那样可以由地址线决定读取或写入某个指定的地址。</p>
+<p><strong>异步FIFO即用一种时钟写入数据，而用另外一种时钟读出数据，其中这两个读写时钟是异步的。</strong>适用于大量数据跨时钟域传输，且对传输速度有一定要求的场合。</p>
+<p><img src="https://i.loli.net/2020/03/14/M4bmUsfjvAeDKW3.png" alt="跨时钟域2.9.png"></p>
+<p>FIFO 上游节点是FIFO的数据输入端，在写信号有效时，数据将被写入FIFO的顶部（由FIFO内部的写指针控制），并且在FIFO内部，写指针后移一个单元，同时FIFO的满信号（FIFO full signal）将控制上游节点是否发送数据；</p>
+<p>FIFO 下游节点是FIFO 的数据输出端，当读信号有效时，位于FIFO底部的数据将被读出（由FIFO内部的读指针控制），并且在FIFO内部读指针将后移一个单元，同时FIFO空信号（FIFO empty signal）将控制下游节点是否读出数据。</p>
+<h3 id="FIFO主要用途："><a href="#FIFO主要用途：" class="headerlink" title="FIFO主要用途："></a>FIFO主要用途：</h3><ul>
+<li><p>使用异步FIFO对不同时钟域之间的数据进行传输；</p>
+</li>
+<li><p>对于不同宽度的数据接口也可以用FIFO</p>
+<p>例如单片机8位数据输出，而DSP可能是16位数据输入，在单片机与DSP连接时就可以使用FIFO来达到数据匹配目的。</p>
+</li>
+</ul>
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
+<p>2.<a href="http://www.sunburst-design.com/papers/CummingsSNUG2001SJ_AsyncClk.pdf" target="_blank" rel="noopener">Synthesis and Scripting Techniques for Designing Multi-Asynchronous Clock Designs</a></p>
+<p>3.<a href="https://d1.amobbs.com/bbs_upload782111/files_35/ourdev_612485SWPQTC.pdf" target="_blank" rel="noopener">ASIC中的异步时序设计</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thank you for your accept！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/wechatpay.jpg" alt="Shuang liu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/alipay.jpg" alt="Shuang liu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Shuang liu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.sliu.info/2020/%E4%BF%A1%E5%8F%B7%E7%9A%84%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/" title="信号的跨时钟域传输问题">https://www.sliu.info/2020/信号的跨时钟域传输/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+	  
+	  <div>
+		
+		  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	  </div>
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%97IC/" rel="tag"><i class="fa fa-tag"></i> 数字IC</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/%E4%BA%9A%E7%A8%B3%E6%80%81/" rel="prev" title="亚稳态">
+      <i class="fa fa-chevron-left"></i> 亚稳态
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/FIFO-%E4%BB%8B%E7%BB%8D1/" rel="next" title="FIFO 介绍1">
+      FIFO 介绍1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODU0NS8yNTAzOQ"></div>
+  </div>
+  
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#结绳法（快时钟–-gt-慢时钟）"><span class="nav-number">1.</span> <span class="nav-text">结绳法（快时钟–&gt;慢时钟）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#考虑两个问题"><span class="nav-number">2.</span> <span class="nav-text">考虑两个问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多bit指示信号的跨时钟域传输"><span class="nav-number">3.</span> <span class="nav-text">多bit指示信号的跨时钟域传输</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多bit数据流的跨时钟域传输"><span class="nav-number">4.</span> <span class="nav-text">多bit数据流的跨时钟域传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FIFO基本介绍"><span class="nav-number">4.1.</span> <span class="nav-text">FIFO基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FIFO主要用途："><span class="nav-number">4.2.</span> <span class="nav-text">FIFO主要用途：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shuang liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Shuang liu</p>
+  <div class="site-description" itemprop="description">你好呀</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sliu0827" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sliu0827" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:striveleos@qq.com" title="E-Mail → mailto:striveleos@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://linux.51yip.com/" title="http:&#x2F;&#x2F;linux.51yip.com&#x2F;" rel="noopener" target="_blank">Linux命令手册</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright" style=" text-align:center;">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shuang liu</span>
+
+	<!-- 添加word count,2020.02.26 -->
+  <div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共 33.1k 字</span>
+  </div>
+</div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e665108c70f9b75" async="async"></script>
+  </div><div class="run_time" style=" text-align:center;">
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("02/28/2020 10:00:00");//此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+    setInterval("createtime()",250);
+  </script>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+	refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+	var j, e = d.getElementsByTagName(s)[0];
+	if (typeof LivereTower === 'function') { return; }
+	j = d.createElement(s);
+	j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+	j.async = true;
+	e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

@@ -2,13 +2,23 @@
 title: My Friends
 date: 2020-03-08 16:27:27
 type: links
+comments: false
+
 ---
-------
 
-<div align=center> <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558956326532&di=82cc9907fc903cfb978a35206986d3f6&imgtype=0&src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20160809%2F31283a3e2d7f411492d3fb27297180ec_th.jpg" /> 
-</div>
+-----
 
-------
+<font size=3 color=Tan> **关于友情链接：** </font>
+
+> <font size=3 face="隶书" color=LightSlateBlue>除了自己的关注外，也给有需要的童鞋提供多一个链接~
+>
+> 欢迎看得上小破站的朋友们联系互粉呀，
+>
+> 期待更多的ICer或者其他优秀的大佬们！
+>
+> </font>
+
+
 
 <!-- 60198 -->
 <!-- require APlayer -->
@@ -24,3 +34,8 @@ type: links
 	autoplay="true"
 	order="random">
 </meting-js>
+
+
+
+
+

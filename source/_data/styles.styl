@@ -69,9 +69,15 @@
 }
 // 渐变菜带,CSS代码copy自https://githubuniverse.com
 .site-meta {
-    //background-image: linear-gradient(to right, #ADA996,#F2F2F2,#DBDBDB,#EAEAEA);
+   // background-image: linear-gradient(to right, #ADA996,#F2F2F2,#DBDBDB,#EAEAEA);
 }
 
+// 站点名背景
+.brand{
+    background-color: rgba(220,20,60,0);
+   // margin-top: 15px;
+   // padding: 0px;
+}
 
 //文章内链接文本样式
 .post-body p a{
@@ -132,16 +138,32 @@ pre .deletion {
 
 // 页面背景色
 body {
-	//background-color: #eeeff0
+	//background-color: linear-gradient(90deg, #A166AB 0%, #A166AB 25%, #A166AB 50%, #A166AB 75%, #A166AB 100%);
 }
 body {
-   background:#fcfcfc;
+  // background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+	background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
+  // background: linear-gradient(90deg,#6D6027 0%, #6D6027 25%,  #D3CBB8 50%, #D3CBB8 75%, #D3CBB8 100%);
     //background:url(/images/background.jpg);
     background-repeat: no-repeat;
     background-attachment:fixed; //不重复
     background-size: cover;      //填充
     background-position:100% 100%;
+	
 }
+
+// 以下为页面页脚设置
+// 页面底部页脚
+.footer {
+    line-height: 1.5;
+    background-color: #f2f2f2;
+   // color: #333;
+  //  border-top-width: 3px;
+   // border-top-style: solid;
+  //  border-top-color: rgb(161, 102, 171);
+  //  box-shadow: 0px -10px 10px 0px rgba(0, 0, 0, 0.15);
+}
+
 
 // 文章标题
 .posts-expand .post-title {
