@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>覆盖率</title>
+    <url>/2020/%E8%A6%86%E7%9B%96%E7%8E%87/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>“验证如果没有量化，那么就意味着没有尽头。”</p>
+<a id="more"></a>
+
+<p>伴随着复杂SoC系统的验证难度系数成倍增加，无论是定向测试还是随机测试，我们在验证的过程中终究需要回答两个问题：</p>
+<blockquote>
+<p>是否所有设计的功能在验证计划中都已经验证？</p>
+<p>代码中的某些部分是否从未执行过？</p>
+</blockquote>
+<p>因此，引入覆盖率来作为衡量验证过程的重要数据。</p>
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
+]]></content>
+      <categories>
+        <category>芯片验证基础</category>
+      </categories>
+      <tags>
+        <tag>SystemVerilog</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SystemVerilog 线程控制</title>
     <url>/2020/SystemVerilog-%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>介绍SV中的任务和函数，线程控制和线程间的同步和通信的基本概念</p>
