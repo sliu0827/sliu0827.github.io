@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#222">
+  <link rel="manifest" href="/images/favicon/site.webmanifest">
+  <meta name="msapplication-config" content="/images/favicon/browserconfig.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="什么是组合型数组？什么又是非组合型数组？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SystemVerilog 数组介绍">
+<meta property="og:url" content="https://www.sliu.info/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="Shuang&#39;Blog">
+<meta property="og:description" content="什么是组合型数组？什么又是非组合型数组？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/11/PvsCz36pwLSZYrm.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/11/kFmCXt6IansPUY1.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/11/J8IzFPNGb3Z52W1.png">
+<meta property="article:published_time" content="2020-04-11T06:11:35.000Z">
+<meta property="article:modified_time" content="2020-04-18T14:03:44.556Z">
+<meta property="article:author" content="Shuang liu">
+<meta property="article:tag" content="SystemVerilog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/11/PvsCz36pwLSZYrm.png">
+
+<link rel="canonical" href="https://www.sliu.info/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>SystemVerilog 数组介绍 | Shuang'Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a933439cb409d34608a69b99e6339a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shuang'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-comments"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.sliu.info/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Shuang liu">
+      <meta itemprop="description" content="你好呀">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shuang'Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          SystemVerilog 数组介绍
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-11 14:11:35" itemprop="dateCreated datePublished" datetime="2020-04-11T14:11:35+08:00">2020-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-18 22:03:44" itemprop="dateModified" datetime="2020-04-18T22:03:44+08:00">2020-04-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">芯片验证基础</span></a>
+                </span>
+            </span>
+
+          
+		  
+		  <!-- 添加time count 2020.02.26 -->
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
+		  </span>本文字数: 819</span>
+	
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount">
+		  <span class="post-meta-item-icon">
+			<i class="fa fa-clock-o"></i>
+		  </span>阅读时长 &asymp; 3 分钟</span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>什么是组合型数组？什么又是非组合型数组？</p>
+<a id="more"></a>
+
+<h2 id="组合型和非组合型数组"><a href="#组合型和非组合型数组" class="headerlink" title="组合型和非组合型数组"></a>组合型和非组合型数组</h2><hr>
+<h3 id="非组合型（unpacked）"><a href="#非组合型（unpacked）" class="headerlink" title="非组合型（unpacked）"></a>非组合型（unpacked）</h3><p>verilog中通常定义例如<code>reg [15:0] RAM[0:4095];</code>，这种数组定义为memory array用作数据存储。SV将这种声明数组的方式称作非组合型数组，即数组中的成员之间存储数据都是互相独立的。</p>
+<p>例如作以下定义：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">wire</span> [<span class="number">7</span>:<span class="number">0</span>] <span class="keyword">table</span> [<span class="number">3</span>:<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>对应的存储结构为：</p>
+<p><img src="https://i.loli.net/2020/04/11/PvsCz36pwLSZYrm.png" alt="SV数组介绍3.1.png"></p>
+<h3 id="组合型（packed）"><a href="#组合型（packed）" class="headerlink" title="组合型（packed）"></a>组合型（packed）</h3><p>SV中将具有向量结构的数组声明方式作为组合型。其相对于非组合型在声明时的差别在于，其索引在数组名的左侧，数组维度从左到右来识别。</p>
+<p>例如作如下定义：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] data;<span class="comment">//2维组合声明</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的存储结构为：</p>
+<p><img src="https://i.loli.net/2020/04/11/kFmCXt6IansPUY1.png" alt="SV数组介绍3.2.png"></p>
+<h3 id="区别分析"><a href="#区别分析" class="headerlink" title="区别分析"></a>区别分析</h3><p>初始化时，组合型（packed）存储值是连续的，可以对所有元素统一赋值；非组合型（unpacked）中则需要分别对每一个维度进行赋值。</p>
+<p>例如：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//packed</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] a = <span class="number">32</span>’h0; <span class="comment">// vector assignment</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] b = &#123;<span class="number">16</span>’hz,<span class="number">16</span>’h0&#125;; <span class="comment">// concatenate operator</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] c = &#123;<span class="number">16</span>&#123;<span class="number">2</span>’b01&#125;&#125;; <span class="comment">// replicate operator</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//unpacked</span></span><br><span class="line"><span class="keyword">int</span> d [<span class="number">0</span>:<span class="number">1</span>][<span class="number">0</span>:<span class="number">3</span>] = ’&#123; ’&#123;<span class="number">7</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">5</span>&#125;, ’&#123;<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">6</span>&#125; &#125;;</span><br><span class="line"><span class="comment">// d[0][0] = 7  d[0][1] = 3  d[0][2] = 0  d[0][3] = 5</span></span><br><span class="line"><span class="comment">// d[1][0] = 2  d[1][1] = 0  d[1][2] = 1  d[1][3] = 6</span></span><br></pre></td></tr></table></figure>
+
+<p>非组合型数组中，若两个数组进行拷贝和赋值时，左右两边数组的维度和大小必须严格一致；组合型数组中，赋值左右两侧操作数的大小和维度不同时，也可以做赋值，会采用截取或者扩展的方式进行赋值。</p>
+<p>非组合型和组合型之间无法直接地互相赋值。</p>
+<h3 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h3><ul>
+<li><p>添加了foreach循环结构，用于遍历一维或多维数组，不需要指定该数组的大小。</p>
+</li>
+<li><p>添加了系统函数，例如：</p>
+<p><code>$dimensions(array_name)</code>,返回数组的维度；</p>
+<p><code>$left(array_name,dimensions)</code>,返回指定维度的最左索引值；</p>
+<p><code>$size(array_name,dimensions)</code>，返回指定维度的尺寸大小等等</p>
+</li>
+</ul>
+<h2 id="其他数组类型"><a href="#其他数组类型" class="headerlink" title="其他数组类型"></a>其他数组类型</h2><hr>
+<h3 id="动态数组"><a href="#动态数组" class="headerlink" title="动态数组"></a>动态数组</h3><p>动态数组在声明时使用“[]”，且不会为限制数组尺寸。动态数组一开始为空，使用new[]为其分配空间。同时，内建方法size(),delete()可以对动态数组进行操作。</p>
+<h3 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h3><p>SV引入了队列，结合了数组和链表。通过“[$]”声明队列，索引值从0到$，常用的内建函数包括push_back(val)、push_front(val)、pop_back()和pop_front()来顺序添加或者移除并且获得数据成员。</p>
+<h3 id="关联数组"><a href="#关联数组" class="headerlink" title="关联数组"></a>关联数组</h3><p>用于存放散列的数据成员，散列的索引类型除了为整形外还可以为字符串或者其它类型，散列的存储数据也可以为任意类型。</p>
+<p><img src="https://i.loli.net/2020/04/11/J8IzFPNGb3Z52W1.png" alt="SV数组介绍3.3.png"></p>
+<h2 id="数组操作方法"><a href="#数组操作方法" class="headerlink" title="数组操作方法"></a>数组操作方法</h2><hr>
+<p>常见的包括以下几类：</p>
+<ul>
+<li>缩减方法，sum、product、and、or和xor；</li>
+<li>定位方法，min、max和unique等，foreach实现数组搜索或者find..width查找满足条件的数据成员；</li>
+<li>排序方法，reverse、sort、rsort和shuffle等。</li>
+</ul>
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thank you for your accept！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/wechatpay.jpg" alt="Shuang liu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/alipay.jpg" alt="Shuang liu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Shuang liu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.sliu.info/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/" title="SystemVerilog 数组介绍">https://www.sliu.info/2020/SystemVerilog-数组介绍/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+	  
+	  <div>
+		
+		  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	  </div>
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/SystemVerilog/" rel="tag"><i class="fa fa-tag"></i> SystemVerilog</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/SystemVerilog-%E8%AF%AD%E6%B3%95%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B/" rel="prev" title="SystemVerilog 语法基本类型">
+      <i class="fa fa-chevron-left"></i> SystemVerilog 语法基本类型
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/SystemVerilog-%E7%B1%BB%E5%92%8C%E5%8C%85%E4%BB%8B%E7%BB%8D/" rel="next" title="SystemVerilog 类和包介绍">
+      SystemVerilog 类和包介绍 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODU0NS8yNTAzOQ"></div>
+  </div>
+  
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#组合型和非组合型数组"><span class="nav-number">1.</span> <span class="nav-text">组合型和非组合型数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#非组合型（unpacked）"><span class="nav-number">1.1.</span> <span class="nav-text">非组合型（unpacked）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合型（packed）"><span class="nav-number">1.2.</span> <span class="nav-text">组合型（packed）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#区别分析"><span class="nav-number">1.3.</span> <span class="nav-text">区别分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他特性"><span class="nav-number">1.4.</span> <span class="nav-text">其他特性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他数组类型"><span class="nav-number">2.</span> <span class="nav-text">其他数组类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#动态数组"><span class="nav-number">2.1.</span> <span class="nav-text">动态数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列"><span class="nav-number">2.2.</span> <span class="nav-text">队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关联数组"><span class="nav-number">2.3.</span> <span class="nav-text">关联数组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组操作方法"><span class="nav-number">3.</span> <span class="nav-text">数组操作方法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shuang liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Shuang liu</p>
+  <div class="site-description" itemprop="description">你好呀</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sliu0827" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sliu0827" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:striveleos@qq.com" title="E-Mail → mailto:striveleos@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://linux.51yip.com/" title="http:&#x2F;&#x2F;linux.51yip.com&#x2F;" rel="noopener" target="_blank">Linux命令手册</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright" style=" text-align:center;">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shuang liu</span>
+
+	<!-- 添加word count,2020.02.26 -->
+  <div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共 33.1k 字</span>
+  </div>
+</div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e665108c70f9b75" async="async"></script>
+  </div><div class="run_time" style=" text-align:center;">
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("02/28/2020 10:00:00");//此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+    setInterval("createtime()",250);
+  </script>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+	refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+	var j, e = d.getElementsByTagName(s)[0];
+	if (typeof LivereTower === 'function') { return; }
+	j = d.createElement(s);
+	j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+	j.async = true;
+	e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

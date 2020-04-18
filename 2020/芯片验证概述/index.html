@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#222">
+  <link rel="manifest" href="/images/favicon/site.webmanifest">
+  <meta name="msapplication-config" content="/images/favicon/browserconfig.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="芯片验证概述">
+<meta property="og:url" content="https://www.sliu.info/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="Shuang&#39;Blog">
+<meta property="og:description" content="芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/07/KAmrWBp1lGdUZkY.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/09/5eGZx9tBqIz8Xyk.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/07/bHLy5WuARsGMhCK.png">
+<meta property="article:published_time" content="2020-04-07T13:01:51.000Z">
+<meta property="article:modified_time" content="2020-04-18T14:03:44.558Z">
+<meta property="article:author" content="Shuang liu">
+<meta property="article:tag" content="SystemVerilog">
+<meta property="article:tag" content="UVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/07/KAmrWBp1lGdUZkY.png">
+
+<link rel="canonical" href="https://www.sliu.info/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>芯片验证概述 | Shuang'Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a933439cb409d34608a69b99e6339a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shuang'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-comments"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.sliu.info/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Shuang liu">
+      <meta itemprop="description" content="你好呀">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shuang'Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          芯片验证概述
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-07 21:01:51" itemprop="dateCreated datePublished" datetime="2020-04-07T21:01:51+08:00">2020-04-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-18 22:03:44" itemprop="dateModified" datetime="2020-04-18T22:03:44+08:00">2020-04-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">芯片验证基础</span></a>
+                </span>
+            </span>
+
+          
+		  
+		  <!-- 添加time count 2020.02.26 -->
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
+		  </span>本文字数: 646</span>
+	
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount">
+		  <span class="post-meta-item-icon">
+			<i class="fa fa-clock-o"></i>
+		  </span>阅读时长 &asymp; 2 分钟</span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>芯片验证为IC设计流程中前端设计的重要一环，用其来证明设计功能是否正确，是否符合设计功能描述。</p>
+<a id="more"></a>
+
+<p>验证和设计是协作进行的，验证和设计都需要认真阅读功能描述文档。设计将功能文档翻译为RTL模型，验证则会按照其功能发送激励和比较结果。</p>
+<img src="https://i.loli.net/2020/04/07/KAmrWBp1lGdUZkY.png" alt="验证概述1.1.png" style="zoom: 67%;" />
+
+<p><strong>验证的周期</strong></p>
+<p>功能验证有着一整套完备的流程，从硬件系统定义贯穿到硅后测试部分。</p>
+<p><img src="https://i.loli.net/2020/04/09/5eGZx9tBqIz8Xyk.png" alt="验证概述1.3.png"></p>
+<h2 id="什么是验证测试平台？"><a href="#什么是验证测试平台？" class="headerlink" title="什么是验证测试平台？"></a>什么是验证测试平台？</h2><hr>
+<p><img src="https://i.loli.net/2020/04/07/bHLy5WuARsGMhCK.png" alt="验证概述1.2.png"></p>
+<p>如图所示，测试平台主要包括的模块有时钟/重置（clock/reset）、激励发生器（stimulator）、检测器（monitor）、比较器（checker）以及待测设计（DUT）。其中：</p>
+<ul>
+<li>Stimulator：对DUT创建测试序列</li>
+<li>Monitor：观察DUT的输入输出</li>
+<li>Checker：对DUT的输出数据与预期数据进行比对</li>
+</ul>
+<p>除此以外，clock/reset完成时钟的发起以及复位工作。最终，测试平台还会报告检查结果。</p>
+<h2 id="什么是SystemVerilog？"><a href="#什么是SystemVerilog？" class="headerlink" title="什么是SystemVerilog？"></a>什么是SystemVerilog？</h2><hr>
+<p>SystemVerilog是一种新的硬件描述和验证语言（HDVL， Hardware Description and Verification Language）。</p>
+<p><strong>SV语言的核心特性</strong></p>
+<ul>
+<li>接口（interface）</li>
+<li>面向对象编程（class&amp;package）</li>
+<li>约束随机（constrained random）</li>
+<li>线程控制和通信（process control）</li>
+<li>功能覆盖率（function coverage）</li>
+<li>外部语言编程接口（Direct Programming Interface）</li>
+<li>断言（assertion）</li>
+</ul>
+<h2 id="什么是UVM？"><a href="#什么是UVM？" class="headerlink" title="什么是UVM？"></a>什么是UVM？</h2><hr>
+<p>UVM（Universal Verification Methodology），是一种可适用于大多数项目的验证方法学。它自身提供的基础类库和验证结构可以让具有不同软件编程经验的验证工程师能够快速构建起一个可靠的验证框架；其框架构建类和测试类能够减轻环境构建的负担，进而将精力集中在如何制定验证计划和创建测试场景上。</p>
+<p>学习UVM时，可以遵循以下步骤：</p>
+<ul>
+<li>认识UVM世界的版图（类库）和核心机制</li>
+<li>学习核心的UVM组件和层次构建方式</li>
+<li>了解常见的UVM组件间的通信方式</li>
+<li>深入UVM测试场景的构成</li>
+<li>UVM的寄存器模型应用</li>
+</ul>
+<p><strong>UVM的类大致包括以下几类：</strong></p>
+<ul>
+<li>核心基类</li>
+<li>工厂（factory）类</li>
+<li>事务（transaction）和序列（sequence）类</li>
+<li>结构创建（structure creation）类</li>
+<li>环境组件（environment component）类</li>
+<li>通信管道（channel）类</li>
+<li>信息报告（message report）类</li>
+<li>寄存器模型（register model）类</li>
+<li>线程同步（thread synchronization）类</li>
+<li>事务接口（transaction interface）类</li>
+</ul>
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thank you for your accept！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/wechatpay.jpg" alt="Shuang liu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/alipay.jpg" alt="Shuang liu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Shuang liu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.sliu.info/2020/%E8%8A%AF%E7%89%87%E9%AA%8C%E8%AF%81%E6%A6%82%E8%BF%B0/" title="芯片验证概述">https://www.sliu.info/2020/芯片验证概述/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+	  
+	  <div>
+		
+		  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	  </div>
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/SystemVerilog/" rel="tag"><i class="fa fa-tag"></i> SystemVerilog</a>
+              <a href="/tags/UVM/" rel="tag"><i class="fa fa-tag"></i> UVM</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/%E7%8A%B6%E6%80%81%E6%9C%BA/" rel="prev" title="状态机基础介绍">
+      <i class="fa fa-chevron-left"></i> 状态机基础介绍
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/SystemVerilog-%E8%AF%AD%E6%B3%95%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B/" rel="next" title="SystemVerilog 语法基本类型">
+      SystemVerilog 语法基本类型 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODU0NS8yNTAzOQ"></div>
+  </div>
+  
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是验证测试平台？"><span class="nav-number">1.</span> <span class="nav-text">什么是验证测试平台？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是SystemVerilog？"><span class="nav-number">2.</span> <span class="nav-text">什么是SystemVerilog？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是UVM？"><span class="nav-number">3.</span> <span class="nav-text">什么是UVM？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shuang liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Shuang liu</p>
+  <div class="site-description" itemprop="description">你好呀</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sliu0827" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sliu0827" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:striveleos@qq.com" title="E-Mail → mailto:striveleos@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://linux.51yip.com/" title="http:&#x2F;&#x2F;linux.51yip.com&#x2F;" rel="noopener" target="_blank">Linux命令手册</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright" style=" text-align:center;">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shuang liu</span>
+
+	<!-- 添加word count,2020.02.26 -->
+  <div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共 33.1k 字</span>
+  </div>
+</div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e665108c70f9b75" async="async"></script>
+  </div><div class="run_time" style=" text-align:center;">
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("02/28/2020 10:00:00");//此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+    setInterval("createtime()",250);
+  </script>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+	refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+	var j, e = d.getElementsByTagName(s)[0];
+	if (typeof LivereTower === 'function') { return; }
+	j = d.createElement(s);
+	j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+	j.async = true;
+	e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

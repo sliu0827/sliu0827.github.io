@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#222">
+  <link rel="manifest" href="/images/favicon/site.webmanifest">
+  <meta name="msapplication-config" content="/images/favicon/browserconfig.xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="异步复位，同步释放从何而来？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="复位电路">
+<meta property="og:url" content="https://www.sliu.info/2020/%E5%A4%8D%E4%BD%8D%E7%94%B5%E8%B7%AF/index.html">
+<meta property="og:site_name" content="Shuang&#39;Blog">
+<meta property="og:description" content="异步复位，同步释放从何而来？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/04/ybnQio1tuJM9acX.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/04/7SDNGq2fEavyzgM.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/04/VwupLPBm18OFHU4.png">
+<meta property="article:published_time" content="2020-03-27T06:21:12.000Z">
+<meta property="article:modified_time" content="2020-04-07T09:05:41.561Z">
+<meta property="article:author" content="Shuang liu">
+<meta property="article:tag" content="数字IC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/04/ybnQio1tuJM9acX.png">
+
+<link rel="canonical" href="https://www.sliu.info/2020/%E5%A4%8D%E4%BD%8D%E7%94%B5%E8%B7%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>复位电路 | Shuang'Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a933439cb409d34608a69b99e6339a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shuang'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/links/" rel="section"><i class="fa fa-fw fa-comments"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.sliu.info/2020/%E5%A4%8D%E4%BD%8D%E7%94%B5%E8%B7%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Shuang liu">
+      <meta itemprop="description" content="你好呀">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shuang'Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          复位电路
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-27 14:21:12" itemprop="dateCreated datePublished" datetime="2020-03-27T14:21:12+08:00">2020-03-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-07 17:05:41" itemprop="dateModified" datetime="2020-04-07T17:05:41+08:00">2020-04-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E5%AD%97IC%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">数字IC设计基础</span></a>
+                </span>
+            </span>
+
+          
+		  
+		  <!-- 添加time count 2020.02.26 -->
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
+		  </span>本文字数: 884</span>
+	
+		  <span class="post-meta-divider">|</span>
+		  <span title="post.wordcount">
+		  <span class="post-meta-item-icon">
+			<i class="fa fa-clock-o"></i>
+		  </span>阅读时长 &asymp; 3 分钟</span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>异步复位，同步释放从何而来？</p>
+<a id="more"></a>
+
+
+
+<h2 id="复位电路"><a href="#复位电路" class="headerlink" title="复位电路"></a>复位电路</h2><hr>
+<p>时序电路是双稳态电路，必须有复位信号。组合逻辑电路，没有存储功能，不需要复位信号。</p>
+<p>复位电路实现两个方面的功能：</p>
+<ul>
+<li>仿真的时候使电路进入初始状态或者其他预知状态；</li>
+<li>对于综合实现的真实电路，通过复位使电路进入初始状态或者其他预知状态。</li>
+</ul>
+<h2 id="同步复位电路"><a href="#同步复位电路" class="headerlink" title="同步复位电路"></a>同步复位电路</h2><hr>
+<p>当复位信号发生变化时，并不立即生效，只有当有效时钟沿采样到已变化的复位信号后，才对所有寄存器复位。</p>
+<p><strong>优点</strong></p>
+<ul>
+<li>有利于仿真器的仿真；</li>
+<li>可以使所设计的系统成为100%的同步时序电路，利于时序分析，综合出来的频率一般比较高；</li>
+<li>只在时钟有效电平到来时才复位，可以滤除高于时钟频率的毛刺。</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>复位信号的有效时长必须大于时钟周期，才能真正被系统识别并完成复位任务。同时还要考虑，诸如：clk_skew,组合逻辑延时，复位延时等因素；</li>
+</ul>
+<blockquote>
+<p><code>Tsyn_rst &gt; Period max + (clk2-clk1) + t1 + t2</code></p>
+</blockquote>
+<ul>
+<li>由于大多数的逻辑器件的目标库内的DFF都只有异步复位端口，所以，倘若采用同步复位的话，综合器就会在寄存器的数据输入端口插入组合逻辑，这样就会浪费较多的逻辑资源。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/04/04/ybnQio1tuJM9acX.png" alt="复位电路1.png"></p>
+<h2 id="异步复位"><a href="#异步复位" class="headerlink" title="异步复位"></a>异步复位</h2><hr>
+<p>当复位信号到达时，无论时钟触发沿是否有效，都会立即对目标（如寄存器、RAM等）复位。</p>
+<p><strong>优点</strong></p>
+<ul>
+<li>大多数目标器件库的dff都有异步复位端口，采用异步复位可以节省资源；</li>
+<li>设计相对简单；</li>
+<li>异步复位信号识别方便，而且可以很方便的使用FPGA的全局复位端口(GSR,Global Set Reset)。</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>在复位信号释放时容易出现问题。例如，复位释放时恰恰在时钟有效沿附近，就容易是寄存器输出出现亚稳态，从而导致亚稳态；</li>
+<li>复位信号容易受到毛刺的影响</li>
+</ul>
+<p><img src="https://i.loli.net/2020/04/04/7SDNGq2fEavyzgM.png" alt="复位电路2.png"></p>
+<h2 id="异步复位，同步释放"><a href="#异步复位，同步释放" class="headerlink" title="异步复位，同步释放"></a>异步复位，同步释放</h2><hr>
+<p>异步复位：复位信号在任意时刻到达低电平及复位，不需要和时钟同步</p>
+<p>同步释放：复位信号取消的时候，必须跟时钟信号同步</p>
+<p><strong>优点</strong></p>
+<ul>
+<li>只要复位信号有效，电路就处于复位状态；</li>
+<li>短脉宽复位也不会丢失；</li>
+<li>复位的撤离是同步信号，有良好的的撤离时序和足够的恢复时间。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/04/04/VwupLPBm18OFHU4.png" alt="复位电路3.png"></p>
+<h2 id="RTL"><a href="#RTL" class="headerlink" title="RTL"></a>RTL</h2><hr>
+<h3 id="syn-rst"><a href="#syn-rst" class="headerlink" title="syn_rst"></a>syn_rst</h3><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> syn_rst (clk, rst_, cnt1, cnt2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">input</span>        clk;</span><br><span class="line"><span class="keyword">input</span>        rst_;</span><br><span class="line"><span class="keyword">output</span> [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"><span class="keyword">reg</span>    [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk)</span><br><span class="line">   <span class="keyword">if</span> (!rst_)</span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        cnt1 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">        cnt2 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">if</span> (cnt1 &lt; <span class="number">2'b11</span>)</span><br><span class="line">            cnt1 &lt;= cnt1 + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cnt1 &lt;= cnt1;                </span><br><span class="line">        cnt2 &lt;= cnt1 - <span class="number">1</span>;      </span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="asyn-rst"><a href="#asyn-rst" class="headerlink" title="asyn_rst"></a>asyn_rst</h3><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> asyn_rst (clk, rst_, cnt1, cnt2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">input</span>        clk;</span><br><span class="line"><span class="keyword">input</span>        rst_;</span><br><span class="line"><span class="keyword">output</span> [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"><span class="keyword">reg</span>    [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_)</span><br><span class="line">   <span class="keyword">if</span> (!rst_)</span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        cnt1 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">        cnt2 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">if</span> (cnt1 &lt; <span class="number">2'b11</span>)</span><br><span class="line">            cnt1 &lt;= cnt1 + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cnt1 &lt;= cnt1;                </span><br><span class="line">        cnt2 &lt;= cnt1 - <span class="number">1</span>;      </span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="asyn-rst，syn-release"><a href="#asyn-rst，syn-release" class="headerlink" title="asyn_rst，syn_release"></a>asyn_rst，syn_release</h3><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> asyn_rst_syn_release(clk, rst_, cnt1, cnt2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">input</span>        clk;</span><br><span class="line"><span class="keyword">input</span>        rst_;</span><br><span class="line"><span class="keyword">output</span> [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"><span class="keyword">reg</span>    [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// reset release circuit</span></span><br><span class="line"><span class="keyword">reg</span> reset_reg;</span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk)</span><br><span class="line">     reset_reg &lt;= rst_;</span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> reset_reg)</span><br><span class="line">   <span class="keyword">if</span> (!rst_)</span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        cnt1 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">        cnt2 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">if</span> (cnt1 &lt; <span class="number">2'b11</span>)</span><br><span class="line">            cnt1 &lt;= cnt1 + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cnt1 &lt;= cnt1;                </span><br><span class="line">        cnt2 &lt;= cnt1 - <span class="number">1</span>;      </span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><em>Reference</em>： </p>
+<p>1.轻松成为设计高手–Verilog HDL 实用精讲</p>
+<p>2.<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thank you for your accept！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/wechatpay.jpg" alt="Shuang liu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/reward/alipay.jpg" alt="Shuang liu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Shuang liu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.sliu.info/2020/%E5%A4%8D%E4%BD%8D%E7%94%B5%E8%B7%AF/" title="复位电路">https://www.sliu.info/2020/复位电路/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+	  
+	  <div>
+		
+		  <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:16px;">-------------本文结束<i class="fa fa-heart"></i>感谢您的阅读-------------</div>
+    
+</div>
+		
+	  </div>
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%97IC/" rel="tag"><i class="fa fa-tag"></i> 数字IC</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/FIFO-%E4%BB%8B%E7%BB%8D2/" rel="prev" title="FIFO 介绍2">
+      <i class="fa fa-chevron-left"></i> FIFO 介绍2
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/%E7%8A%B6%E6%80%81%E6%9C%BA/" rel="next" title="状态机基础介绍">
+      状态机基础介绍 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80ODU0NS8yNTAzOQ"></div>
+  </div>
+  
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#复位电路"><span class="nav-number">1.</span> <span class="nav-text">复位电路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步复位电路"><span class="nav-number">2.</span> <span class="nav-text">同步复位电路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异步复位"><span class="nav-number">3.</span> <span class="nav-text">异步复位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异步复位，同步释放"><span class="nav-number">4.</span> <span class="nav-text">异步复位，同步释放</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTL"><span class="nav-number">5.</span> <span class="nav-text">RTL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#syn-rst"><span class="nav-number">5.1.</span> <span class="nav-text">syn_rst</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#asyn-rst"><span class="nav-number">5.2.</span> <span class="nav-text">asyn_rst</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#asyn-rst，syn-release"><span class="nav-number">5.3.</span> <span class="nav-text">asyn_rst，syn_release</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Shuang liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Shuang liu</p>
+  <div class="site-description" itemprop="description">你好呀</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/sliu0827" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;sliu0827" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:striveleos@qq.com" title="E-Mail → mailto:striveleos@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://linux.51yip.com/" title="http:&#x2F;&#x2F;linux.51yip.com&#x2F;" rel="noopener" target="_blank">Linux命令手册</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright" style=" text-align:center;">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shuang liu</span>
+
+	<!-- 添加word count,2020.02.26 -->
+  <div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">全站共 33.1k 字</span>
+  </div>
+</div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e665108c70f9b75" async="async"></script>
+  </div><div class="run_time" style=" text-align:center;">
+  <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+  <script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("02/28/2020 10:00:00");//此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+    setInterval("createtime()",250);
+  </script>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+	refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+	var j, e = d.getElementsByTagName(s)[0];
+	if (typeof LivereTower === 'function') { return; }
+	j = d.createElement(s);
+	j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+	j.async = true;
+	e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
