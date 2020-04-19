@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|Cinzel Decorative:300,300italic,400,400italic,700,700italic|思源宋体:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
   <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
@@ -287,7 +287,7 @@
 <p><strong>不可综合</strong>：function、for、fork-join、while</p>
 <a id="more"></a>
 <h1>常见可综合语法与硬件电路的关系</h1>
-<h2 id="if-else相关语句的硬件结构映射及优化"><a class="header-anchor" href="#if-else相关语句的硬件结构映射及优化">¶</a>if-else相关语句的硬件结构映射及优化</h2>
+<h2 id="if-else相关语句的硬件结构映射及优化"><a class="header-anchor" href="#if-else相关语句的硬件结构映射及优化"></a>if-else相关语句的硬件结构映射及优化</h2>
 <p>对应的硬件结构是多路选择器（Multiplexing Hardware）</p>
 <ul>
 <li>需要根据输入约束，小心设计：先“加”后“选”，先“选”后“加”</li>
@@ -304,9 +304,9 @@
 </li>
 </ul>
 <p><img src="https://i.loli.net/2020/02/27/9tMhjpIADVRfw5W.png" alt="RTL1.2.png"></p>
-<h2 id="case相关语句的硬件结构映射及优化"><a class="header-anchor" href="#case相关语句的硬件结构映射及优化">¶</a>case相关语句的硬件结构映射及优化</h2>
+<h2 id="case相关语句的硬件结构映射及优化"><a class="header-anchor" href="#case相关语句的硬件结构映射及优化"></a>case相关语句的硬件结构映射及优化</h2>
 <p>对应的硬件结构是无优先级的判断结构，与单if语句的区别在于各条件互斥，多用于指令译码电路</p>
-<h2 id="慎用latch"><a class="header-anchor" href="#慎用latch">¶</a>慎用latch</h2>
+<h2 id="慎用latch"><a class="header-anchor" href="#慎用latch"></a>慎用latch</h2>
 <ul>
 <li>
 <p>综合器很难解释latch，因此，除非特殊用途，一般避免引入latch。</p>
@@ -332,29 +332,29 @@ latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制
 <p>Parallel-case：告诉DC，所有条件互斥，且并行，无优先权</p>
 </li>
 </ul>
-<h2 id="逻辑复制，均衡负载"><a class="header-anchor" href="#逻辑复制，均衡负载">¶</a>逻辑复制，均衡负载</h2>
+<h2 id="逻辑复制，均衡负载"><a class="header-anchor" href="#逻辑复制，均衡负载"></a>逻辑复制，均衡负载</h2>
 <p>通过逻辑复制，降低关键信号的扇出，进而降低该信号的传播延迟，提高电路性能。</p>
 <p><img src="https://i.loli.net/2020/02/27/pB7qAltnWrg6vK3.png" alt="RTL1.4.png"></p>
-<h2 id="资源共享，减小面积"><a class="header-anchor" href="#资源共享，减小面积">¶</a>资源共享，减小面积</h2>
+<h2 id="资源共享，减小面积"><a class="header-anchor" href="#资源共享，减小面积"></a>资源共享，减小面积</h2>
 <p><img src="https://i.loli.net/2020/02/27/FzgvMmDeUKl6BiT.png" alt="RTL1.5.png"></p>
-<h2 id="资源顺序重排，降低传播延时"><a class="header-anchor" href="#资源顺序重排，降低传播延时">¶</a>资源顺序重排，降低传播延时</h2>
+<h2 id="资源顺序重排，降低传播延时"><a class="header-anchor" href="#资源顺序重排，降低传播延时"></a>资源顺序重排，降低传播延时</h2>
 <p><img src="https://i.loli.net/2020/02/27/lXg6WIJ89CjOSPH.png" alt="RTL1.6.png"></p>
-<h2 id="同步复位与异步复位"><a class="header-anchor" href="#同步复位与异步复位">¶</a>同步复位与异步复位</h2>
-<h2 id="少用“：？”赋值语句"><a class="header-anchor" href="#少用“：？”赋值语句">¶</a>少用“：？”赋值语句</h2>
+<h2 id="同步复位与异步复位"><a class="header-anchor" href="#同步复位与异步复位"></a>同步复位与异步复位</h2>
+<h2 id="少用“：？”赋值语句"><a class="header-anchor" href="#少用“：？”赋值语句"></a>少用“：？”赋值语句</h2>
 <p>使用always用于逻辑运算，关于assign，仅用于信号连接，难以阅读，且多层嵌套后很难被综合其解释</p>
 <h1>可综合风格</h1>
-<h2 id="完整的always敏感信号列表"><a class="header-anchor" href="#完整的always敏感信号列表">¶</a>完整的always敏感信号列表</h2>
+<h2 id="完整的always敏感信号列表"><a class="header-anchor" href="#完整的always敏感信号列表"></a>完整的always敏感信号列表</h2>
 <p>所有的组合逻辑或锁存的always结构必须有敏感信号列表。这个敏感信号列表必须包含所有的输入信号</p>
 <p><em>原因：综合过程将产生一个取决于除开敏感信号列表中所有其他值的结构，将可能在行为仿真和门级仿真间产生潜在的适配。</em></p>
-<h2 id="每个always敏感信号列表对应一个时钟"><a class="header-anchor" href="#每个always敏感信号列表对应一个时钟">¶</a>每个always敏感信号列表对应一个时钟</h2>
+<h2 id="每个always敏感信号列表对应一个时钟"><a class="header-anchor" href="#每个always敏感信号列表对应一个时钟"></a>每个always敏感信号列表对应一个时钟</h2>
 <p>在综合过程中，每个Verilog always敏感信号列表只能对应一个时钟。</p>
 <p><em>原因：这是将每一个过程限制在单一寄存器类型的要求。</em></p>
-<h2 id="在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。"><a class="header-anchor" href="#在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。">¶</a>在时序电路中必须使用非阻塞赋值（&lt;=），组合逻辑电路必须使用阻塞赋值（=）。</h2>
+<h2 id="在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。"><a class="header-anchor" href="#在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。"></a>在时序电路中必须使用非阻塞赋值（&lt;=），组合逻辑电路必须使用阻塞赋值（=）。</h2>
 <h1>模块划分</h1>
-<h2 id="分开异步逻辑与同步逻辑"><a class="header-anchor" href="#分开异步逻辑与同步逻辑">¶</a>分开异步逻辑与同步逻辑</h2>
+<h2 id="分开异步逻辑与同步逻辑"><a class="header-anchor" href="#分开异步逻辑与同步逻辑"></a>分开异步逻辑与同步逻辑</h2>
 <p>建议分开异步逻辑与同步逻辑</p>
 <p><em>原因：避免综合时的问题，简化约束和编码难度。</em></p>
-<h2 id="分开控制逻辑和存储器"><a class="header-anchor" href="#分开控制逻辑和存储器">¶</a>分开控制逻辑和存储器</h2>
+<h2 id="分开控制逻辑和存储器"><a class="header-anchor" href="#分开控制逻辑和存储器"></a>分开控制逻辑和存储器</h2>
 <p>建议控制逻辑和存储器逻辑分成独立的模块</p>
 <p><em>原因：便于高层的存储器模块的使用和便于重新描述为不同的存储器类型。</em></p>
 <blockquote>
@@ -501,7 +501,7 @@ latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">Verilog HDL 语言的特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">常见可综合语法与硬件电路的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#if-else相关语句的硬件结构映射及优化"><span class="nav-number">2.1.</span> <span class="nav-text">¶if-else相关语句的硬件结构映射及优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#case相关语句的硬件结构映射及优化"><span class="nav-number">2.2.</span> <span class="nav-text">¶case相关语句的硬件结构映射及优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#慎用latch"><span class="nav-number">2.3.</span> <span class="nav-text">¶慎用latch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑复制，均衡负载"><span class="nav-number">2.4.</span> <span class="nav-text">¶逻辑复制，均衡负载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源共享，减小面积"><span class="nav-number">2.5.</span> <span class="nav-text">¶资源共享，减小面积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源顺序重排，降低传播延时"><span class="nav-number">2.6.</span> <span class="nav-text">¶资源顺序重排，降低传播延时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步复位与异步复位"><span class="nav-number">2.7.</span> <span class="nav-text">¶同步复位与异步复位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#少用“：？”赋值语句"><span class="nav-number">2.8.</span> <span class="nav-text">¶少用“：？”赋值语句</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">可综合风格</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#完整的always敏感信号列表"><span class="nav-number">3.1.</span> <span class="nav-text">¶完整的always敏感信号列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#每个always敏感信号列表对应一个时钟"><span class="nav-number">3.2.</span> <span class="nav-text">¶每个always敏感信号列表对应一个时钟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。"><span class="nav-number">3.3.</span> <span class="nav-text">¶在时序电路中必须使用非阻塞赋值（&lt;&#x3D;），组合逻辑电路必须使用阻塞赋值（&#x3D;）。</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">模块划分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分开异步逻辑与同步逻辑"><span class="nav-number">4.1.</span> <span class="nav-text">¶分开异步逻辑与同步逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分开控制逻辑和存储器"><span class="nav-number">4.2.</span> <span class="nav-text">¶分开控制逻辑和存储器</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">Verilog HDL 语言的特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">常见可综合语法与硬件电路的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#if-else相关语句的硬件结构映射及优化"><span class="nav-number">2.1.</span> <span class="nav-text">if-else相关语句的硬件结构映射及优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#case相关语句的硬件结构映射及优化"><span class="nav-number">2.2.</span> <span class="nav-text">case相关语句的硬件结构映射及优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#慎用latch"><span class="nav-number">2.3.</span> <span class="nav-text">慎用latch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑复制，均衡负载"><span class="nav-number">2.4.</span> <span class="nav-text">逻辑复制，均衡负载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源共享，减小面积"><span class="nav-number">2.5.</span> <span class="nav-text">资源共享，减小面积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源顺序重排，降低传播延时"><span class="nav-number">2.6.</span> <span class="nav-text">资源顺序重排，降低传播延时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步复位与异步复位"><span class="nav-number">2.7.</span> <span class="nav-text">同步复位与异步复位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#少用“：？”赋值语句"><span class="nav-number">2.8.</span> <span class="nav-text">少用“：？”赋值语句</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">可综合风格</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#完整的always敏感信号列表"><span class="nav-number">3.1.</span> <span class="nav-text">完整的always敏感信号列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#每个always敏感信号列表对应一个时钟"><span class="nav-number">3.2.</span> <span class="nav-text">每个always敏感信号列表对应一个时钟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。"><span class="nav-number">3.3.</span> <span class="nav-text">在时序电路中必须使用非阻塞赋值（&lt;&#x3D;），组合逻辑电路必须使用阻塞赋值（&#x3D;）。</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">模块划分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分开异步逻辑与同步逻辑"><span class="nav-number">4.1.</span> <span class="nav-text">分开异步逻辑与同步逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分开控制逻辑和存储器"><span class="nav-number">4.2.</span> <span class="nav-text">分开控制逻辑和存储器</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

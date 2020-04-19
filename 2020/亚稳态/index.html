@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|Cinzel Decorative:300,300italic,400,400italic,700,700italic|思源宋体:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
   <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
@@ -287,7 +287,7 @@
       
         <p>亚稳态的概念，常见的三种同步器，电平同步器、边沿检查同步器和脉冲同步器。</p>
 <a id="more"></a>
-<h2 id="同步电路和域异步电路"><a class="header-anchor" href="#同步电路和域异步电路">¶</a>同步电路和域异步电路</h2>
+<h2 id="同步电路和域异步电路"><a class="header-anchor" href="#同步电路和域异步电路"></a>同步电路和域异步电路</h2>
 <p><strong>同步电路的定义</strong></p>
 <p>电路中的所有受时钟控制的单元（例如flip-flop，register），全部由一个统一的全局时钟控制</p>
 <p><img src="https://i.loli.net/2020/03/06/BcNd6LzaCu5XhEY.png" alt="亚稳态1.1.png"></p>
@@ -331,7 +331,7 @@
 <li>在大规模集成电路设计中应该避免采用异步电路设计</li>
 </ul>
 <p>同步时钟异步时钟的差别在于，同步时钟来源于统一锁相环PLL生成，这些时钟的相位和倍数都是可控的，如果来源于不同的PLL，即使两个时钟的频率相同也属于异步时钟。</p>
-<h2 id="亚稳态相关概念和原理"><a class="header-anchor" href="#亚稳态相关概念和原理">¶</a>亚稳态相关概念和原理</h2>
+<h2 id="亚稳态相关概念和原理"><a class="header-anchor" href="#亚稳态相关概念和原理"></a>亚稳态相关概念和原理</h2>
 <ul>
 <li>亚稳态是指触发器无法在某个规定时间段内达到一个可确认的状态；</li>
 <li>当一个触发器进入亚稳态时，既无法预测该单元的输出电平，也无法预测何时输出才能稳定在某个正确的电平上；</li>
@@ -353,7 +353,7 @@
 </blockquote>
 <p>由于Tcq和Tsu都由器件本身的工艺和工作环境决定，如果在时钟频率fclk和数据变化率固定的情况下，要增大Tmet值，那么设计者要做的只能是<strong>减小T_data值</strong>。</p>
 <p><strong>最大程度的减小T_data，只能是不再两个寄存器之间添加任何逻辑。</strong></p>
-<h2 id="同步策略—双锁存器电平同步器"><a class="header-anchor" href="#同步策略—双锁存器电平同步器">¶</a>同步策略—双锁存器电平同步器</h2>
+<h2 id="同步策略—双锁存器电平同步器"><a class="header-anchor" href="#同步策略—双锁存器电平同步器"></a>同步策略—双锁存器电平同步器</h2>
 <p>一个信号在过渡到另一个时钟域时，如果仅仅用一个触发器将其锁存，那么用一个触发器进行采样的结果可能是亚稳态。</p>
 <p>双锁存器法，即在一个信号进入另一个时钟域之前，将信号用两个锁存器连续锁存两次，最后得到的采样结果可以消除亚稳态问题。</p>
 <p><em>亚稳态现象</em></p>
@@ -375,15 +375,15 @@
 <li>三级或者更多级虽然能将亚稳态出现概率降得更低，但影响电路效率；</li>
 <li>增加寄存器进行同步的方法只是不断降低亚稳态出现的概率</li>
 </ul>
-<h2 id="亚稳态—单bit信号的跨时钟域传输"><a class="header-anchor" href="#亚稳态—单bit信号的跨时钟域传输">¶</a>亚稳态—单bit信号的跨时钟域传输</h2>
-<h3 id="慢时钟域–-快时钟域"><a class="header-anchor" href="#慢时钟域–-快时钟域">¶</a>慢时钟域–&gt;快时钟域</h3>
+<h2 id="亚稳态—单bit信号的跨时钟域传输"><a class="header-anchor" href="#亚稳态—单bit信号的跨时钟域传输"></a>亚稳态—单bit信号的跨时钟域传输</h2>
+<h3 id="慢时钟域–-快时钟域"><a class="header-anchor" href="#慢时钟域–-快时钟域"></a>慢时钟域–&gt;快时钟域</h3>
 <p>由慢时钟到快时钟域的传输，主要采用边沿检测同步器电路，可以检测输入信号的上升沿或下降沿。</p>
 <p><img src="https://i.loli.net/2020/03/06/Rpl7SFvCEr3ayjK.png" alt="亚稳态1.8.png"></p>
 <p>边沿检查电路实现的电路功能实际上是将慢时钟下一个周期的脉冲，搬移并缩小为快时钟下一个周期宽的脉冲。</p>
 <p><img src="https://i.loli.net/2020/03/06/pt4owY1VFjacNmA.png" alt="亚稳态1.9.png"></p>
 <p>适用条件：</p>
 <p>输入数据的宽度必须比一个接收时钟周期加上一个同步触发器的hold时间要长，最安全的就是两个同步周期宽度。<em>慢时钟域的脉冲足够保持到被快时钟的同步器拿到</em></p>
-<h3 id="快时钟域–-慢时钟域"><a class="header-anchor" href="#快时钟域–-慢时钟域">¶</a>快时钟域–&gt;慢时钟域</h3>
+<h3 id="快时钟域–-慢时钟域"><a class="header-anchor" href="#快时钟域–-慢时钟域"></a>快时钟域–&gt;慢时钟域</h3>
 <p>通常采用脉冲同步器，基本功能是：从某个时钟域取出一个单时钟宽度脉冲，然后在新的时钟域中建立另一个单时钟宽度的脉冲。</p>
 <p><img src="https://i.loli.net/2020/03/06/XuUxinRSgDtKPyW.png" alt="亚稳态1.10.png"></p>
 <p>使用慢时钟直接去采集快时钟域下input信号采集不到，因此使用toggle 电路子啊快时钟域下对输入信号有效标定，获得toggle信号。随后，使用同步器同步toggle信号，在慢时钟域下最终获得两个有效的单周期脉冲output。</p>
@@ -395,7 +395,7 @@
 <li>当输入脉冲时钟周期大于两个同步器时钟周期时，这个问题更加严重；</li>
 <li>这种情况下，如果输入脉冲相邻太近，则同步器就不能检测到每个脉冲。</li>
 </ul>
-<h2 id="三种同步器对比"><a class="header-anchor" href="#三种同步器对比">¶</a>三种同步器对比</h2>
+<h2 id="三种同步器对比"><a class="header-anchor" href="#三种同步器对比"></a>三种同步器对比</h2>
 <p><img src="https://i.loli.net/2020/03/06/XGbjk4R79xuEYsJ.png" alt="亚稳态1.12.png"></p>
 <hr>
 <p><em>Reference</em>：</p>
@@ -542,7 +542,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#同步电路和域异步电路"><span class="nav-number">1.</span> <span class="nav-text">¶同步电路和域异步电路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#亚稳态相关概念和原理"><span class="nav-number">2.</span> <span class="nav-text">¶亚稳态相关概念和原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步策略—双锁存器电平同步器"><span class="nav-number">3.</span> <span class="nav-text">¶同步策略—双锁存器电平同步器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#亚稳态—单bit信号的跨时钟域传输"><span class="nav-number">4.</span> <span class="nav-text">¶亚稳态—单bit信号的跨时钟域传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#慢时钟域–-快时钟域"><span class="nav-number">4.1.</span> <span class="nav-text">¶慢时钟域–&gt;快时钟域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快时钟域–-慢时钟域"><span class="nav-number">4.2.</span> <span class="nav-text">¶快时钟域–&gt;慢时钟域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三种同步器对比"><span class="nav-number">5.</span> <span class="nav-text">¶三种同步器对比</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#同步电路和域异步电路"><span class="nav-number">1.</span> <span class="nav-text">同步电路和域异步电路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#亚稳态相关概念和原理"><span class="nav-number">2.</span> <span class="nav-text">亚稳态相关概念和原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步策略—双锁存器电平同步器"><span class="nav-number">3.</span> <span class="nav-text">同步策略—双锁存器电平同步器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#亚稳态—单bit信号的跨时钟域传输"><span class="nav-number">4.</span> <span class="nav-text">亚稳态—单bit信号的跨时钟域传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#慢时钟域–-快时钟域"><span class="nav-number">4.1.</span> <span class="nav-text">慢时钟域–&gt;快时钟域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快时钟域–-慢时钟域"><span class="nav-number">4.2.</span> <span class="nav-text">快时钟域–&gt;慢时钟域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三种同步器对比"><span class="nav-number">5.</span> <span class="nav-text">三种同步器对比</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

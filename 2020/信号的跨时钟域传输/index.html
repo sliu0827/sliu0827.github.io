@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|Cinzel Decorative:300,300italic,400,400italic,700,700italic|思源宋体:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
   <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
@@ -286,7 +286,7 @@
       
         <p>快时钟域向慢时钟域过渡时如何采用“结绳法”进行过渡以及多bit指示信号和多bit数据流的跨时钟域处理方法</p>
 <a id="more"></a>
-<h2 id="结绳法（快时钟–-慢时钟）"><a class="header-anchor" href="#结绳法（快时钟–-慢时钟）">¶</a>结绳法（快时钟–&gt;慢时钟）</h2>
+<h2 id="结绳法（快时钟–-慢时钟）"><a class="header-anchor" href="#结绳法（快时钟–-慢时钟）"></a>结绳法（快时钟–&gt;慢时钟）</h2>
 <hr>
 <p>信号从快时钟域到慢时钟域过渡时，慢时钟将可能无法对变化太快的信号实现正确采样，前述同步器对两个时钟之间的关系要求很严格，采用“结绳法”则适合任何时钟的过渡。</p>
 <p><strong>原理：</strong></p>
@@ -338,7 +338,7 @@
 <p>结绳法实现较为复杂，特别是效率不高，在对设计性能要求较高的场合应该慎用。</p>
 </li>
 </ol>
-<h2 id="考虑两个问题"><a class="header-anchor" href="#考虑两个问题">¶</a>考虑两个问题</h2>
+<h2 id="考虑两个问题"><a class="header-anchor" href="#考虑两个问题"></a>考虑两个问题</h2>
 <hr>
 <ol>
 <li>
@@ -351,7 +351,7 @@
 <p>因为根据采样定理，采样频率低于信号最高频率2倍的时候，是无法完整采样的</p>
 </li>
 </ol>
-<h2 id="多bit指示信号的跨时钟域传输"><a class="header-anchor" href="#多bit指示信号的跨时钟域传输">¶</a>多bit指示信号的跨时钟域传输</h2>
+<h2 id="多bit指示信号的跨时钟域传输"><a class="header-anchor" href="#多bit指示信号的跨时钟域传输"></a>多bit指示信号的跨时钟域传输</h2>
 <hr>
 <p>同时传递两个信号（b_load &amp; b-en）,如下图所示。</p>
 <p><img src="https://i.loli.net/2020/03/14/rZtiKzgWPwFJvOp.png" alt="跨时钟域2.6.png"></p>
@@ -365,7 +365,7 @@
 <p><img src="https://i.loli.net/2020/03/14/9bOxfk3SRXqaudc.png" alt="跨时钟域2.8.1.png"></p>
 <p>解决方法2：在发送时钟域解码，通过同步器来同步发送时钟域的输出到新的时钟域。<strong>在新的时钟域内，使用状态机确定何时被同步的输入有效。</strong></p>
 <p><img src="https://i.loli.net/2020/03/14/CPA7MctDQSjaRYs.png" alt="跨时钟域2.8.2.png"></p>
-<h2 id="多bit数据流的跨时钟域传输"><a class="header-anchor" href="#多bit数据流的跨时钟域传输">¶</a>多bit数据流的跨时钟域传输</h2>
+<h2 id="多bit数据流的跨时钟域传输"><a class="header-anchor" href="#多bit数据流的跨时钟域传输"></a>多bit数据流的跨时钟域传输</h2>
 <hr>
 <p>数据流和指示信号的区别：</p>
 <ul>
@@ -373,14 +373,14 @@
 <li>数据流要求信号具有较快的传输速度</li>
 </ul>
 <p><strong>解决方法：SRAM、FIFO</strong></p>
-<h3 id="FIFO基本介绍"><a class="header-anchor" href="#FIFO基本介绍">¶</a>FIFO基本介绍</h3>
+<h3 id="FIFO基本介绍"><a class="header-anchor" href="#FIFO基本介绍"></a>FIFO基本介绍</h3>
 <p>FIFO（first in first out），是一种先进先出的存储结构。与普通存储器相比没有外部的读写地址线，使用简单。</p>
 <p>缺点在于只能顺序写入数据，顺序的读出数据，其数据地址由内部读写指针自动加1完成，不能像普通存储器那样可以由地址线决定读取或写入某个指定的地址。</p>
 <p>**异步FIFO即用一种时钟写入数据，而用另外一种时钟读出数据，其中这两个读写时钟是异步的。**适用于大量数据跨时钟域传输，且对传输速度有一定要求的场合。</p>
 <p><img src="https://i.loli.net/2020/03/14/M4bmUsfjvAeDKW3.png" alt="跨时钟域2.9.png"></p>
 <p>FIFO 上游节点是FIFO的数据输入端，在写信号有效时，数据将被写入FIFO的顶部（由FIFO内部的写指针控制），并且在FIFO内部，写指针后移一个单元，同时FIFO的满信号（FIFO full signal）将控制上游节点是否发送数据；</p>
 <p>FIFO 下游节点是FIFO 的数据输出端，当读信号有效时，位于FIFO底部的数据将被读出（由FIFO内部的读指针控制），并且在FIFO内部读指针将后移一个单元，同时FIFO空信号（FIFO empty signal）将控制下游节点是否读出数据。</p>
-<h3 id="FIFO主要用途："><a class="header-anchor" href="#FIFO主要用途：">¶</a>FIFO主要用途：</h3>
+<h3 id="FIFO主要用途："><a class="header-anchor" href="#FIFO主要用途："></a>FIFO主要用途：</h3>
 <ul>
 <li>
 <p>使用异步FIFO对不同时钟域之间的数据进行传输；</p>
@@ -536,7 +536,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#结绳法（快时钟–-慢时钟）"><span class="nav-number">1.</span> <span class="nav-text">¶结绳法（快时钟–&gt;慢时钟）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#考虑两个问题"><span class="nav-number">2.</span> <span class="nav-text">¶考虑两个问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多bit指示信号的跨时钟域传输"><span class="nav-number">3.</span> <span class="nav-text">¶多bit指示信号的跨时钟域传输</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多bit数据流的跨时钟域传输"><span class="nav-number">4.</span> <span class="nav-text">¶多bit数据流的跨时钟域传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FIFO基本介绍"><span class="nav-number">4.1.</span> <span class="nav-text">¶FIFO基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FIFO主要用途："><span class="nav-number">4.2.</span> <span class="nav-text">¶FIFO主要用途：</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#结绳法（快时钟–-慢时钟）"><span class="nav-number">1.</span> <span class="nav-text">结绳法（快时钟–&gt;慢时钟）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#考虑两个问题"><span class="nav-number">2.</span> <span class="nav-text">考虑两个问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多bit指示信号的跨时钟域传输"><span class="nav-number">3.</span> <span class="nav-text">多bit指示信号的跨时钟域传输</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多bit数据流的跨时钟域传输"><span class="nav-number">4.</span> <span class="nav-text">多bit数据流的跨时钟域传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FIFO基本介绍"><span class="nav-number">4.1.</span> <span class="nav-text">FIFO基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FIFO主要用途："><span class="nav-number">4.2.</span> <span class="nav-text">FIFO主要用途：</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

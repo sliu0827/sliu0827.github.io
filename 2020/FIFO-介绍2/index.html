@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|Cinzel Decorative:300,300italic,400,400italic,700,700italic|思源宋体:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
   <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
@@ -277,9 +277,9 @@
       
         <p>如何对FIFO最小深度计算和FIFO空满标志判断的漏洞分析。</p>
 <a id="more"></a>
-<h2 id="FIFO-深度计算"><a class="header-anchor" href="#FIFO-深度计算">¶</a>FIFO 深度计算</h2>
+<h2 id="FIFO-深度计算"><a class="header-anchor" href="#FIFO-深度计算"></a>FIFO 深度计算</h2>
 <hr>
-<h3 id="例题分析"><a class="header-anchor" href="#例题分析">¶</a>例题分析</h3>
+<h3 id="例题分析"><a class="header-anchor" href="#例题分析"></a>例题分析</h3>
 <p>例题：假设FIFO的写时钟为100MHZ，读时钟为80MHZ。在FIFO输入侧，每100个写时钟，写入80个数据；读数据侧，假定每个时钟读走一个数据。</p>
 <p><em>请问FIFO深度设置为多少可以保证FIFO不会上溢出和下溢出？</em></p>
 <p><strong>分析清楚数据轻载和重载时数据的传输任务</strong></p>
@@ -294,7 +294,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_num_read &#x3D; Time&#x2F;t_read &#x3D; Time&#x2F;(1&#x2F;f_read) &#x3D; Time * f_read &#x3D; (160&#x2F;100) * 80</span><br></pre></td></tr></table></figure>
 <p>FIFO应该设置的深度值：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depth &#x3D; burst - data_num_read &#x3D; 160 - (160&#x2F;100) * 80 &#x3D; 32</span><br></pre></td></tr></table></figure>
-<h3 id="问题一般化"><a class="header-anchor" href="#问题一般化">¶</a>问题一般化</h3>
+<h3 id="问题一般化"><a class="header-anchor" href="#问题一般化"></a>问题一般化</h3>
 <p>参数为：</p>
 <ul>
 <li>写时钟频率：WCLK；</li>
@@ -309,7 +309,7 @@
 <p>RCLK *（X/Y）表示读的实际速度，两者乘积为读数据量；</p>
 <p>burst_length 表示写入数据量。</p>
 </blockquote>
-<h2 id="FIFO空满标志的判断方法是否存在漏洞？"><a class="header-anchor" href="#FIFO空满标志的判断方法是否存在漏洞？">¶</a>FIFO空满标志的判断方法是否存在漏洞？</h2>
+<h2 id="FIFO空满标志的判断方法是否存在漏洞？"><a class="header-anchor" href="#FIFO空满标志的判断方法是否存在漏洞？"></a>FIFO空满标志的判断方法是否存在漏洞？</h2>
 <hr>
 <p>判断方法回顾：</p>
 <ul>
@@ -477,7 +477,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FIFO-深度计算"><span class="nav-number">1.</span> <span class="nav-text">¶FIFO 深度计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例题分析"><span class="nav-number">1.1.</span> <span class="nav-text">¶例题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一般化"><span class="nav-number">1.2.</span> <span class="nav-text">¶问题一般化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FIFO空满标志的判断方法是否存在漏洞？"><span class="nav-number">2.</span> <span class="nav-text">¶FIFO空满标志的判断方法是否存在漏洞？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FIFO-深度计算"><span class="nav-number">1.</span> <span class="nav-text">FIFO 深度计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例题分析"><span class="nav-number">1.1.</span> <span class="nav-text">例题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一般化"><span class="nav-number">1.2.</span> <span class="nav-text">问题一般化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FIFO空满标志的判断方法是否存在漏洞？"><span class="nav-number">2.</span> <span class="nav-text">FIFO空满标志的判断方法是否存在漏洞？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|Cinzel Decorative:300,300italic,400,400italic,700,700italic|思源宋体:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
   <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
@@ -276,7 +276,7 @@
       
         <p>类是一种可以包含数据和方法的类型。通过类的使用，实现面向对象编程（OOP，Object-Oriented Programming）…</p>
 <a id="more"></a>
-<h2 id="类的封装"><a class="header-anchor" href="#类的封装">¶</a>类的封装</h2>
+<h2 id="类的封装"><a class="header-anchor" href="#类的封装"></a>类的封装</h2>
 <hr>
 <p>类是一种可以包含数据和方法的类型。借助类的使用，实现面向对象编程（OOP，Object-Oriented Programming），用户可以创建复杂的数据类型，在更加抽象的层次建立测试平台和系统级模型，通过调用函数可以执行一个动作而不仅是完成电平的改变。</p>
 <p><strong>OOP术语：</strong></p>
@@ -310,7 +310,7 @@
 <li>使用this来索引当前所在对象的成员（变量/参数/方法）</li>
 <li>数据的隐藏，使得类的测试和维护变得简单。例如local，protected</li>
 </ul>
-<h2 id="类的继承"><a class="header-anchor" href="#类的继承">¶</a>类的继承</h2>
+<h2 id="类的继承"><a class="header-anchor" href="#类的继承"></a>类的继承</h2>
 <hr>
 <p>SV中通过使用关键词extends，可以扩展一个新的类继承于先前定义过的类，包括其所有的成员（变量/方法）。</p>
 <p><strong>成员的覆盖</strong></p>
@@ -320,7 +320,7 @@
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Packet;</span><br><span class="line">  <span class="keyword">integer</span> i = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="keyword">integer</span> get();</span><br><span class="line">    get = i;</span><br><span class="line">  <span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> LinkedPacket <span class="keyword">extends</span> Packet;</span><br><span class="line">  <span class="keyword">integer</span> i = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="keyword">integer</span> get();</span><br><span class="line">    get = -i;</span><br><span class="line">  <span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"></span><br><span class="line">LinkedPacket lp = <span class="keyword">new</span>;</span><br><span class="line">Packet p = lp;</span><br><span class="line"></span><br><span class="line">j = p<span class="variable">.i</span>; <span class="comment">// j = 1, not 2</span></span><br><span class="line">j = p<span class="variable">.get</span>(); <span class="comment">// j = 1, not -1 or –2</span></span><br></pre></td></tr></table></figure>
 <p><strong>super 的使用</strong></p>
 <p>用于访问当前对象的父类成员，尤其当子类与父类的成员同名时，可以使用其指定访问父类成员，而非默认的子类成员。</p>
-<h2 id="包的使用"><a class="header-anchor" href="#包的使用">¶</a>包的使用</h2>
+<h2 id="包的使用"><a class="header-anchor" href="#包的使用"></a>包的使用</h2>
 <hr>
 <p>为了使得可以在多个模块（硬件）或者类（软件）之间共享用户定义的类型，SV添加了包（package）。</p>
 <p>module、interface、class等可以使用包中定义或者声明的内容。</p>
@@ -469,7 +469,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#类的封装"><span class="nav-number">1.</span> <span class="nav-text">¶类的封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类的继承"><span class="nav-number">2.</span> <span class="nav-text">¶类的继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包的使用"><span class="nav-number">3.</span> <span class="nav-text">¶包的使用</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#类的封装"><span class="nav-number">1.</span> <span class="nav-text">类的封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类的继承"><span class="nav-number">2.</span> <span class="nav-text">类的继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包的使用"><span class="nav-number">3.</span> <span class="nav-text">包的使用</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -27,31 +27,31 @@
     <url>/2020/SystemVerilog-%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>介绍SV中的任务和函数，线程控制和线程间的同步和通信的基本概念</p>
 <a id="more"></a>
-<h2 id="任务和函数"><a class="header-anchor" href="#任务和函数">¶</a>任务和函数</h2>
+<h2 id="任务和函数"><a class="header-anchor" href="#任务和函数"></a>任务和函数</h2>
 <hr>
-<h3 id="函数（function）"><a class="header-anchor" href="#函数（function）">¶</a>函数（function）</h3>
+<h3 id="函数（function）"><a class="header-anchor" href="#函数（function）"></a>函数（function）</h3>
 <p>首要目的在于为运算表达式提供返回值，其次可以简化代码，使得大型代码的维护更加容易。</p>
 <p>函数的参数列表主要有input、output、inout和ref。</p>
 <p><strong>函数的返回方式包括return直接返回，或者将值赋给与函数同名的变量。</strong></p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> [<span class="number">15</span>:<span class="number">0</span>] myfunc1 (<span class="keyword">input</span> [<span class="number">7</span>:<span class="number">0</span>] x,y);</span><br><span class="line">  myfunc1 = x * y - <span class="number">1</span>; </span><br><span class="line"><span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">function</span> [<span class="number">15</span>:<span class="number">0</span>] myfunc2 (<span class="keyword">input</span> [<span class="number">7</span>:<span class="number">0</span>] x,y);</span><br><span class="line">  <span class="keyword">return</span> x * y - <span class="number">1</span>; </span><br><span class="line"><span class="keyword">endfunction</span></span><br></pre></td></tr></table></figure>
 <p>如果调用具有返回值的函数，但是又不使用该返回值，可以添加void’()进行转换。</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span>'(some_function());</span><br></pre></td></tr></table></figure>
-<h3 id="任务（task）"><a class="header-anchor" href="#任务（task）">¶</a>任务（task）</h3>
+<h3 id="任务（task）"><a class="header-anchor" href="#任务（task）"></a>任务（task）</h3>
 <p>任务的定义同样可以指定函数中包括的各种参数，但任务可以消耗仿真时间。同时，任务可以调用其它任务或者函数。</p>
 <p>task没有返回值，但我们依然可以利用return来使task结束。</p>
-<h3 id="二者区别"><a class="header-anchor" href="#二者区别">¶</a>二者区别</h3>
+<h3 id="二者区别"><a class="header-anchor" href="#二者区别"></a>二者区别</h3>
 <ul>
 <li>function不会消耗仿真时间，而task则可能会消耗仿真时间；</li>
 <li>function无法调用task，而task可以调用function；</li>
 <li>一个可以返回数据的function只能返回一个单一数值，而任务或者void function不会返回数值；</li>
 <li>一个可以返回数据的function可以作为一个表达式中的操作数，该操作数的值即function的返回值。</li>
 </ul>
-<h3 id="参数传递"><a class="header-anchor" href="#参数传递">¶</a>参数传递</h3>
+<h3 id="参数传递"><a class="header-anchor" href="#参数传递"></a>参数传递</h3>
 <p>参数传递的过程只发生在方法的调用和返回时。</p>
 <p><strong>ref参数在传递时不会发生值拷贝，而是将变量“指针”传递到方法中，在方法内部对该参数的操作将会同时影响外部变量。</strong></p>
 <p>如果为了避免外部传入的ref参数会被方法修改，则可以添加const修饰符，来表示变量是只读变量。</p>
 <p>SV中允许参数声明自己的默认值。方法被调用时，可由参数位置顺序在调用方法时传递参数，也可以由参数名字调用方式时绑定参数。</p>
-<h2 id="线程控制"><a class="header-anchor" href="#线程控制">¶</a>线程控制</h2>
+<h2 id="线程控制"><a class="header-anchor" href="#线程控制"></a>线程控制</h2>
 <hr>
 <p><strong>并行线程</strong></p>
 <p>Verilog中与顺序线程begin…end相对的是并行线程fork…join，SV引入了两种新的创建线程的方法，fork…join_none和fork…join_any。</p>
@@ -76,17 +76,17 @@
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">real</span> AOR[];</span><br><span class="line"><span class="keyword">initial</span> <span class="keyword">wait</span>(AOR<span class="variable">.size</span>() &gt; <span class="number">0</span>)...;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="线程的同步和通信"><a class="header-anchor" href="#线程的同步和通信">¶</a>线程的同步和通信</h2>
+<h2 id="线程的同步和通信"><a class="header-anchor" href="#线程的同步和通信"></a>线程的同步和通信</h2>
 <hr>
 <p>测试平台中的所有线程都需要同步并交换数据。例如，一个线程等待另外一个，验证环境需要等待所有激励结束、比较结束才可以结束仿真。又有，监测器需要将监测到的数据发送至比较器，比较器又需要从不同的缓存获取数据进行比较。</p>
-<h3 id="事件（event）"><a class="header-anchor" href="#事件（event）">¶</a>事件（event）</h3>
+<h3 id="事件（event）"><a class="header-anchor" href="#事件（event）"></a>事件（event）</h3>
 <p>event可以用来控制进程的同步。</p>
 <p>一般通过使用event来声明event变量，通过-&gt;来触发事件。其他等待该事件的进程可以通过@操作符或者wait()来检查event触发状态来完成。</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">event</span> done, blast; <span class="comment">// declare two new events</span></span><br><span class="line"><span class="keyword">event</span> done_too = done; <span class="comment">// done_too as alias to done</span></span><br><span class="line"><span class="keyword">task</span> trigger( <span class="keyword">event</span> ev );</span><br><span class="line">  -&gt; ev;</span><br><span class="line"><span class="keyword">endtask</span></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">fork</span></span><br><span class="line">  @ done_too; <span class="comment">// wait for done through done_too</span></span><br><span class="line">  #<span class="number">1</span> trigger( done ); <span class="comment">// trigger done</span></span><br><span class="line"><span class="keyword">join</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fork</span></span><br><span class="line">  -&gt; blast;</span><br><span class="line">  <span class="keyword">wait</span> ( blast<span class="variable">.triggered</span> );</span><br><span class="line"><span class="keyword">join</span></span><br></pre></td></tr></table></figure>
-<h3 id="wait-order-方法"><a class="header-anchor" href="#wait-order-方法">¶</a>wait_order()方法</h3>
+<h3 id="wait-order-方法"><a class="header-anchor" href="#wait-order-方法"></a>wait_order()方法</h3>
 <p>对于较多的事件时，wait_order可以使得进程保持等待，直到在参数列表中的事件event按照顺序从左到右依次完成。</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">wait_order</span>( a, b, c);</span><br><span class="line"></span><br><span class="line"><span class="keyword">wait_order</span>( a, b, c ) <span class="keyword">else</span> <span class="built_in">$display</span>( <span class="string">"Error: events out of order"</span> );</span><br><span class="line"></span><br><span class="line"><span class="keyword">bit</span> success;</span><br><span class="line"><span class="keyword">wait_order</span>( a, b, c ) success = <span class="number">1</span>; <span class="keyword">else</span> success = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
-<h3 id="旗语（semaphore）"><a class="header-anchor" href="#旗语（semaphore）">¶</a>旗语（semaphore）</h3>
+<h3 id="旗语（semaphore）"><a class="header-anchor" href="#旗语（semaphore）"></a>旗语（semaphore）</h3>
 <p>多个线程对同一资源进行访问时，使用旗语来实现对同一资源的访问控制，也称为“互斥访问”。其可以确保线程A在访问的时候，线程B是无法访问的，A退出后，B才可以访问。</p>
 <p>旗语的基本操作包括：</p>
 <ul>
@@ -96,7 +96,7 @@
 </ul>
 <p>如果试图获取一个旗语而不被阻塞，则可以使用try_get()函数，返回1则表示有足够的钥匙。</p>
 <p>如果一个线程请求“钥匙”不足，则会一直阻塞，多个阻塞的线程会以先进先出（FIFO）的方式进行排队。</p>
-<h3 id="信箱（mailbox）"><a class="header-anchor" href="#信箱（mailbox）">¶</a>信箱（mailbox）</h3>
+<h3 id="信箱（mailbox）"><a class="header-anchor" href="#信箱（mailbox）"></a>信箱（mailbox）</h3>
 <p>信箱mailbox可以使得进程之间的信息得以交换，数据可以由一个进程写入信箱，再由另外一个进程获得。</p>
 <p><strong>信箱的内建方法：</strong></p>
 <ul>
@@ -126,9 +126,9 @@
 <a id="more"></a>
 <p>随机约束测试（CRT，Constrained-Random Test）即能够产生你感兴趣的、你想不到的的测试向量，通过回归测试、替换随机种子的方式来提高单位测试用例的覆盖率收集效率。</p>
 <p>面向DUT的随机激励产生过程中，为了符合协议、满足测试需求，我们需要添加一些“约束”，从而系统地组织随机变量。同时，采用类来作为载体来容纳这些变量和它们之间的约束，类的成员变量均可声明为“随机”属性，用rand或者randc来表示。</p>
-<h2 id="随机变量"><a class="header-anchor" href="#随机变量">¶</a>随机变量</h2>
+<h2 id="随机变量"><a class="header-anchor" href="#随机变量"></a>随机变量</h2>
 <hr>
-<h3 id="修饰符rand-randc"><a class="header-anchor" href="#修饰符rand-randc">¶</a>修饰符rand/randc</h3>
+<h3 id="修饰符rand-randc"><a class="header-anchor" href="#修饰符rand-randc"></a>修饰符rand/randc</h3>
 <ul>
 <li>
 <p>rand修饰符，表示在可生成的范围内，每个值的可能性是相同的</p>
@@ -140,17 +140,17 @@
 <p><img src="https://i.loli.net/2020/04/16/GMmdreoPKTt5N6u.png" alt="SV随机约束5.1.png"></p>
 </li>
 </ul>
-<h3 id="使用范围"><a class="header-anchor" href="#使用范围">¶</a>使用范围</h3>
+<h3 id="使用范围"><a class="header-anchor" href="#使用范围"></a>使用范围</h3>
 <ul>
 <li>任何类中的整形（bit/byte/int）变量都可以声明为rand/randc；</li>
 <li>定长数组、动态数组、关联数组和队列都可以声明为rand/randc，可以对动态数组和队列的长度加以约束；</li>
 <li>指向对象的句柄成员，也可以声明为rand(不能被声明为randc)，随机时该句柄指向对象中的随机变量也会一并被随机；</li>
 <li>非组合型结构体可以声明为rand，非组合型的成员可以声明为rand/randc；</li>
 </ul>
-<h2 id="随机约束"><a class="header-anchor" href="#随机约束">¶</a>随机约束</h2>
+<h2 id="随机约束"><a class="header-anchor" href="#随机约束"></a>随机约束</h2>
 <hr>
 <p>没有约束的随机变量会包含许多无效的和非法的值，这会使得有效激励的产生变得低效。因此，需要使用约束块来定义随机变量的约束关系。</p>
-<h3 id="约束块方法"><a class="header-anchor" href="#约束块方法">¶</a>约束块方法</h3>
+<h3 id="约束块方法"><a class="header-anchor" href="#约束块方法"></a>约束块方法</h3>
 <ul>
 <li>
 <p>成员集合，约束块支持整形通过set操作符来设置他们的可取值范围</p>
@@ -182,9 +182,9 @@
 <p>软约束，没有soft描述时默认为硬约束，当约束冲突时，硬约束可以“覆盖”软约束，并且不会导致随机数产生的失败。</p>
 </li>
 </ul>
-<h2 id="约束控制"><a class="header-anchor" href="#约束控制">¶</a>约束控制</h2>
+<h2 id="约束控制"><a class="header-anchor" href="#约束控制"></a>约束控制</h2>
 <hr>
-<h3 id="随机方法randomize"><a class="header-anchor" href="#随机方法randomize">¶</a>随机方法randomize()</h3>
+<h3 id="随机方法randomize"><a class="header-anchor" href="#随机方法randomize"></a>随机方法randomize()</h3>
 <p>在类中声明的随机变量，需要伴随着**SV类的内建方法randomize()**的调用。</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">virtual</span> <span class="keyword">function</span> <span class="keyword">int</span> randomize();</span><br></pre></td></tr></table></figure>
 <p>如果随机化成功则返回1，如果失败则返回0。</p>
@@ -192,12 +192,12 @@
 <p><strong>内嵌约束</strong>：在调用类方法randomize()时可以伴随着with来添加额外的约束。</p>
 <p>内嵌约束可能存在指向模糊的问题。例如以下：</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> C1;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">integer</span> x;</span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"><span class="keyword">class</span> C2;</span><br><span class="line">  <span class="keyword">integer</span> x;</span><br><span class="line">  <span class="keyword">integer</span> y;</span><br><span class="line">  <span class="keyword">task</span> doit(C1 f, <span class="keyword">integer</span> x, <span class="keyword">integer</span> z);</span><br><span class="line">    <span class="keyword">int</span> result;</span><br><span class="line">    result = f<span class="variable">.randomize</span>() <span class="keyword">with</span> &#123;x &lt; y + z;&#125;;</span><br><span class="line">  <span class="keyword">endtask</span></span><br><span class="line"><span class="keyword">endclass</span></span><br></pre></td></tr></table></figure>
-<h3 id="内嵌约束指向模糊问题"><a class="header-anchor" href="#内嵌约束指向模糊问题">¶</a>内嵌约束指向模糊问题</h3>
+<h3 id="内嵌约束指向模糊问题"><a class="header-anchor" href="#内嵌约束指向模糊问题"></a>内嵌约束指向模糊问题</h3>
 <p><strong>解决指向模糊的问题，可以在随机时在with后面添加指定对象的成员变量</strong>，不在其中的则是该对象以外的变量。</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> C;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">integer</span> x;</span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"><span class="keyword">function</span> <span class="keyword">int</span> F(C obj, <span class="keyword">integer</span> y);</span><br><span class="line">  F = obj<span class="variable">.randomize</span>() <span class="keyword">with</span> (x) &#123; x &lt; y; &#125;;</span><br><span class="line"><span class="keyword">endfunction</span></span><br></pre></td></tr></table></figure>
 <p><strong>可以通过local::的域索引方式来明确随机变量的指向</strong>，即local::指向的变量会在包含randomize()方法的对象中。</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> C;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">integer</span> x;</span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"><span class="keyword">function</span> <span class="keyword">int</span> F(C obj, <span class="keyword">integer</span> x);</span><br><span class="line">  F = obj<span class="variable">.randomize</span>() <span class="keyword">with</span> &#123; x &lt; <span class="keyword">local</span>::x; &#125;;</span><br><span class="line"><span class="keyword">endfunction</span></span><br><span class="line"><span class="comment">//第一个x指向对象c中的成员变量x，第二个x指向c对象以外的域</span></span><br></pre></td></tr></table></figure>
-<h2 id="随机控制"><a class="header-anchor" href="#随机控制">¶</a>随机控制</h2>
+<h2 id="随机控制"><a class="header-anchor" href="#随机控制"></a>随机控制</h2>
 <hr>
 <p><strong>随机变量的控制</strong></p>
 <p>rand_mode可以用来使能或者禁止随机变量。</p>
@@ -226,7 +226,7 @@
     <url>/2020/SystemVerilog-%E7%B1%BB%E5%92%8C%E5%8C%85%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>类是一种可以包含数据和方法的类型。通过类的使用，实现面向对象编程（OOP，Object-Oriented Programming）…</p>
 <a id="more"></a>
-<h2 id="类的封装"><a class="header-anchor" href="#类的封装">¶</a>类的封装</h2>
+<h2 id="类的封装"><a class="header-anchor" href="#类的封装"></a>类的封装</h2>
 <hr>
 <p>类是一种可以包含数据和方法的类型。借助类的使用，实现面向对象编程（OOP，Object-Oriented Programming），用户可以创建复杂的数据类型，在更加抽象的层次建立测试平台和系统级模型，通过调用函数可以执行一个动作而不仅是完成电平的改变。</p>
 <p><strong>OOP术语：</strong></p>
@@ -260,7 +260,7 @@
 <li>使用this来索引当前所在对象的成员（变量/参数/方法）</li>
 <li>数据的隐藏，使得类的测试和维护变得简单。例如local，protected</li>
 </ul>
-<h2 id="类的继承"><a class="header-anchor" href="#类的继承">¶</a>类的继承</h2>
+<h2 id="类的继承"><a class="header-anchor" href="#类的继承"></a>类的继承</h2>
 <hr>
 <p>SV中通过使用关键词extends，可以扩展一个新的类继承于先前定义过的类，包括其所有的成员（变量/方法）。</p>
 <p><strong>成员的覆盖</strong></p>
@@ -270,7 +270,7 @@
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> Packet;</span><br><span class="line">  <span class="keyword">integer</span> i = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="keyword">integer</span> get();</span><br><span class="line">    get = i;</span><br><span class="line">  <span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> LinkedPacket <span class="keyword">extends</span> Packet;</span><br><span class="line">  <span class="keyword">integer</span> i = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">function</span> <span class="keyword">integer</span> get();</span><br><span class="line">    get = -i;</span><br><span class="line">  <span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"></span><br><span class="line">LinkedPacket lp = <span class="keyword">new</span>;</span><br><span class="line">Packet p = lp;</span><br><span class="line"></span><br><span class="line">j = p<span class="variable">.i</span>; <span class="comment">// j = 1, not 2</span></span><br><span class="line">j = p<span class="variable">.get</span>(); <span class="comment">// j = 1, not -1 or –2</span></span><br></pre></td></tr></table></figure>
 <p><strong>super 的使用</strong></p>
 <p>用于访问当前对象的父类成员，尤其当子类与父类的成员同名时，可以使用其指定访问父类成员，而非默认的子类成员。</p>
-<h2 id="包的使用"><a class="header-anchor" href="#包的使用">¶</a>包的使用</h2>
+<h2 id="包的使用"><a class="header-anchor" href="#包的使用"></a>包的使用</h2>
 <hr>
 <p>为了使得可以在多个模块（硬件）或者类（软件）之间共享用户定义的类型，SV添加了包（package）。</p>
 <p>module、interface、class等可以使用包中定义或者声明的内容。</p>
@@ -291,27 +291,27 @@
     <url>/2020/SystemVerilog-%E6%95%B0%E7%BB%84%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>什么是组合型数组？什么又是非组合型数组？</p>
 <a id="more"></a>
-<h2 id="组合型和非组合型数组"><a class="header-anchor" href="#组合型和非组合型数组">¶</a>组合型和非组合型数组</h2>
+<h2 id="组合型和非组合型数组"><a class="header-anchor" href="#组合型和非组合型数组"></a>组合型和非组合型数组</h2>
 <hr>
-<h3 id="非组合型（unpacked）"><a class="header-anchor" href="#非组合型（unpacked）">¶</a>非组合型（unpacked）</h3>
+<h3 id="非组合型（unpacked）"><a class="header-anchor" href="#非组合型（unpacked）"></a>非组合型（unpacked）</h3>
 <p>verilog中通常定义例如<code>reg [15:0] RAM[0:4095];</code>，这种数组定义为memory array用作数据存储。SV将这种声明数组的方式称作非组合型数组，即数组中的成员之间存储数据都是互相独立的。</p>
 <p>例如作以下定义：</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">wire</span> [<span class="number">7</span>:<span class="number">0</span>] <span class="keyword">table</span> [<span class="number">3</span>:<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
 <p>对应的存储结构为：</p>
 <p><img src="https://i.loli.net/2020/04/11/PvsCz36pwLSZYrm.png" alt="SV数组介绍3.1.png"></p>
-<h3 id="组合型（packed）"><a class="header-anchor" href="#组合型（packed）">¶</a>组合型（packed）</h3>
+<h3 id="组合型（packed）"><a class="header-anchor" href="#组合型（packed）"></a>组合型（packed）</h3>
 <p>SV中将具有向量结构的数组声明方式作为组合型。其相对于非组合型在声明时的差别在于，其索引在数组名的左侧，数组维度从左到右来识别。</p>
 <p>例如作如下定义：</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] data;<span class="comment">//2维组合声明</span></span><br></pre></td></tr></table></figure>
 <p>对应的存储结构为：</p>
 <p><img src="https://i.loli.net/2020/04/11/kFmCXt6IansPUY1.png" alt="SV数组介绍3.2.png"></p>
-<h3 id="区别分析"><a class="header-anchor" href="#区别分析">¶</a>区别分析</h3>
+<h3 id="区别分析"><a class="header-anchor" href="#区别分析"></a>区别分析</h3>
 <p>初始化时，组合型（packed）存储值是连续的，可以对所有元素统一赋值；非组合型（unpacked）中则需要分别对每一个维度进行赋值。</p>
 <p>例如：</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="comment">//packed</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] a = <span class="number">32</span>’h0; <span class="comment">// vector assignment</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] b = &#123;<span class="number">16</span>’hz,<span class="number">16</span>’h0&#125;; <span class="comment">// concatenate operator</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] c = &#123;<span class="number">16</span>&#123;<span class="number">2</span>’b01&#125;&#125;; <span class="comment">// replicate operator</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//unpacked</span></span><br><span class="line"><span class="keyword">int</span> d [<span class="number">0</span>:<span class="number">1</span>][<span class="number">0</span>:<span class="number">3</span>] = ’&#123; ’&#123;<span class="number">7</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">5</span>&#125;, ’&#123;<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">6</span>&#125; &#125;;</span><br><span class="line"><span class="comment">// d[0][0] = 7  d[0][1] = 3  d[0][2] = 0  d[0][3] = 5</span></span><br><span class="line"><span class="comment">// d[1][0] = 2  d[1][1] = 0  d[1][2] = 1  d[1][3] = 6</span></span><br></pre></td></tr></table></figure>
 <p>非组合型数组中，若两个数组进行拷贝和赋值时，左右两边数组的维度和大小必须严格一致；组合型数组中，赋值左右两侧操作数的大小和维度不同时，也可以做赋值，会采用截取或者扩展的方式进行赋值。</p>
 <p>非组合型和组合型之间无法直接地互相赋值。</p>
-<h3 id="其他特性"><a class="header-anchor" href="#其他特性">¶</a>其他特性</h3>
+<h3 id="其他特性"><a class="header-anchor" href="#其他特性"></a>其他特性</h3>
 <ul>
 <li>
 <p>添加了foreach循环结构，用于遍历一维或多维数组，不需要指定该数组的大小。</p>
@@ -323,16 +323,16 @@
 <p><code>$size(array_name,dimensions)</code>，返回指定维度的尺寸大小等等</p>
 </li>
 </ul>
-<h2 id="其他数组类型"><a class="header-anchor" href="#其他数组类型">¶</a>其他数组类型</h2>
+<h2 id="其他数组类型"><a class="header-anchor" href="#其他数组类型"></a>其他数组类型</h2>
 <hr>
-<h3 id="动态数组"><a class="header-anchor" href="#动态数组">¶</a>动态数组</h3>
+<h3 id="动态数组"><a class="header-anchor" href="#动态数组"></a>动态数组</h3>
 <p>动态数组在声明时使用“[]”，且不会为限制数组尺寸。动态数组一开始为空，使用new[]为其分配空间。同时，内建方法size(),delete()可以对动态数组进行操作。</p>
-<h3 id="队列"><a class="header-anchor" href="#队列">¶</a>队列</h3>
+<h3 id="队列"><a class="header-anchor" href="#队列"></a>队列</h3>
 <p>SV引入了队列，结合了数组和链表。通过“[$]”声明队列，索引值从0到$，常用的内建函数包括push_back(val)、push_front(val)、pop_back()和pop_front()来顺序添加或者移除并且获得数据成员。</p>
-<h3 id="关联数组"><a class="header-anchor" href="#关联数组">¶</a>关联数组</h3>
+<h3 id="关联数组"><a class="header-anchor" href="#关联数组"></a>关联数组</h3>
 <p>用于存放散列的数据成员，散列的索引类型除了为整形外还可以为字符串或者其它类型，散列的存储数据也可以为任意类型。</p>
 <p><img src="https://i.loli.net/2020/04/11/J8IzFPNGb3Z52W1.png" alt="SV数组介绍3.3.png"></p>
-<h2 id="数组操作方法"><a class="header-anchor" href="#数组操作方法">¶</a>数组操作方法</h2>
+<h2 id="数组操作方法"><a class="header-anchor" href="#数组操作方法"></a>数组操作方法</h2>
 <hr>
 <p>常见的包括以下几类：</p>
 <ul>
@@ -356,7 +356,7 @@
     <url>/2020/SystemVerilog-%E8%AF%AD%E6%B3%95%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>SystemVerilog中语法基本类型的简单介绍</p>
 <a id="more"></a>
-<h2 id="数据类型中四值-二值逻辑的区分"><a class="header-anchor" href="#数据类型中四值-二值逻辑的区分">¶</a>数据类型中四值&amp;二值逻辑的区分</h2>
+<h2 id="数据类型中四值-二值逻辑的区分"><a class="header-anchor" href="#数据类型中四值-二值逻辑的区分"></a>数据类型中四值&amp;二值逻辑的区分</h2>
 <hr>
 <p><strong>verilog中数据类型均为四值逻辑</strong>，包括变量类型（variables）和线网类型（nets）。</p>
 <ul>
@@ -372,7 +372,7 @@
 <li>四值逻辑硬件信号中变量或者线网类型，统一可以用logic声明。logic默认为变量类型（variable），也可以显示声明为线网型（nets）；</li>
 <li>二值数据类型，用来对于比RTL更高抽象级的模型建模，这些模型中Z和X很少被使用。包括，bit(1-bit)/byte(8-bit)/shortint(16-bit)/int(32-bit)/longint(64-bit)。</li>
 </ul>
-<h2 id="自定义类型"><a class="header-anchor" href="#自定义类型">¶</a>自定义类型</h2>
+<h2 id="自定义类型"><a class="header-anchor" href="#自定义类型"></a>自定义类型</h2>
 <hr>
 <p>SV中通过自定义类型使得代码自身的可读性更好，也使得用户可以构建更高抽象层的数据类型。常见的包括：</p>
 <ul>
@@ -381,7 +381,7 @@
 <li>struct，创建结构体类型。</li>
 </ul>
 <p>typedef又可以对enum，struct实现自定义枚举或结构体类型。</p>
-<h2 id="字符串类型"><a class="header-anchor" href="#字符串类型">¶</a>字符串类型</h2>
+<h2 id="字符串类型"><a class="header-anchor" href="#字符串类型"></a>字符串类型</h2>
 <hr>
 <p>SV引入了string类型来容纳可变长度的字符串，同时包括一些字符串内建的方法，例如返回字符串长度str.len(),返回地i个字符串str.getc(i)等等。</p>
 <p>SV字符串类型有以下特点：</p>
@@ -390,7 +390,7 @@
 <li>不同于c函数，没有空字符，长度为N，则索引为0~N-1；</li>
 <li>内存是动态分配的</li>
 </ul>
-<h2 id="接口（interface）"><a class="header-anchor" href="#接口（interface）">¶</a>接口（interface）</h2>
+<h2 id="接口（interface）"><a class="header-anchor" href="#接口（interface）"></a>接口（interface）</h2>
 <hr>
 <p>verilog中模块之间的通信需要例化端口和连线来完成，大型的设计中大量的端口让设计冗长和容易出错。因此，SV在Verilog基础上扩展了接口（interface）。</p>
 <p>接口提供了一种新型的对抽象级建模的方式，可以使简化建模和验证大型设计。</p>
@@ -429,7 +429,7 @@
 <p><strong>验证的周期</strong></p>
 <p>功能验证有着一整套完备的流程，从硬件系统定义贯穿到硅后测试部分。</p>
 <p><img src="https://i.loli.net/2020/04/09/5eGZx9tBqIz8Xyk.png" alt="验证概述1.3.png"></p>
-<h2 id="什么是验证测试平台？"><a class="header-anchor" href="#什么是验证测试平台？">¶</a>什么是验证测试平台？</h2>
+<h2 id="什么是验证测试平台？"><a class="header-anchor" href="#什么是验证测试平台？"></a>什么是验证测试平台？</h2>
 <hr>
 <p><img src="https://i.loli.net/2020/04/07/bHLy5WuARsGMhCK.png" alt="验证概述1.2.png"></p>
 <p>如图所示，测试平台主要包括的模块有时钟/重置（clock/reset）、激励发生器（stimulator）、检测器（monitor）、比较器（checker）以及待测设计（DUT）。其中：</p>
@@ -439,7 +439,7 @@
 <li>Checker：对DUT的输出数据与预期数据进行比对</li>
 </ul>
 <p>除此以外，clock/reset完成时钟的发起以及复位工作。最终，测试平台还会报告检查结果。</p>
-<h2 id="什么是SystemVerilog？"><a class="header-anchor" href="#什么是SystemVerilog？">¶</a>什么是SystemVerilog？</h2>
+<h2 id="什么是SystemVerilog？"><a class="header-anchor" href="#什么是SystemVerilog？"></a>什么是SystemVerilog？</h2>
 <hr>
 <p>SystemVerilog是一种新的硬件描述和验证语言（HDVL， Hardware Description and Verification Language）。</p>
 <p><strong>SV语言的核心特性</strong></p>
@@ -452,7 +452,7 @@
 <li>外部语言编程接口（Direct Programming Interface）</li>
 <li>断言（assertion）</li>
 </ul>
-<h2 id="什么是UVM？"><a class="header-anchor" href="#什么是UVM？">¶</a>什么是UVM？</h2>
+<h2 id="什么是UVM？"><a class="header-anchor" href="#什么是UVM？"></a>什么是UVM？</h2>
 <hr>
 <p>UVM（Universal Verification Methodology），是一种可适用于大多数项目的验证方法学。它自身提供的基础类库和验证结构可以让具有不同软件编程经验的验证工程师能够快速构建起一个可靠的验证框架；其框架构建类和测试类能够减轻环境构建的负担，进而将精力集中在如何制定验证计划和创建测试场景上。</p>
 <p>学习UVM时，可以遵循以下步骤：</p>
@@ -493,7 +493,7 @@
     <url>/2020/%E7%8A%B6%E6%80%81%E6%9C%BA/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>状态机的本质是对具有逻辑顺序或时序规律事件的一种描述方法。</p>
 <a id="more"></a>
-<h2 id="状态机的基本概念"><a class="header-anchor" href="#状态机的基本概念">¶</a>状态机的基本概念</h2>
+<h2 id="状态机的基本概念"><a class="header-anchor" href="#状态机的基本概念"></a>状态机的基本概念</h2>
 <hr>
 <p><strong>应用思路</strong>：</p>
 <ul>
@@ -519,7 +519,7 @@
 <p>根据状态机的数量是否为有限个，可分为有限状态机（Finite State Machine，FSM）和无限型状态机（Infinite State Machine，ISM）</p>
 </li>
 </ul>
-<h2 id="如何写好状态机"><a class="header-anchor" href="#如何写好状态机">¶</a>如何写好状态机</h2>
+<h2 id="如何写好状态机"><a class="header-anchor" href="#如何写好状态机"></a>如何写好状态机</h2>
 <hr>
 <p><strong>好的RTL级FSM描述具备以下特点：</strong></p>
 <ul>
@@ -529,7 +529,7 @@
 <li>FSM要清晰易懂、易于维护</li>
 </ul>
 <p>即在FSM中需要注意完备性，综合的结果无毛刺等异常扰动，在满足时序要求的前提下，占用最小的面积，或者在满足面积要求的情况下，是设计的时序余量更大，频率更高。</p>
-<h3 id="一段式状态机"><a class="header-anchor" href="#一段式状态机">¶</a>一段式状态机</h3>
+<h3 id="一段式状态机"><a class="header-anchor" href="#一段式状态机"></a>一段式状态机</h3>
 <p>应该避免的写法。</p>
 <p>设计的整个状态机写到1各always模块中，在该模块既描述状态转移，又描述状态的输入输出，这种写法称为一段式。</p>
 <p><img src="https://i.loli.net/2020/04/06/TS157YB9PUbVReH.jpg" alt="状态机1.png"></p>
@@ -539,12 +539,12 @@
 <li>代码结构不清晰，不利于维护，且不利于附加约束，不利于综合器和布局布线对设计的优化；</li>
 <li>另外该描述方法冗长，一般来说，一段式代码长度会比两段式长大约80%~150%。</li>
 </ul>
-<h3 id="两段式状态机"><a class="header-anchor" href="#两段式状态机">¶</a>两段式状态机</h3>
+<h3 id="两段式状态机"><a class="header-anchor" href="#两段式状态机"></a>两段式状态机</h3>
 <p>推荐的FSM描述方法之一。</p>
 <p>实现方法，一个always模块采用同步时序描述状态转移；另一个模块采用组合逻辑判断状态转移条件，描述状态转移规律。</p>
 <p><img src="https://i.loli.net/2020/04/06/XkpzN794gVUMJ5I.jpg" alt="状态机2.jpg"></p>
 <p>缺点：输出一般使用组合逻辑描述，容易产生毛刺等不稳定因素。</p>
-<h3 id="三段式状态机"><a class="header-anchor" href="#三段式状态机">¶</a>三段式状态机</h3>
+<h3 id="三段式状态机"><a class="header-anchor" href="#三段式状态机"></a>三段式状态机</h3>
 <p>比较推荐的写法。</p>
 <p>关键在于使用同步时序逻辑寄存FSM的输出。</p>
 <p>两段式状态机根据CS 决定输出结果，而三段式状态机根据NS 决定输出结果</p>
@@ -564,10 +564,10 @@
 <p>在FPGA/CPLD等可编程逻辑器件上的综合与布局布线效果更佳</p>
 </li>
 </ul>
-<h2 id="RTL"><a class="header-anchor" href="#RTL">¶</a>RTL</h2>
-<h3 id="两段式状态机-v2"><a class="header-anchor" href="#两段式状态机-v2">¶</a>两段式状态机</h3>
+<h2 id="RTL"><a class="header-anchor" href="#RTL"></a>RTL</h2>
+<h3 id="两段式状态机-v2"><a class="header-anchor" href="#两段式状态机-v2"></a>两段式状态机</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="comment">//Add a default state to make it more safe</span></span><br><span class="line"><span class="keyword">module</span> state2_default ( nrst,clk,</span><br><span class="line">                i1,i2,</span><br><span class="line">                o1,o2,</span><br><span class="line">                err</span><br><span class="line">               );</span><br><span class="line">         </span><br><span class="line"><span class="keyword">input</span>          nrst,clk;</span><br><span class="line"><span class="keyword">input</span>          i1,i2;</span><br><span class="line"><span class="keyword">output</span>         o1,o2,err;</span><br><span class="line"><span class="keyword">reg</span>            o1,o2,err;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">reg</span>    [<span class="number">2</span>:<span class="number">0</span>]   NS,CS;</span><br><span class="line"></span><br><span class="line"><span class="keyword">parameter</span> [<span class="number">2</span>:<span class="number">0</span>]      <span class="comment">//one hot with zero idle</span></span><br><span class="line">      IDLE   = <span class="number">3'b000</span>,</span><br><span class="line">      S1     = <span class="number">3'b001</span>,</span><br><span class="line">      S2     = <span class="number">3'b010</span>,</span><br><span class="line">      ERROR  = <span class="number">3'b100</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//sequential state transition</span></span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> nrst)</span><br><span class="line">      <span class="keyword">if</span> (!nrst)            </span><br><span class="line">         CS &lt;= IDLE;        </span><br><span class="line">      <span class="keyword">else</span>                  </span><br><span class="line">         CS &lt;=NS;           </span><br><span class="line"></span><br><span class="line"><span class="comment">//combinational condition judgment</span></span><br><span class="line"><span class="keyword">always</span> @ (nrst <span class="keyword">or</span> CS <span class="keyword">or</span> i1 <span class="keyword">or</span> i2)</span><br><span class="line">          <span class="keyword">begin</span></span><br><span class="line">               NS = <span class="number">3'bx</span>;</span><br><span class="line">               ERROR_out;</span><br><span class="line">               <span class="keyword">case</span> (CS)</span><br><span class="line">                    IDLE: <span class="keyword">begin</span></span><br><span class="line">                        IDLE_out;</span><br><span class="line">                        <span class="keyword">if</span> (~i1)           NS = IDLE;</span><br><span class="line">                        <span class="keyword">if</span> (i1 &amp;&amp; i2)      NS = S1;</span><br><span class="line">                        <span class="keyword">if</span> (i1 &amp;&amp; ~i2)     NS = ERROR;</span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    S1: <span class="keyword">begin</span></span><br><span class="line">                        S1_out;</span><br><span class="line">                        <span class="keyword">if</span> (~i2)           NS = S1;</span><br><span class="line">                        <span class="keyword">if</span> (i2 &amp;&amp; i1)      NS = S2;</span><br><span class="line">                        <span class="keyword">if</span> (i2 &amp;&amp; (~i1))   NS = ERROR;</span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    S2: <span class="keyword">begin</span></span><br><span class="line">                         S2_out;</span><br><span class="line">                         <span class="keyword">if</span> (i2)            NS = S2;</span><br><span class="line">			           	 <span class="keyword">if</span> (~i2 &amp;&amp; i1)     NS = IDLE;</span><br><span class="line">                         <span class="keyword">if</span> (~i2 &amp;&amp; (~i1))  NS = ERROR;</span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    ERROR: <span class="keyword">begin</span></span><br><span class="line">                    	  ERROR_out;</span><br><span class="line">                          <span class="keyword">if</span> (i1)            NS = ERROR;</span><br><span class="line">                          <span class="keyword">if</span> (~i1)           NS = IDLE;</span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    <span class="keyword">default</span>:  <span class="keyword">begin</span></span><br><span class="line">                    	  IDLE_out;</span><br><span class="line">                          NS = IDLE;</span><br><span class="line">                    <span class="keyword">end</span> </span><br><span class="line">               <span class="keyword">endcase</span></span><br><span class="line">         <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//output task</span></span><br><span class="line"><span class="keyword">task</span> IDLE_out;</span><br><span class="line">     &#123;o1,o2,err&#125; = <span class="number">3'b000</span>;</span><br><span class="line"><span class="keyword">endtask</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">task</span> S1_out;</span><br><span class="line">     &#123;o1,o2,err&#125; = <span class="number">3'b100</span>;</span><br><span class="line"><span class="keyword">endtask</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">task</span> S2_out;</span><br><span class="line">     &#123;o1,o2,err&#125; = <span class="number">3'b010</span>;</span><br><span class="line"><span class="keyword">endtask</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">task</span> ERROR_out;</span><br><span class="line">     &#123;o1,o2,err&#125; = <span class="number">3'b111</span>;</span><br><span class="line"><span class="keyword">endtask</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="三段式状态机-v2"><a class="header-anchor" href="#三段式状态机-v2">¶</a>三段式状态机</h3>
+<h3 id="三段式状态机-v2"><a class="header-anchor" href="#三段式状态机-v2"></a>三段式状态机</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="comment">//3-paragraph method to describe FSM</span></span><br><span class="line"><span class="comment">//Describe sequential state transition in the 1st sequential always block</span></span><br><span class="line"><span class="comment">//State transition conditions in the 2nd combinational always block</span></span><br><span class="line"><span class="comment">//Describe the FSM out in the 3rd sequential always block</span></span><br><span class="line"><span class="comment">//Westor, Dec. 2006</span></span><br><span class="line"><span class="comment">//Verilog Usage Book</span></span><br><span class="line"><span class="keyword">module</span> state3 ( nrst,clk,</span><br><span class="line">                i1,i2,</span><br><span class="line">                o1,o2,</span><br><span class="line">                err</span><br><span class="line">               );</span><br><span class="line">         </span><br><span class="line"><span class="keyword">input</span>          nrst,clk;</span><br><span class="line"><span class="keyword">input</span>          i1,i2;</span><br><span class="line"><span class="keyword">output</span>         o1,o2,err;</span><br><span class="line"><span class="keyword">reg</span>            o1,o2,err;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">reg</span>    [<span class="number">2</span>:<span class="number">0</span>]   NS,CS;</span><br><span class="line"></span><br><span class="line"><span class="keyword">parameter</span> [<span class="number">2</span>:<span class="number">0</span>]      <span class="comment">//one hot with zero idle</span></span><br><span class="line">      IDLE   = <span class="number">3'b000</span>,</span><br><span class="line">      S1     = <span class="number">3'b001</span>,</span><br><span class="line">      S2     = <span class="number">3'b010</span>,</span><br><span class="line">      ERROR  = <span class="number">3'b100</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//1st always block, sequential state transition</span></span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> nrst)</span><br><span class="line">      <span class="keyword">if</span> (!nrst)            </span><br><span class="line">         CS &lt;= IDLE;        </span><br><span class="line">      <span class="keyword">else</span>                  </span><br><span class="line">         CS &lt;=NS;           </span><br><span class="line"></span><br><span class="line"><span class="comment">//2nd always block, combinational condition judgment</span></span><br><span class="line"><span class="keyword">always</span> @ (nrst <span class="keyword">or</span> CS <span class="keyword">or</span> i1 <span class="keyword">or</span> i2)</span><br><span class="line">          <span class="keyword">begin</span></span><br><span class="line">               NS = <span class="number">3'bx</span>;</span><br><span class="line">               <span class="keyword">case</span> (CS)</span><br><span class="line">                    IDLE:     <span class="keyword">begin</span></span><br><span class="line">                                   <span class="keyword">if</span> (~i1)           NS = IDLE;</span><br><span class="line">                                   <span class="keyword">if</span> (i1 &amp;&amp; i2)      NS = S1;</span><br><span class="line">                                   <span class="keyword">if</span> (i1 &amp;&amp; ~i2)     NS = ERROR;</span><br><span class="line">                              <span class="keyword">end</span></span><br><span class="line">                    S1:       <span class="keyword">begin</span></span><br><span class="line">                                   <span class="keyword">if</span> (~i2)           NS = S1;</span><br><span class="line">                                   <span class="keyword">if</span> (i2 &amp;&amp; i1)      NS = S2;</span><br><span class="line">                                   <span class="keyword">if</span> (i2 &amp;&amp; (~i1))   NS = ERROR;</span><br><span class="line">                              <span class="keyword">end</span></span><br><span class="line">                    S2:       <span class="keyword">begin</span></span><br><span class="line">                                   <span class="keyword">if</span> (i2)            NS = S2;</span><br><span class="line">			           <span class="keyword">if</span> (~i2 &amp;&amp; i1)     NS = IDLE;</span><br><span class="line">                                   <span class="keyword">if</span> (~i2 &amp;&amp; (~i1))  NS = ERROR;</span><br><span class="line">                              <span class="keyword">end</span></span><br><span class="line">                    ERROR:    <span class="keyword">begin</span></span><br><span class="line">                                   <span class="keyword">if</span> (i1)            NS = ERROR;</span><br><span class="line">                                   <span class="keyword">if</span> (~i1)           NS = IDLE;</span><br><span class="line">                              <span class="keyword">end</span></span><br><span class="line">               <span class="keyword">endcase</span></span><br><span class="line">         <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//3rd always block, the sequential FSM output</span></span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> nrst)</span><br><span class="line"> <span class="keyword">if</span> (!nrst)</span><br><span class="line">      &#123;o1,o2,err&#125; &lt;= <span class="number">3'b000</span>;</span><br><span class="line"> <span class="keyword">else</span></span><br><span class="line">    <span class="keyword">begin</span></span><br><span class="line">       &#123;o1,o2,err&#125; &lt;=  <span class="number">3'b000</span>;</span><br><span class="line">       <span class="keyword">case</span> (NS)</span><br><span class="line">           IDLE:  &#123;o1,o2,err&#125;&lt;=<span class="number">3'b000</span>;</span><br><span class="line"></span><br><span class="line">           S1:    &#123;o1,o2,err&#125;&lt;=<span class="number">3'b100</span>;</span><br><span class="line">           S2:    &#123;o1,o2,err&#125;&lt;=<span class="number">3'b010</span>;</span><br><span class="line">           ERROR: &#123;o1,o2,err&#125;&lt;=<span class="number">3'b111</span>; </span><br><span class="line">       <span class="keyword">endcase</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 <hr>
 <p><em>Reference</em>：</p>
@@ -585,7 +585,7 @@
     <url>/2020/%E5%A4%8D%E4%BD%8D%E7%94%B5%E8%B7%AF/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>异步复位，同步释放从何而来？</p>
 <a id="more"></a>
-<h2 id="复位电路"><a class="header-anchor" href="#复位电路">¶</a>复位电路</h2>
+<h2 id="复位电路"><a class="header-anchor" href="#复位电路"></a>复位电路</h2>
 <hr>
 <p>时序电路是双稳态电路，必须有复位信号。组合逻辑电路，没有存储功能，不需要复位信号。</p>
 <p>复位电路实现两个方面的功能：</p>
@@ -593,7 +593,7 @@
 <li>仿真的时候使电路进入初始状态或者其他预知状态；</li>
 <li>对于综合实现的真实电路，通过复位使电路进入初始状态或者其他预知状态。</li>
 </ul>
-<h2 id="同步复位电路"><a class="header-anchor" href="#同步复位电路">¶</a>同步复位电路</h2>
+<h2 id="同步复位电路"><a class="header-anchor" href="#同步复位电路"></a>同步复位电路</h2>
 <hr>
 <p>当复位信号发生变化时，并不立即生效，只有当有效时钟沿采样到已变化的复位信号后，才对所有寄存器复位。</p>
 <p><strong>优点</strong></p>
@@ -613,7 +613,7 @@
 <li>由于大多数的逻辑器件的目标库内的DFF都只有异步复位端口，所以，倘若采用同步复位的话，综合器就会在寄存器的数据输入端口插入组合逻辑，这样就会浪费较多的逻辑资源。</li>
 </ul>
 <p><img src="https://i.loli.net/2020/04/04/ybnQio1tuJM9acX.png" alt="复位电路1.png"></p>
-<h2 id="异步复位"><a class="header-anchor" href="#异步复位">¶</a>异步复位</h2>
+<h2 id="异步复位"><a class="header-anchor" href="#异步复位"></a>异步复位</h2>
 <hr>
 <p>当复位信号到达时，无论时钟触发沿是否有效，都会立即对目标（如寄存器、RAM等）复位。</p>
 <p><strong>优点</strong></p>
@@ -628,7 +628,7 @@
 <li>复位信号容易受到毛刺的影响</li>
 </ul>
 <p><img src="https://i.loli.net/2020/04/04/7SDNGq2fEavyzgM.png" alt="复位电路2.png"></p>
-<h2 id="异步复位，同步释放"><a class="header-anchor" href="#异步复位，同步释放">¶</a>异步复位，同步释放</h2>
+<h2 id="异步复位，同步释放"><a class="header-anchor" href="#异步复位，同步释放"></a>异步复位，同步释放</h2>
 <hr>
 <p>异步复位：复位信号在任意时刻到达低电平及复位，不需要和时钟同步</p>
 <p>同步释放：复位信号取消的时候，必须跟时钟信号同步</p>
@@ -639,13 +639,13 @@
 <li>复位的撤离是同步信号，有良好的的撤离时序和足够的恢复时间。</li>
 </ul>
 <p><img src="https://i.loli.net/2020/04/04/VwupLPBm18OFHU4.png" alt="复位电路3.png"></p>
-<h2 id="RTL"><a class="header-anchor" href="#RTL">¶</a>RTL</h2>
+<h2 id="RTL"><a class="header-anchor" href="#RTL"></a>RTL</h2>
 <hr>
-<h3 id="syn-rst"><a class="header-anchor" href="#syn-rst">¶</a>syn_rst</h3>
+<h3 id="syn-rst"><a class="header-anchor" href="#syn-rst"></a>syn_rst</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> syn_rst (clk, rst_, cnt1, cnt2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">input</span>        clk;</span><br><span class="line"><span class="keyword">input</span>        rst_;</span><br><span class="line"><span class="keyword">output</span> [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"><span class="keyword">reg</span>    [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk)</span><br><span class="line">   <span class="keyword">if</span> (!rst_)</span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        cnt1 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">        cnt2 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">if</span> (cnt1 &lt; <span class="number">2'b11</span>)</span><br><span class="line">            cnt1 &lt;= cnt1 + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cnt1 &lt;= cnt1;                </span><br><span class="line">        cnt2 &lt;= cnt1 - <span class="number">1</span>;      </span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="asyn-rst"><a class="header-anchor" href="#asyn-rst">¶</a>asyn_rst</h3>
+<h3 id="asyn-rst"><a class="header-anchor" href="#asyn-rst"></a>asyn_rst</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> asyn_rst (clk, rst_, cnt1, cnt2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">input</span>        clk;</span><br><span class="line"><span class="keyword">input</span>        rst_;</span><br><span class="line"><span class="keyword">output</span> [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"><span class="keyword">reg</span>    [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_)</span><br><span class="line">   <span class="keyword">if</span> (!rst_)</span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        cnt1 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">        cnt2 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">if</span> (cnt1 &lt; <span class="number">2'b11</span>)</span><br><span class="line">            cnt1 &lt;= cnt1 + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cnt1 &lt;= cnt1;                </span><br><span class="line">        cnt2 &lt;= cnt1 - <span class="number">1</span>;      </span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="asyn-rst，syn-release"><a class="header-anchor" href="#asyn-rst，syn-release">¶</a>asyn_rst，syn_release</h3>
+<h3 id="asyn-rst，syn-release"><a class="header-anchor" href="#asyn-rst，syn-release"></a>asyn_rst，syn_release</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> asyn_rst_syn_release(clk, rst_, cnt1, cnt2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">input</span>        clk;</span><br><span class="line"><span class="keyword">input</span>        rst_;</span><br><span class="line"><span class="keyword">output</span> [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"><span class="keyword">reg</span>    [<span class="number">4</span>:<span class="number">0</span>] cnt1 , cnt2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// reset release circuit</span></span><br><span class="line"><span class="keyword">reg</span> reset_reg;</span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk)</span><br><span class="line">     reset_reg &lt;= rst_;</span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> reset_reg)</span><br><span class="line">   <span class="keyword">if</span> (!rst_)</span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        cnt1 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">        cnt2 &lt;= <span class="number">4'b0</span>;</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">      <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">if</span> (cnt1 &lt; <span class="number">2'b11</span>)</span><br><span class="line">            cnt1 &lt;= cnt1 + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cnt1 &lt;= cnt1;                </span><br><span class="line">        cnt2 &lt;= cnt1 - <span class="number">1</span>;      </span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 <hr>
 <p><em>Reference</em>：</p>
@@ -664,9 +664,9 @@
     <url>/2020/FIFO-%E4%BB%8B%E7%BB%8D2/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>如何对FIFO最小深度计算和FIFO空满标志判断的漏洞分析。</p>
 <a id="more"></a>
-<h2 id="FIFO-深度计算"><a class="header-anchor" href="#FIFO-深度计算">¶</a>FIFO 深度计算</h2>
+<h2 id="FIFO-深度计算"><a class="header-anchor" href="#FIFO-深度计算"></a>FIFO 深度计算</h2>
 <hr>
-<h3 id="例题分析"><a class="header-anchor" href="#例题分析">¶</a>例题分析</h3>
+<h3 id="例题分析"><a class="header-anchor" href="#例题分析"></a>例题分析</h3>
 <p>例题：假设FIFO的写时钟为100MHZ，读时钟为80MHZ。在FIFO输入侧，每100个写时钟，写入80个数据；读数据侧，假定每个时钟读走一个数据。</p>
 <p><em>请问FIFO深度设置为多少可以保证FIFO不会上溢出和下溢出？</em></p>
 <p><strong>分析清楚数据轻载和重载时数据的传输任务</strong></p>
@@ -681,7 +681,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">data_num_read &#x3D; Time&#x2F;t_read &#x3D; Time&#x2F;(1&#x2F;f_read) &#x3D; Time * f_read &#x3D; (160&#x2F;100) * 80</span><br></pre></td></tr></table></figure>
 <p>FIFO应该设置的深度值：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">depth &#x3D; burst - data_num_read &#x3D; 160 - (160&#x2F;100) * 80 &#x3D; 32</span><br></pre></td></tr></table></figure>
-<h3 id="问题一般化"><a class="header-anchor" href="#问题一般化">¶</a>问题一般化</h3>
+<h3 id="问题一般化"><a class="header-anchor" href="#问题一般化"></a>问题一般化</h3>
 <p>参数为：</p>
 <ul>
 <li>写时钟频率：WCLK；</li>
@@ -696,7 +696,7 @@
 <p>RCLK *（X/Y）表示读的实际速度，两者乘积为读数据量；</p>
 <p>burst_length 表示写入数据量。</p>
 </blockquote>
-<h2 id="FIFO空满标志的判断方法是否存在漏洞？"><a class="header-anchor" href="#FIFO空满标志的判断方法是否存在漏洞？">¶</a>FIFO空满标志的判断方法是否存在漏洞？</h2>
+<h2 id="FIFO空满标志的判断方法是否存在漏洞？"><a class="header-anchor" href="#FIFO空满标志的判断方法是否存在漏洞？"></a>FIFO空满标志的判断方法是否存在漏洞？</h2>
 <hr>
 <p>判断方法回顾：</p>
 <ul>
@@ -736,7 +736,7 @@
     <url>/2020/FIFO-%E4%BB%8B%E7%BB%8D1/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>FIFO的基本介绍，包括同步FIFO、异步FIFO、异步FIFO中常使用的格雷码（Gray code）计数器等</p>
 <a id="more"></a>
-<h2 id="FIFO常见参数"><a class="header-anchor" href="#FIFO常见参数">¶</a>FIFO常见参数</h2>
+<h2 id="FIFO常见参数"><a class="header-anchor" href="#FIFO常见参数"></a>FIFO常见参数</h2>
 <hr>
 <p>FIFO的宽度：即FIFO一次读写操作的数据位；</p>
 <p>FIFO的深度：FIFO可以存储多少个N位的数据（如果宽度为N）；</p>
@@ -744,7 +744,7 @@
 <p>空标志：FIFO已空或将要空时由FIFO的状态电路送出的一个信号，以阻止FIFO的读操作继续从FIFO中读出数据而造成无效数据的读出（underflow）；</p>
 <p>读时钟：读操作所遵循的时钟，在每个时钟沿来临时读数据；</p>
 <p>写时钟：写操作所遵循的时钟，在每个时钟沿来临写数据。</p>
-<h2 id="FIFO-pointers"><a class="header-anchor" href="#FIFO-pointers">¶</a>FIFO pointers</h2>
+<h2 id="FIFO-pointers"><a class="header-anchor" href="#FIFO-pointers"></a>FIFO pointers</h2>
 <hr>
 <p>正确的产生空满标志是任何FIFO设计的关键。<strong>空满标志产生的原则是：写满而不溢出，能读空而不多读。</strong></p>
 <p><strong>空满状态的判断</strong></p>
@@ -757,7 +757,7 @@
 <ul>
 <li>写指针转了一圈，折回来又追上了读指针</li>
 </ul>
-<h3 id="同步FIFO指针-Synchronous-FIFO-pointers-："><a class="header-anchor" href="#同步FIFO指针-Synchronous-FIFO-pointers-：">¶</a>同步FIFO指针(Synchronous FIFO pointers)：</h3>
+<h3 id="同步FIFO指针-Synchronous-FIFO-pointers-："><a class="header-anchor" href="#同步FIFO指针-Synchronous-FIFO-pointers-："></a>同步FIFO指针(Synchronous FIFO pointers)：</h3>
 <p>同步FIFO中，在同一时钟域内进行FIFO缓冲区的读写操作。对FIFO缓冲区的写入和读取次数进行计数。</p>
 <ul>
 <li>
@@ -771,14 +771,14 @@
 </li>
 </ul>
 <p>直接根据计数器数值来判断空满状态，当计数器达到预设的满值，FIFO填满。当计数器为0时，FIFO为空。</p>
-<h3 id="异步FIFO指针-Asynchronous-FIFO-pointers-："><a class="header-anchor" href="#异步FIFO指针-Asynchronous-FIFO-pointers-：">¶</a>异步FIFO指针(Asynchronous FIFO pointers)：</h3>
+<h3 id="异步FIFO指针-Asynchronous-FIFO-pointers-："><a class="header-anchor" href="#异步FIFO指针-Asynchronous-FIFO-pointers-："></a>异步FIFO指针(Asynchronous FIFO pointers)：</h3>
 <p>异步FIFO设计中，则不能简单地增减FIFO填充指针，因为需要使用两个不同的异步时钟来控制计数器。因此，为了确定异步FIFO设计的满状态和空状态，必须比较写指针和读指针。</p>
 <p>**当读指针等于写指针时，FIFO为空。**该情况发生在所有指针复位期间复位为0时，或者当读指针赶上写指针，读到FIFO最后一个字节的情况下。</p>
 <p><strong>当指针再次相等，即写指针循环一次后再次追赶上读指针，FIFO为满。</strong></p>
 <p>为了区分满空状态，我们可以为每个指针添加一个额外的位MSB。写指针增加到FIFO最后一个地址后，将未使用的MSB递增，同时将其余位设置为0，如下图所示。读指针也是如此。</p>
 <p><strong>如果两个指针的MSB不同，则意味着写指针比读指针多循环了一次。如果两个指针的MSB相同，则意味着两个指针的换行次数相同。</strong></p>
 <p><img src="https://i.loli.net/2020/03/26/WJ5OszSy1GmMtYn.png" alt="FIFO3.2.png"></p>
-<h2 id="FIFO结构实例："><a class="header-anchor" href="#FIFO结构实例：">¶</a>FIFO结构实例：</h2>
+<h2 id="FIFO结构实例："><a class="header-anchor" href="#FIFO结构实例："></a>FIFO结构实例：</h2>
 <hr>
 <p>下图为典型的FIFO结构实例，主要包括：</p>
 <p>FIFO memory：存储缓存区，可由写入和读取时钟域访问。Memory buffer大多由synchronous dual-port RAM或其它memory 例化而来；</p>
@@ -787,31 +787,31 @@
 <p>wptr_full:与写时钟域完全同步，并包含了FIFO写指针和满标志逻辑。</p>
 <p><img src="https://i.loli.net/2020/03/26/ynJBlsjCx6UTmv2.png" alt="FIFO3.1.png"></p>
 <p>为了实现FIFO full、empty的判断，读写指针需要传递到对方时钟域中进行比较。为了保证安全的传输到对方时钟域，后面会介绍同步格雷码指针的方法，保证一次只更改一个指针位。</p>
-<h2 id="使用格雷码（Gray-Code）计数器"><a class="header-anchor" href="#使用格雷码（Gray-Code）计数器">¶</a>使用格雷码（Gray Code）计数器</h2>
+<h2 id="使用格雷码（Gray-Code）计数器"><a class="header-anchor" href="#使用格雷码（Gray-Code）计数器"></a>使用格雷码（Gray Code）计数器</h2>
 <hr>
-<h3 id="格雷码的特点："><a class="header-anchor" href="#格雷码的特点：">¶</a>格雷码的特点：</h3>
+<h3 id="格雷码的特点："><a class="header-anchor" href="#格雷码的特点："></a>格雷码的特点：</h3>
 <ul>
 <li>相邻的2个数值之间只会有1位发生变化，其余各位相同；</li>
 <li>是一种循环码，0和最大数（2的n次方减1）之间也只有一位不同</li>
 </ul>
-<h3 id="Gray-To-Binary-Conversion"><a class="header-anchor" href="#Gray-To-Binary-Conversion">¶</a>Gray To Binary Conversion</h3>
+<h3 id="Gray-To-Binary-Conversion"><a class="header-anchor" href="#Gray-To-Binary-Conversion"></a>Gray To Binary Conversion</h3>
 <p>4 bit Gray To Binary Conversion:</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line">bin[<span class="number">0</span>]= gray[<span class="number">3</span>] ^ gray[<span class="number">2</span>] ^ gray[<span class="number">1</span>] ^ gray[<span class="number">0</span>];</span><br><span class="line">bin[<span class="number">1</span>] = gray[<span class="number">3</span>] ^ gray[<span class="number">2</span>] ^ gray[<span class="number">1</span>];</span><br><span class="line">bin[<span class="number">2</span>] = gray[<span class="number">3</span>] ^ gray[<span class="number">2</span>];</span><br><span class="line">bin[<span class="number">3</span>] = gray[<span class="number">3</span>];</span><br></pre></td></tr></table></figure>
 <p>verilog 实现，通过采用填充0 的方式对有效的格雷码位进行异或操作，如下所示：</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line">bin[<span class="number">0</span>] = gray[<span class="number">3</span>] ^ gray[<span class="number">2</span>] ^ gray[<span class="number">1</span>] ^ gray[<span class="number">0</span>] ; <span class="comment">// gray&gt;&gt;0</span></span><br><span class="line">bin[<span class="number">1</span>] =   <span class="number">1'b0</span>  ^ gray[<span class="number">3</span>] ^ gray[<span class="number">2</span>] ^ gray[<span class="number">1</span>] ; <span class="comment">// gray&gt;&gt;1</span></span><br><span class="line">bin[<span class="number">2</span>] =   <span class="number">1'b0</span>  ^   <span class="number">1'b0</span>  ^ gray[<span class="number">3</span>] ^ gray[<span class="number">2</span>] ; <span class="comment">// gray&gt;&gt;2</span></span><br><span class="line">bin[<span class="number">3</span>] =   <span class="number">1'b0</span>  ^   <span class="number">1'b0</span>  ^   <span class="number">1'b0</span>  ^ gray[<span class="number">3</span>] ; <span class="comment">// gray&gt;&gt;3</span></span><br></pre></td></tr></table></figure>
 <p>Code:</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> gray2bin (bin, gray);</span><br><span class="line">  <span class="keyword">parameter</span> SIZE = <span class="number">4</span>;</span><br><span class="line">  <span class="keyword">output</span> [SIZE-<span class="number">1</span>:<span class="number">0</span>] bin;</span><br><span class="line">  <span class="keyword">input</span>  [SIZE-<span class="number">1</span>:<span class="number">0</span>] gray;</span><br><span class="line">  <span class="keyword">reg</span>    [SIZE-<span class="number">1</span>:<span class="number">0</span>] bin;</span><br><span class="line">  <span class="keyword">integer</span>           i;</span><br><span class="line">  <span class="keyword">always</span> @(gray)</span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;SIZE; i=i+<span class="number">1</span>)</span><br><span class="line">      bin[i] = ^(gray&gt;&gt;i);</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="Binary-To-Gray-Conversion"><a class="header-anchor" href="#Binary-To-Gray-Conversion">¶</a>Binary To Gray Conversion</h3>
+<h3 id="Binary-To-Gray-Conversion"><a class="header-anchor" href="#Binary-To-Gray-Conversion"></a>Binary To Gray Conversion</h3>
 <p>4bit binary-to-gray conversion:</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line">gray[<span class="number">0</span>] = bin[<span class="number">0</span>] ^ bin[<span class="number">1</span>];</span><br><span class="line">gray[<span class="number">1</span>] = bin[<span class="number">1</span>] ^ bin[<span class="number">2</span>];</span><br><span class="line">gray[<span class="number">2</span>] = bin[<span class="number">2</span>] ^ bin[<span class="number">3</span>];</span><br><span class="line">gray[<span class="number">3</span>] = bin[<span class="number">3</span>];</span><br></pre></td></tr></table></figure>
 <p>Code:</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> bin2gray (gray, bin);</span><br><span class="line">  <span class="keyword">parameter</span> SIZE = <span class="number">4</span>;</span><br><span class="line">  <span class="keyword">output</span> [SIZE-<span class="number">1</span>:<span class="number">0</span>] gray;</span><br><span class="line">  <span class="keyword">input</span>  [SIZE-<span class="number">1</span>:<span class="number">0</span>] bin;</span><br><span class="line">  <span class="keyword">assign</span> gray = (bin&gt;&gt;<span class="number">1</span>) ^ bin;</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="Gray-Code-Counter"><a class="header-anchor" href="#Gray-Code-Counter">¶</a>Gray Code Counter</h3>
+<h3 id="Gray-Code-Counter"><a class="header-anchor" href="#Gray-Code-Counter"></a>Gray Code Counter</h3>
 <p>verilog Code中包含一个gray-to-binary 和一个binary-to-gray转换器，并在两者之间递增1。</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> graycntr (gray, clk, inc, rst_n);</span><br><span class="line">  <span class="keyword">parameter</span> SIZE = <span class="number">4</span>;</span><br><span class="line">  <span class="keyword">output</span> [SIZE-<span class="number">1</span>:<span class="number">0</span>] gray;</span><br><span class="line">  <span class="keyword">input</span>             clk, inc, rst_n;</span><br><span class="line">  <span class="keyword">reg</span>    [SIZE-<span class="number">1</span>:<span class="number">0</span>] gnext, gray, bnext, bin;</span><br><span class="line">  <span class="keyword">integer</span>           i;</span><br><span class="line">  <span class="keyword">always</span> @(<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)</span><br><span class="line">    <span class="keyword">if</span> (!rst_n) gray &lt;= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span>        gray &lt;= gnext;</span><br><span class="line">  <span class="keyword">always</span> @(gray <span class="keyword">or</span> inc) <span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;SIZE; i=i+<span class="number">1</span>)</span><br><span class="line">      bin[i] = ^(gray&gt;&gt;i);</span><br><span class="line">    bnext = bin + inc;</span><br><span class="line">    gnext = (bnext&gt;&gt;<span class="number">1</span>) ^ bnext;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 <p>Gray-code counter block diagram：</p>
 <p><img src="https://i.loli.net/2020/03/26/yisngNOo1lAqkTu.png" alt="FIFO3.3.png"></p>
-<h2 id="使用Gray-Code后，如何做空满判断？"><a class="header-anchor" href="#使用Gray-Code后，如何做空满判断？">¶</a>使用Gray Code后，如何做空满判断？</h2>
+<h2 id="使用Gray-Code后，如何做空满判断？"><a class="header-anchor" href="#使用Gray-Code后，如何做空满判断？"></a>使用Gray Code后，如何做空满判断？</h2>
 <hr>
 <p>空状态：依据二者完全相等（包括MSB）</p>
 <p>满状态：由于gray码除了MSB外，具有镜像对称的特点，存在一个特殊情况。当读指针指向7，写指针指向8时，除了MSB，其余位皆相同，不能算满。</p>
@@ -827,19 +827,19 @@
 <li>wptr与rptr的<strong>次高位不相等</strong>，如上图位置7和位置15，转化为二进制对应的是0111和1111，MSB不同说明多折回一次，111相同代表同一位置；</li>
 <li><strong>剩下的其余位完全相等</strong>。</li>
 </ul>
-<h2 id="RTL-code-for-FIFO"><a class="header-anchor" href="#RTL-code-for-FIFO">¶</a>RTL code for FIFO</h2>
+<h2 id="RTL-code-for-FIFO"><a class="header-anchor" href="#RTL-code-for-FIFO"></a>RTL code for FIFO</h2>
 <hr>
-<h3 id="fifo-v-FIFO-top-level-module"><a class="header-anchor" href="#fifo-v-FIFO-top-level-module">¶</a>fifo.v-FIFO top-level module</h3>
+<h3 id="fifo-v-FIFO-top-level-module"><a class="header-anchor" href="#fifo-v-FIFO-top-level-module"></a>fifo.v-FIFO top-level module</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> fifo1 #(<span class="keyword">parameter</span> DSIZE = <span class="number">8</span>,</span><br><span class="line">               <span class="keyword">parameter</span> ASIZE = <span class="number">4</span>)</span><br><span class="line">  (<span class="keyword">output</span> [DSIZE-<span class="number">1</span>:<span class="number">0</span>] rdata,</span><br><span class="line">   <span class="keyword">output</span>             wfull,</span><br><span class="line">   <span class="keyword">output</span>             rempty,</span><br><span class="line">   <span class="keyword">input</span>  [DSIZE-<span class="number">1</span>:<span class="number">0</span>] wdata,</span><br><span class="line">   <span class="keyword">input</span>              winc, wclk, wrst_n,</span><br><span class="line">   <span class="keyword">input</span>              rinc, rclk, rrst_n);</span><br><span class="line">  <span class="keyword">wire</span>   [ASIZE-<span class="number">1</span>:<span class="number">0</span>] waddr, raddr;</span><br><span class="line">  <span class="keyword">wire</span>   [ASIZE:<span class="number">0</span>]   wptr, rptr, wq2_rptr, rq2_wptr;</span><br><span class="line">  sync_r2w      sync_r2w  (<span class="variable">.wq2_rptr</span>(wq2_rptr), <span class="variable">.rptr</span>(rptr),</span><br><span class="line">                           <span class="variable">.wclk</span>(wclk), <span class="variable">.wrst_n</span>(wrst_n));</span><br><span class="line">  sync_w2r      sync_w2r  (<span class="variable">.rq2_wptr</span>(rq2_wptr), <span class="variable">.wptr</span>(wptr),</span><br><span class="line">                           <span class="variable">.rclk</span>(rclk), <span class="variable">.rrst_n</span>(rrst_n));</span><br><span class="line">  fifomem <span class="variable">#(DSIZE, ASIZE)</span> fifomem</span><br><span class="line">                          (<span class="variable">.rdata</span>(rdata), <span class="variable">.wdata</span>(wdata),</span><br><span class="line">                           <span class="variable">.waddr</span>(waddr), <span class="variable">.raddr</span>(raddr),</span><br><span class="line">                           <span class="variable">.wclken</span>(winc), <span class="variable">.wfull</span>(wfull),</span><br><span class="line">                           <span class="variable">.wclk</span>(wclk));</span><br><span class="line">  rptr_empty <span class="variable">#(ASIZE)</span>     rptr_empty</span><br><span class="line">                          (<span class="variable">.rempty</span>(rempty),</span><br><span class="line">                           <span class="variable">.raddr</span>(raddr),</span><br><span class="line">                           <span class="variable">.rptr</span>(rptr), <span class="variable">.rq2_wptr</span>(rq2_wptr),</span><br><span class="line">                           <span class="variable">.rinc</span>(rinc), <span class="variable">.rclk</span>(rclk),</span><br><span class="line">                           <span class="variable">.rrst_n</span>(rrst_n));</span><br><span class="line">  wptr_full  <span class="variable">#(ASIZE)</span>     wptr_full</span><br><span class="line">                          (<span class="variable">.wfull</span>(wfull), <span class="variable">.waddr</span>(waddr),</span><br><span class="line">                           <span class="variable">.wptr</span>(wptr), <span class="variable">.wq2_rptr</span>(wq2_rptr),</span><br><span class="line">                           <span class="variable">.winc</span>(winc), <span class="variable">.wclk</span>(wclk),</span><br><span class="line">                           <span class="variable">.wrst_n</span>(wrst_n));</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="fifomem-v-FIFO-memory-buffer"><a class="header-anchor" href="#fifomem-v-FIFO-memory-buffer">¶</a>fifomem.v - FIFO memory buffer</h3>
+<h3 id="fifomem-v-FIFO-memory-buffer"><a class="header-anchor" href="#fifomem-v-FIFO-memory-buffer"></a>fifomem.v - FIFO memory buffer</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> fifomem #(<span class="keyword">parameter</span>  DATASIZE = <span class="number">8</span>, <span class="comment">// Memory data word width</span></span><br><span class="line">                 <span class="keyword">parameter</span>  ADDRSIZE = <span class="number">4</span>) <span class="comment">// Number of mem address bits</span></span><br><span class="line">  (<span class="keyword">output</span> [DATASIZE-<span class="number">1</span>:<span class="number">0</span>] rdata,</span><br><span class="line">   <span class="keyword">input</span>  [DATASIZE-<span class="number">1</span>:<span class="number">0</span>] wdata,</span><br><span class="line">   <span class="keyword">input</span>  [ADDRSIZE-<span class="number">1</span>:<span class="number">0</span>] waddr, raddr,</span><br><span class="line">   <span class="keyword">input</span>                 wclken, wfull, wclk);</span><br><span class="line">  ìfdef VENDORRAM</span><br><span class="line">    <span class="comment">// instantiation of a vendor's dual-port RAM</span></span><br><span class="line">    vendor_ram mem (<span class="variable">.dout</span>(rdata), <span class="variable">.din</span>(wdata),</span><br><span class="line">                    <span class="variable">.waddr</span>(waddr), <span class="variable">.raddr</span>(raddr),</span><br><span class="line">                    <span class="variable">.wclken</span>(wclken),</span><br><span class="line">                    <span class="variable">.wclken_n</span>(wfull), <span class="variable">.clk</span>(wclk));</span><br><span class="line">  èlse</span><br><span class="line">    <span class="comment">// RTL Verilog memory model</span></span><br><span class="line">    <span class="keyword">localparam</span> DEPTH = <span class="number">1</span>&lt;&lt;ADDRSIZE;</span><br><span class="line">    <span class="keyword">reg</span> [DATASIZE-<span class="number">1</span>:<span class="number">0</span>] mem [<span class="number">0</span>:DEPTH-<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">assign</span> rdata = mem[raddr];</span><br><span class="line">    <span class="keyword">always</span> @(<span class="keyword">posedge</span> wclk)</span><br><span class="line">      <span class="keyword">if</span> (wclken &amp;&amp; !wfull) mem[waddr] &lt;= wdata;</span><br><span class="line">  èndif</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="sync-r2w-v-Read-domain-to-write-domain-synchronizer"><a class="header-anchor" href="#sync-r2w-v-Read-domain-to-write-domain-synchronizer">¶</a>sync_r2w.v - Read-domain to write-domain synchronizer</h3>
+<h3 id="sync-r2w-v-Read-domain-to-write-domain-synchronizer"><a class="header-anchor" href="#sync-r2w-v-Read-domain-to-write-domain-synchronizer"></a>sync_r2w.v - Read-domain to write-domain synchronizer</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> sync_r2w #(<span class="keyword">parameter</span> ADDRSIZE = <span class="number">4</span>)</span><br><span class="line">  (<span class="keyword">output</span> <span class="keyword">reg</span> [ADDRSIZE:<span class="number">0</span>] wq2_rptr,</span><br><span class="line">   <span class="keyword">input</span>      [ADDRSIZE:<span class="number">0</span>] rptr,</span><br><span class="line">   <span class="keyword">input</span>                   wclk, wrst_n);</span><br><span class="line">  <span class="keyword">reg</span> [ADDRSIZE:<span class="number">0</span>] wq1_rptr;</span><br><span class="line">  <span class="keyword">always</span> @(<span class="keyword">posedge</span> wclk <span class="keyword">or</span> <span class="keyword">negedge</span> wrst_n)</span><br><span class="line">    <span class="keyword">if</span> (!wrst_n) &#123;wq2_rptr,wq1_rptr&#125; &lt;= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span>         &#123;wq2_rptr,wq1_rptr&#125; &lt;= &#123;wq1_rptr,rptr&#125;;</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="sync-w2r-v-Write-domain-to-read-domain-synchronizer"><a class="header-anchor" href="#sync-w2r-v-Write-domain-to-read-domain-synchronizer">¶</a>sync_w2r.v - Write-domain to read-domain synchronizer</h3>
+<h3 id="sync-w2r-v-Write-domain-to-read-domain-synchronizer"><a class="header-anchor" href="#sync-w2r-v-Write-domain-to-read-domain-synchronizer"></a>sync_w2r.v - Write-domain to read-domain synchronizer</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> sync_w2r #(<span class="keyword">parameter</span> ADDRSIZE = <span class="number">4</span>)</span><br><span class="line">  (<span class="keyword">output</span> <span class="keyword">reg</span> [ADDRSIZE:<span class="number">0</span>] rq2_wptr,</span><br><span class="line">   <span class="keyword">input</span>      [ADDRSIZE:<span class="number">0</span>] wptr,</span><br><span class="line">   <span class="keyword">input</span>                   rclk, rrst_n);</span><br><span class="line">  <span class="keyword">reg</span> [ADDRSIZE:<span class="number">0</span>] rq1_wptr;</span><br><span class="line">  <span class="keyword">always</span> @(<span class="keyword">posedge</span> rclk <span class="keyword">or</span> <span class="keyword">negedge</span> rrst_n)</span><br><span class="line">    <span class="keyword">if</span> (!rrst_n) &#123;rq2_wptr,rq1_wptr&#125; &lt;= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span>         &#123;rq2_wptr,rq1_wptr&#125; &lt;= &#123;rq1_wptr,wptr&#125;;</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="rptr-empty-v-Read-pointer-empty-generation-logic"><a class="header-anchor" href="#rptr-empty-v-Read-pointer-empty-generation-logic">¶</a>rptr_empty.v - Read pointer &amp; empty generation logic</h3>
+<h3 id="rptr-empty-v-Read-pointer-empty-generation-logic"><a class="header-anchor" href="#rptr-empty-v-Read-pointer-empty-generation-logic"></a>rptr_empty.v - Read pointer &amp; empty generation logic</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> rptr_empty #(<span class="keyword">parameter</span> ADDRSIZE = <span class="number">4</span>)</span><br><span class="line">  (<span class="keyword">output</span> <span class="keyword">reg</span>                rempty,</span><br><span class="line">   <span class="keyword">output</span>     [ADDRSIZE-<span class="number">1</span>:<span class="number">0</span>] raddr,</span><br><span class="line">   <span class="keyword">output</span> <span class="keyword">reg</span> [ADDRSIZE  :<span class="number">0</span>] rptr,</span><br><span class="line">   <span class="keyword">input</span>      [ADDRSIZE  :<span class="number">0</span>] rq2_wptr,</span><br><span class="line">   <span class="keyword">input</span>                     rinc, rclk, rrst_n);</span><br><span class="line">  <span class="keyword">reg</span>  [ADDRSIZE:<span class="number">0</span>] rbin;</span><br><span class="line">  <span class="keyword">wire</span> [ADDRSIZE:<span class="number">0</span>] rgraynext, rbinnext;</span><br><span class="line">  <span class="comment">//-------------------</span></span><br><span class="line">  <span class="comment">// GRAYSTYLE2 pointer</span></span><br><span class="line">  <span class="comment">//-------------------</span></span><br><span class="line">  <span class="keyword">always</span> @(<span class="keyword">posedge</span> rclk <span class="keyword">or</span> <span class="keyword">negedge</span> rrst_n)</span><br><span class="line">    <span class="keyword">if</span> (!rrst_n) &#123;rbin, rptr&#125; &lt;= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span>         &#123;rbin, rptr&#125; &lt;= &#123;rbinnext, rgraynext&#125;;</span><br><span class="line">  <span class="comment">// Memory read-address pointer (okay to use binary to address memory)</span></span><br><span class="line">  <span class="keyword">assign</span> raddr     = rbin[ADDRSIZE-<span class="number">1</span>:<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">assign</span> rbinnext  = rbin + (rinc &amp; ~rempty);</span><br><span class="line">  <span class="keyword">assign</span> rgraynext = (rbinnext&gt;&gt;<span class="number">1</span>) ^ rbinnext;</span><br><span class="line">  <span class="comment">//---------------------------------------------------------------</span></span><br><span class="line">  <span class="comment">// FIFO empty when the next rptr == synchronized wptr or on reset</span></span><br><span class="line">  <span class="comment">//---------------------------------------------------------------</span></span><br><span class="line">  <span class="keyword">assign</span> rempty_val = (rgraynext == rq2_wptr);</span><br><span class="line">  <span class="keyword">always</span> @(<span class="keyword">posedge</span> rclk <span class="keyword">or</span> <span class="keyword">negedge</span> rrst_n)</span><br><span class="line">    <span class="keyword">if</span> (!rrst_n) rempty &lt;= <span class="number">1'b1</span>;</span><br><span class="line">    <span class="keyword">else</span>         rempty &lt;= rempty_val;</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-<h3 id="wptr-full-v-Write-pointer-full-generation-logic"><a class="header-anchor" href="#wptr-full-v-Write-pointer-full-generation-logic">¶</a>wptr_full.v - Write pointer &amp; full generation logic</h3>
+<h3 id="wptr-full-v-Write-pointer-full-generation-logic"><a class="header-anchor" href="#wptr-full-v-Write-pointer-full-generation-logic"></a>wptr_full.v - Write pointer &amp; full generation logic</h3>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> wptr_full  #(<span class="keyword">parameter</span> ADDRSIZE = <span class="number">4</span>)</span><br><span class="line">  (<span class="keyword">output</span> <span class="keyword">reg</span>                wfull,</span><br><span class="line">   <span class="keyword">output</span>     [ADDRSIZE-<span class="number">1</span>:<span class="number">0</span>] waddr,</span><br><span class="line">   <span class="keyword">output</span> <span class="keyword">reg</span> [ADDRSIZE  :<span class="number">0</span>] wptr,</span><br><span class="line">   <span class="keyword">input</span>      [ADDRSIZE  :<span class="number">0</span>] wq2_rptr,</span><br><span class="line">   <span class="keyword">input</span>                     winc, wclk, wrst_n);</span><br><span class="line">  <span class="keyword">reg</span>  [ADDRSIZE:<span class="number">0</span>] wbin;</span><br><span class="line">  <span class="keyword">wire</span> [ADDRSIZE:<span class="number">0</span>] wgraynext, wbinnext;</span><br><span class="line">  <span class="comment">// GRAYSTYLE2 pointer</span></span><br><span class="line">  <span class="keyword">always</span> @(<span class="keyword">posedge</span> wclk <span class="keyword">or</span> <span class="keyword">negedge</span> wrst_n)</span><br><span class="line">    <span class="keyword">if</span> (!wrst_n) &#123;wbin, wptr&#125; &lt;= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">else</span>         &#123;wbin, wptr&#125; &lt;= &#123;wbinnext, wgraynext&#125;;</span><br><span class="line">  <span class="comment">// Memory write-address pointer (okay to use binary to address memory)</span></span><br><span class="line">  <span class="keyword">assign</span> waddr = wbin[ADDRSIZE-<span class="number">1</span>:<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">assign</span> wbinnext  = wbin + (winc &amp; ~wfull);</span><br><span class="line">  <span class="keyword">assign</span> wgraynext = (wbinnext&gt;&gt;<span class="number">1</span>) ^ wbinnext;</span><br><span class="line">  <span class="comment">//------------------------------------------------------------------</span></span><br><span class="line">  <span class="comment">// Simplified version of the three necessary full-tests:</span></span><br><span class="line">  <span class="comment">// assign wfull_val=((wgnext[ADDRSIZE]    !=wq2_rptr[ADDRSIZE]  ) &amp;&amp;</span></span><br><span class="line">  <span class="comment">//                   (wgnext[ADDRSIZE-1]  !=wq2_rptr[ADDRSIZE-1]) &amp;&amp;</span></span><br><span class="line">  <span class="comment">//                   (wgnext[ADDRSIZE-2:0]==wq2_rptr[ADDRSIZE-2:0]));</span></span><br><span class="line">  <span class="comment">//------------------------------------------------------------------</span></span><br><span class="line">  <span class="keyword">assign</span> wfull_val = (wgraynext==&#123;~wq2_rptr[ADDRSIZE:ADDRSIZE-<span class="number">1</span>],</span><br><span class="line">                                   wq2_rptr[ADDRSIZE-<span class="number">2</span>:<span class="number">0</span>]&#125;);</span><br><span class="line">  <span class="keyword">always</span> @(<span class="keyword">posedge</span> wclk <span class="keyword">or</span> <span class="keyword">negedge</span> wrst_n)</span><br><span class="line">    <span class="keyword">if</span> (!wrst_n) wfull  &lt;= <span class="number">1'b0</span>;</span><br><span class="line">    <span class="keyword">else</span>         wfull  &lt;= wfull_val;</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 <hr>
 <p><em>Reference</em>：</p>
@@ -858,7 +858,7 @@
     <url>/2020/%E4%BF%A1%E5%8F%B7%E7%9A%84%E8%B7%A8%E6%97%B6%E9%92%9F%E5%9F%9F%E4%BC%A0%E8%BE%93/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>快时钟域向慢时钟域过渡时如何采用“结绳法”进行过渡以及多bit指示信号和多bit数据流的跨时钟域处理方法</p>
 <a id="more"></a>
-<h2 id="结绳法（快时钟–-慢时钟）"><a class="header-anchor" href="#结绳法（快时钟–-慢时钟）">¶</a>结绳法（快时钟–&gt;慢时钟）</h2>
+<h2 id="结绳法（快时钟–-慢时钟）"><a class="header-anchor" href="#结绳法（快时钟–-慢时钟）"></a>结绳法（快时钟–&gt;慢时钟）</h2>
 <hr>
 <p>信号从快时钟域到慢时钟域过渡时，慢时钟将可能无法对变化太快的信号实现正确采样，前述同步器对两个时钟之间的关系要求很严格，采用“结绳法”则适合任何时钟的过渡。</p>
 <p><strong>原理：</strong></p>
@@ -910,7 +910,7 @@
 <p>结绳法实现较为复杂，特别是效率不高，在对设计性能要求较高的场合应该慎用。</p>
 </li>
 </ol>
-<h2 id="考虑两个问题"><a class="header-anchor" href="#考虑两个问题">¶</a>考虑两个问题</h2>
+<h2 id="考虑两个问题"><a class="header-anchor" href="#考虑两个问题"></a>考虑两个问题</h2>
 <hr>
 <ol>
 <li>
@@ -923,7 +923,7 @@
 <p>因为根据采样定理，采样频率低于信号最高频率2倍的时候，是无法完整采样的</p>
 </li>
 </ol>
-<h2 id="多bit指示信号的跨时钟域传输"><a class="header-anchor" href="#多bit指示信号的跨时钟域传输">¶</a>多bit指示信号的跨时钟域传输</h2>
+<h2 id="多bit指示信号的跨时钟域传输"><a class="header-anchor" href="#多bit指示信号的跨时钟域传输"></a>多bit指示信号的跨时钟域传输</h2>
 <hr>
 <p>同时传递两个信号（b_load &amp; b-en）,如下图所示。</p>
 <p><img src="https://i.loli.net/2020/03/14/rZtiKzgWPwFJvOp.png" alt="跨时钟域2.6.png"></p>
@@ -937,7 +937,7 @@
 <p><img src="https://i.loli.net/2020/03/14/9bOxfk3SRXqaudc.png" alt="跨时钟域2.8.1.png"></p>
 <p>解决方法2：在发送时钟域解码，通过同步器来同步发送时钟域的输出到新的时钟域。<strong>在新的时钟域内，使用状态机确定何时被同步的输入有效。</strong></p>
 <p><img src="https://i.loli.net/2020/03/14/CPA7MctDQSjaRYs.png" alt="跨时钟域2.8.2.png"></p>
-<h2 id="多bit数据流的跨时钟域传输"><a class="header-anchor" href="#多bit数据流的跨时钟域传输">¶</a>多bit数据流的跨时钟域传输</h2>
+<h2 id="多bit数据流的跨时钟域传输"><a class="header-anchor" href="#多bit数据流的跨时钟域传输"></a>多bit数据流的跨时钟域传输</h2>
 <hr>
 <p>数据流和指示信号的区别：</p>
 <ul>
@@ -945,14 +945,14 @@
 <li>数据流要求信号具有较快的传输速度</li>
 </ul>
 <p><strong>解决方法：SRAM、FIFO</strong></p>
-<h3 id="FIFO基本介绍"><a class="header-anchor" href="#FIFO基本介绍">¶</a>FIFO基本介绍</h3>
+<h3 id="FIFO基本介绍"><a class="header-anchor" href="#FIFO基本介绍"></a>FIFO基本介绍</h3>
 <p>FIFO（first in first out），是一种先进先出的存储结构。与普通存储器相比没有外部的读写地址线，使用简单。</p>
 <p>缺点在于只能顺序写入数据，顺序的读出数据，其数据地址由内部读写指针自动加1完成，不能像普通存储器那样可以由地址线决定读取或写入某个指定的地址。</p>
 <p>**异步FIFO即用一种时钟写入数据，而用另外一种时钟读出数据，其中这两个读写时钟是异步的。**适用于大量数据跨时钟域传输，且对传输速度有一定要求的场合。</p>
 <p><img src="https://i.loli.net/2020/03/14/M4bmUsfjvAeDKW3.png" alt="跨时钟域2.9.png"></p>
 <p>FIFO 上游节点是FIFO的数据输入端，在写信号有效时，数据将被写入FIFO的顶部（由FIFO内部的写指针控制），并且在FIFO内部，写指针后移一个单元，同时FIFO的满信号（FIFO full signal）将控制上游节点是否发送数据；</p>
 <p>FIFO 下游节点是FIFO 的数据输出端，当读信号有效时，位于FIFO底部的数据将被读出（由FIFO内部的读指针控制），并且在FIFO内部读指针将后移一个单元，同时FIFO空信号（FIFO empty signal）将控制下游节点是否读出数据。</p>
-<h3 id="FIFO主要用途："><a class="header-anchor" href="#FIFO主要用途：">¶</a>FIFO主要用途：</h3>
+<h3 id="FIFO主要用途："><a class="header-anchor" href="#FIFO主要用途："></a>FIFO主要用途：</h3>
 <ul>
 <li>
 <p>使用异步FIFO对不同时钟域之间的数据进行传输；</p>
@@ -980,7 +980,7 @@
     <url>/2020/%E4%BA%9A%E7%A8%B3%E6%80%81/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>亚稳态的概念，常见的三种同步器，电平同步器、边沿检查同步器和脉冲同步器。</p>
 <a id="more"></a>
-<h2 id="同步电路和域异步电路"><a class="header-anchor" href="#同步电路和域异步电路">¶</a>同步电路和域异步电路</h2>
+<h2 id="同步电路和域异步电路"><a class="header-anchor" href="#同步电路和域异步电路"></a>同步电路和域异步电路</h2>
 <p><strong>同步电路的定义</strong></p>
 <p>电路中的所有受时钟控制的单元（例如flip-flop，register），全部由一个统一的全局时钟控制</p>
 <p><img src="https://i.loli.net/2020/03/06/BcNd6LzaCu5XhEY.png" alt="亚稳态1.1.png"></p>
@@ -1024,7 +1024,7 @@
 <li>在大规模集成电路设计中应该避免采用异步电路设计</li>
 </ul>
 <p>同步时钟异步时钟的差别在于，同步时钟来源于统一锁相环PLL生成，这些时钟的相位和倍数都是可控的，如果来源于不同的PLL，即使两个时钟的频率相同也属于异步时钟。</p>
-<h2 id="亚稳态相关概念和原理"><a class="header-anchor" href="#亚稳态相关概念和原理">¶</a>亚稳态相关概念和原理</h2>
+<h2 id="亚稳态相关概念和原理"><a class="header-anchor" href="#亚稳态相关概念和原理"></a>亚稳态相关概念和原理</h2>
 <ul>
 <li>亚稳态是指触发器无法在某个规定时间段内达到一个可确认的状态；</li>
 <li>当一个触发器进入亚稳态时，既无法预测该单元的输出电平，也无法预测何时输出才能稳定在某个正确的电平上；</li>
@@ -1046,7 +1046,7 @@
 </blockquote>
 <p>由于Tcq和Tsu都由器件本身的工艺和工作环境决定，如果在时钟频率fclk和数据变化率固定的情况下，要增大Tmet值，那么设计者要做的只能是<strong>减小T_data值</strong>。</p>
 <p><strong>最大程度的减小T_data，只能是不再两个寄存器之间添加任何逻辑。</strong></p>
-<h2 id="同步策略—双锁存器电平同步器"><a class="header-anchor" href="#同步策略—双锁存器电平同步器">¶</a>同步策略—双锁存器电平同步器</h2>
+<h2 id="同步策略—双锁存器电平同步器"><a class="header-anchor" href="#同步策略—双锁存器电平同步器"></a>同步策略—双锁存器电平同步器</h2>
 <p>一个信号在过渡到另一个时钟域时，如果仅仅用一个触发器将其锁存，那么用一个触发器进行采样的结果可能是亚稳态。</p>
 <p>双锁存器法，即在一个信号进入另一个时钟域之前，将信号用两个锁存器连续锁存两次，最后得到的采样结果可以消除亚稳态问题。</p>
 <p><em>亚稳态现象</em></p>
@@ -1068,15 +1068,15 @@
 <li>三级或者更多级虽然能将亚稳态出现概率降得更低，但影响电路效率；</li>
 <li>增加寄存器进行同步的方法只是不断降低亚稳态出现的概率</li>
 </ul>
-<h2 id="亚稳态—单bit信号的跨时钟域传输"><a class="header-anchor" href="#亚稳态—单bit信号的跨时钟域传输">¶</a>亚稳态—单bit信号的跨时钟域传输</h2>
-<h3 id="慢时钟域–-快时钟域"><a class="header-anchor" href="#慢时钟域–-快时钟域">¶</a>慢时钟域–&gt;快时钟域</h3>
+<h2 id="亚稳态—单bit信号的跨时钟域传输"><a class="header-anchor" href="#亚稳态—单bit信号的跨时钟域传输"></a>亚稳态—单bit信号的跨时钟域传输</h2>
+<h3 id="慢时钟域–-快时钟域"><a class="header-anchor" href="#慢时钟域–-快时钟域"></a>慢时钟域–&gt;快时钟域</h3>
 <p>由慢时钟到快时钟域的传输，主要采用边沿检测同步器电路，可以检测输入信号的上升沿或下降沿。</p>
 <p><img src="https://i.loli.net/2020/03/06/Rpl7SFvCEr3ayjK.png" alt="亚稳态1.8.png"></p>
 <p>边沿检查电路实现的电路功能实际上是将慢时钟下一个周期的脉冲，搬移并缩小为快时钟下一个周期宽的脉冲。</p>
 <p><img src="https://i.loli.net/2020/03/06/pt4owY1VFjacNmA.png" alt="亚稳态1.9.png"></p>
 <p>适用条件：</p>
 <p>输入数据的宽度必须比一个接收时钟周期加上一个同步触发器的hold时间要长，最安全的就是两个同步周期宽度。<em>慢时钟域的脉冲足够保持到被快时钟的同步器拿到</em></p>
-<h3 id="快时钟域–-慢时钟域"><a class="header-anchor" href="#快时钟域–-慢时钟域">¶</a>快时钟域–&gt;慢时钟域</h3>
+<h3 id="快时钟域–-慢时钟域"><a class="header-anchor" href="#快时钟域–-慢时钟域"></a>快时钟域–&gt;慢时钟域</h3>
 <p>通常采用脉冲同步器，基本功能是：从某个时钟域取出一个单时钟宽度脉冲，然后在新的时钟域中建立另一个单时钟宽度的脉冲。</p>
 <p><img src="https://i.loli.net/2020/03/06/XuUxinRSgDtKPyW.png" alt="亚稳态1.10.png"></p>
 <p>使用慢时钟直接去采集快时钟域下input信号采集不到，因此使用toggle 电路子啊快时钟域下对输入信号有效标定，获得toggle信号。随后，使用同步器同步toggle信号，在慢时钟域下最终获得两个有效的单周期脉冲output。</p>
@@ -1088,7 +1088,7 @@
 <li>当输入脉冲时钟周期大于两个同步器时钟周期时，这个问题更加严重；</li>
 <li>这种情况下，如果输入脉冲相邻太近，则同步器就不能检测到每个脉冲。</li>
 </ul>
-<h2 id="三种同步器对比"><a class="header-anchor" href="#三种同步器对比">¶</a>三种同步器对比</h2>
+<h2 id="三种同步器对比"><a class="header-anchor" href="#三种同步器对比"></a>三种同步器对比</h2>
 <p><img src="https://i.loli.net/2020/03/06/XGbjk4R79xuEYsJ.png" alt="亚稳态1.12.png"></p>
 <hr>
 <p><em>Reference</em>：</p>
@@ -1107,7 +1107,7 @@
     <url>/2020/Multiple-Clocks/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>多时钟交互路径如何检查建立时间和保持时间。</p>
 <a id="more"></a>
-<h2 id="Integer-Multiples"><a class="header-anchor" href="#Integer-Multiples">¶</a>Integer Multiples</h2>
+<h2 id="Integer-Multiples"><a class="header-anchor" href="#Integer-Multiples"></a>Integer Multiples</h2>
 <p>设计中经常会定义出现成整数倍数关系的时钟。这样的例子中，我们在相关的时钟（related clocks）中找出公共的时钟周期来进行STA分析。</p>
 <blockquote>
 <p>two clocks are related if they have a data path between their domains</p>
@@ -1122,7 +1122,7 @@
 Expanding clock ‘CLKQ’ to base period of 20.00 (old period was 10.00, added 2 edges).</p>
 </blockquote>
 <p>简单分析可知，在 CLKP 15ns时刻出发至CLKM 20ns时刻捕获进行setup time check 最为严苛。而在CLKP&amp;CLKM 0ns时刻进行hold time check最为合理。时序报告这里不再贴出。</p>
-<h2 id="Non-Integer-Multiples"><a class="header-anchor" href="#Non-Integer-Multiples">¶</a>Non-Integer Multiples</h2>
+<h2 id="Non-Integer-Multiples"><a class="header-anchor" href="#Non-Integer-Multiples"></a>Non-Integer Multiples</h2>
 <p>考虑数据路径中两个clock domains的频率不成倍数关系时，例如，the launch<br>
 clock is divide-by-8 of a common clock and the capture clock is divide-by-5<br>
 of the common clock ，如下图所示。</p>
@@ -1149,7 +1149,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 </ul>
 <p>hold check中时钟是在0ns时刻检查最严苛。</p>
 <p>时序报告在此不一一列出。</p>
-<h2 id="Phase-Shifted"><a class="header-anchor" href="#Phase-Shifted">¶</a>Phase Shifted</h2>
+<h2 id="Phase-Shifted"><a class="header-anchor" href="#Phase-Shifted"></a>Phase Shifted</h2>
 <p>下面两个时钟相差90度相移。</p>
 <figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">create_clock -period <span class="number">2.0</span> -waveform &#123;<span class="number">0</span> <span class="number">1.0</span>&#125; [get_ports CKM]</span><br><span class="line">create_clock -period <span class="number">2.0</span> -waveform &#123;<span class="number">0.5</span> <span class="number">1.5</span>&#125; [get_ports CKM90]</span><br></pre></td></tr></table></figure>
 <p><em>Phase-shifted clocks</em></p>
@@ -1157,7 +1157,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p>对于setup time 而言，数据在CKM 0ns建立，于CKM90 0.5ns时进行建立时间检查。</p>
 <p>对于hold check而言，我们得在建立时间检查中capture edge 的前一个周期时刻点进行检查。例如在launch 2ns时刻，此时于2.5ns时刻进行setup check，因此在前一个capture edge 0.5ns时刻进行hold check。</p>
 <p>因此该例中对于hold check 是十分有利的，因为hold time check中，数据捕获路径clock的时刻早于数据建立clock的时间。</p>
-<h2 id="Half-Cycle-Paths"><a class="header-anchor" href="#Half-Cycle-Paths">¶</a>Half-Cycle Paths</h2>
+<h2 id="Half-Cycle-Paths"><a class="header-anchor" href="#Half-Cycle-Paths"></a>Half-Cycle Paths</h2>
 <p>设计中同时存在negative-edge triggered flip-flops(active clock edge is falling edge)和positive-edge triggered flip-flops (active clock edge is rising edge)时，就可能属于half-cycle paths。</p>
 <blockquote>
 <p>A half-cycle path could be from a rising edge flip-flop to a falling edge flip-flop, or vice versa.</p>
@@ -1170,7 +1170,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p><img src="https://i.loli.net/2020/03/03/ZbQUXJrzFI4VmjA.png" alt="STA5.6.png"></p>
 <p><em>the hold timing path</em></p>
 <p><img src="https://i.loli.net/2020/03/03/7ERZPQrKIxYAbwM.png" alt="STA5.7.png"></p>
-<h2 id="False-Path"><a class="header-anchor" href="#False-Path">¶</a>False Path</h2>
+<h2 id="False-Path"><a class="header-anchor" href="#False-Path"></a>False Path</h2>
 <p>电路中某些timing paths有可能是不存在或者在设计中没有实际作用的。这些路径我们可以设置为false paths，使得STA在分析过程中忽略掉。</p>
 <p>False paths的例子：</p>
 <ul>
@@ -1274,23 +1274,23 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>主要分析单周期时序路径下setup/hold time check</p>
 <a id="more"></a>
 <h1>单周期路径下setup time check</h1>
-<h2 id="Input-to-Flip-flop-Path"><a class="header-anchor" href="#Input-to-Flip-flop-Path">¶</a>Input to Flip-flop Path</h2>
+<h2 id="Input-to-Flip-flop-Path"><a class="header-anchor" href="#Input-to-Flip-flop-Path"></a>Input to Flip-flop Path</h2>
 <p>时序报告：</p>
 <p><img src="https://i.loli.net/2020/02/29/dFhK1PumQM674z5.png" alt="STA3.1.png"></p>
 <p>input port clocked by VIRTUAL_CLKM，可以认为是由一个在设计外面的imaginary（virtual）flip-flop驱动的input port。另外，从该clock pin到达input port INA的max delay 可以被定义为一个确定的数值，在报告中为input external delay。通过以下SDC commands可以实现上述操作：</p>
 <figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">create_clock -name VIRTUAL_CLKM -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125;</span><br><span class="line"></span><br><span class="line">set_input_delay -<span class="keyword">clock</span> VIRTUAL_CLKM -max <span class="number">2.55</span> [get_ports INA]</span><br></pre></td></tr></table></figure>
 <p>同时可以注意到DUA中经过input port INA，和其连接的第一个cell UINV1，可以通过specifying the driving cell of the input port INA计算delay：</p>
 <figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_driving_cell -lib_cell BUFF -library lib013lwc [get_ports INA]</span><br></pre></td></tr></table></figure>
-<h3 id="Setup-check-for-the-path-through-input-port"><a class="header-anchor" href="#Setup-check-for-the-path-through-input-port">¶</a>Setup check for the path through input port</h3>
+<h3 id="Setup-check-for-the-path-through-input-port"><a class="header-anchor" href="#Setup-check-for-the-path-through-input-port"></a>Setup check for the path through input port</h3>
 <p><img src="https://i.loli.net/2020/02/29/uyT9sEJf4aIpPFv.png" alt="STA3.2.png"></p>
-<h2 id="Flip-flop-to-Output-Path"><a class="header-anchor" href="#Flip-flop-to-Output-Path">¶</a>Flip-flop to Output Path</h2>
+<h2 id="Flip-flop-to-Output-Path"><a class="header-anchor" href="#Flip-flop-to-Output-Path"></a>Flip-flop to Output Path</h2>
 <p>类似于input port 约束，output port 也可以受virtual clock，internal clock of the design，input clock port，output clock port约束。下面是output pin ROUT constraint with respect to a virtual clock。如下：</p>
  <figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_output_delay -<span class="keyword">clock</span> VIRTUAL_CLKP -max <span class="number">5.1</span> [get_ports ROUT]</span><br><span class="line">set_load <span class="number">0.02</span> [get_ports ROUT]</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>To determine the delay of the last cell connected to the output port correctly,one needs to specify the load on this port.</p>
 <p>The output load is specified above using the <em>set_load</em> command.</p>
 </blockquote>
-<h3 id="Setup-check-for-path-through-output-port"><a class="header-anchor" href="#Setup-check-for-path-through-output-port">¶</a>Setup check for path through output port</h3>
+<h3 id="Setup-check-for-path-through-output-port"><a class="header-anchor" href="#Setup-check-for-path-through-output-port"></a>Setup check for path through output port</h3>
 <p><img src="https://i.loli.net/2020/02/29/WNVHDpCyTtdJ3u5.png" alt="STA3.3.png"></p>
 <p>时序报告：</p>
 <p><img src="https://i.loli.net/2020/02/29/ONaM34jEuR7lVfG.png" alt="STA3.4.png"></p>
@@ -1300,10 +1300,10 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p>因为 output external delay应该对应于virtual flip-flop的launch path中，但此处路径已在ROUT终止，因此将其放于capture path中，表现为负值。</p>
 <p>总结：</p>
 <p><code> slack = （Tcapture + Tcycle - Tuncertainty - Tsetup - Toutput_dealy）- （Tlaunch + Tck2q + Tdp）</code></p>
-<h2 id="Input-to-Output-Path"><a class="header-anchor" href="#Input-to-Output-Path">¶</a>Input to Output Path</h2>
+<h2 id="Input-to-Output-Path"><a class="header-anchor" href="#Input-to-Output-Path"></a>Input to Output Path</h2>
 <p>和先前input path、output path类似，使用Virtual clocks来约束input&amp;output ports。通过以下指令进行约束：</p>
 <figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">set_input_delay -<span class="keyword">clock</span> VIRTUAL_CLKM -max <span class="number">3.6</span> [get_ports INB]</span><br><span class="line">set_output_delay -<span class="keyword">clock</span> VIRTUAL_CLKM -max <span class="number">5.8</span> [get_ports POUT]</span><br></pre></td></tr></table></figure>
-<h3 id="Combinational-path-from-input-to-output-port"><a class="header-anchor" href="#Combinational-path-from-input-to-output-port">¶</a>Combinational path from input to output port</h3>
+<h3 id="Combinational-path-from-input-to-output-port"><a class="header-anchor" href="#Combinational-path-from-input-to-output-port"></a>Combinational path from input to output port</h3>
 <p><img src="https://i.loli.net/2020/02/29/HSAJg9DBMGdphuV.png" alt="STA3.5.png"></p>
 <p>时序报告：</p>
 <p><img src="https://i.loli.net/2020/02/29/FJOdvztUEQjZYoC.png" alt="STA3.6.png"></p>
@@ -1323,7 +1323,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p><img src="https://i.loli.net/2020/02/29/iHVeXdlkhg1fFEW.png" alt="STA3.10.png"></p>
 <p><code>Slack = (Tlaunch + Tck2q + Tdp) - (Tcapture + Thold)</code></p>
 <p>Hold time check 对capture flip-flop上数据引脚的路径施加了下限或最小值限制。需要确定到捕获触发器D引脚的最快路径。 这意味着将始终使用最短路径来验证hold checks。 因此，通常在fast timing corner 中执行hold checks。</p>
-<h2 id="Hold-time-check-和setup-time-check-之间的关系"><a class="header-anchor" href="#Hold-time-check-和setup-time-check-之间的关系">¶</a>Hold time check 和setup time check 之间的关系</h2>
+<h2 id="Hold-time-check-和setup-time-check-之间的关系"><a class="header-anchor" href="#Hold-time-check-和setup-time-check-之间的关系"></a>Hold time check 和setup time check 之间的关系</h2>
 <p>如下图所示，hold timing check 确保:</p>
 <ul>
 <li><em>Data from the subsequent launch edge must not be captured by the setup receiving edge.</em></li>
@@ -1355,7 +1355,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
     <url>/2020/2020-02-29-Path-reg2reg-setup-time-%E5%88%86%E6%9E%90/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>简单地对<em>寄存器到寄存器路径</em>建立时间的报告进行了分析</p>
 <a id="more"></a>
-<h2 id="理想的时钟网络"><a class="header-anchor" href="#理想的时钟网络">¶</a>理想的时钟网络</h2>
+<h2 id="理想的时钟网络"><a class="header-anchor" href="#理想的时钟网络"></a>理想的时钟网络</h2>
 <p><img src="https://i.loli.net/2020/02/29/ec9qmofu2OEhbXv.png" alt="STA2.1.png"></p>
 <p>可以先分析出下面几个问题：</p>
 <blockquote>
@@ -1396,12 +1396,12 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 </li>
 </ul>
 <p><img src="https://i.loli.net/2020/02/29/UavV19MIKOT32cR.png" alt="STA2.2.png"></p>
-<h2 id="时钟网络有一个确定的延时值"><a class="header-anchor" href="#时钟网络有一个确定的延时值">¶</a>时钟网络有一个确定的延时值</h2>
+<h2 id="时钟网络有一个确定的延时值"><a class="header-anchor" href="#时钟网络有一个确定的延时值"></a>时钟网络有一个确定的延时值</h2>
 <p>上面报告中clock network delay是一个理想的值（marked as ideal），这意味着clock trees被认为是理想的，即clock path上所有的buffer delay都为0。显然，当时钟树被建立之后，clock paths会先显示真实的delays（marked as propagated），如下图所示。</p>
 <p><img src="https://i.loli.net/2020/02/29/efwkadL7CAlOmNx.png" alt="STA2.3.png"></p>
 <p><strong>后一个时钟为0.12比前一个触发器的时钟要晚到一点，差值012-0.11=0.01称之为时钟的<em>偏斜</em>。</strong></p>
 <p>**另外时序报告中标有“r”和“f”，分别代表clock或数据信号的rising and falling edge。**因为是建立时间检查，所以通常取上升或下降沿延迟中的最大延迟值。</p>
-<h3 id="两种类型的clock-latencies"><a class="header-anchor" href="#两种类型的clock-latencies">¶</a>两种类型的clock latencies</h3>
+<h3 id="两种类型的clock-latencies"><a class="header-anchor" href="#两种类型的clock-latencies"></a>两种类型的clock latencies</h3>
 <p><em>clock source latency &amp; clock network latency</em></p>
 <ul>
 <li>
@@ -1744,7 +1744,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>减少设计面积，意味着成本降低、功耗降低。特别是对于FPGA的设计，直接决定着FPGA的选型。</p>
 <p>为了减少设计面积，首先得估算设计使用资源的数量，例如触发器、加法器、乘法器等。其中，触发器的数量由功能决定，很难减少，其面积也比较好估计。因此，RTL设计中的组合逻辑，对应的各种操作符在使用的时候应该加以重视。例如，加减法、乘除法以及条件语句中的比较运算。</p>
 <a id="more"></a> 
-<h2 id="RTL编码中考虑面积"><a class="header-anchor" href="#RTL编码中考虑面积">¶</a>RTL编码中考虑面积</h2>
+<h2 id="RTL编码中考虑面积"><a class="header-anchor" href="#RTL编码中考虑面积"></a>RTL编码中考虑面积</h2>
 <p>如以下实例中，替换判断语句后，实现了1bit逻辑门省掉了一个6bit的比较器。</p>
 <p>对于一些定值的数据，类似操作都可以如此考虑RTL设计来节省面积。</p>
 <p><img src="https://i.loli.net/2020/02/27/RuKsTDMYajIzV5g.png" alt="RTL3.1.png"></p>
@@ -1756,7 +1756,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p>除了操作符以外，我们仍需注意多比特数据的使用，其会占用乘倍的资源，应该分析信号的所有比特位是否都需要参与操作，如果不是，咋可以只对需要的部分进行操作。</p>
 <p>例如：实现加32的操作</p>
 <p><code>addr &lt;= addr + 32;</code> 更换为 <code>{ addr[7:5] &lt;= addr[7:5] + 1; addr[4:0] &lt;= addr[4:0] + 0}</code></p>
-<h2 id="RTL编码中考虑功耗"><a class="header-anchor" href="#RTL编码中考虑功耗">¶</a>RTL编码中考虑功耗</h2>
+<h2 id="RTL编码中考虑功耗"><a class="header-anchor" href="#RTL编码中考虑功耗"></a>RTL编码中考虑功耗</h2>
 <hr>
 <p>动态功耗的计算公式可以表述为：</p>
 <p><img src="https://i.loli.net/2020/02/27/snAGku5yjdZ2D8w.png" alt="RTL3.2.png"></p>
@@ -1772,7 +1772,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p>然后再RTL编码中，注意消耗功率较多的电路，如状态机、译码器、多路选择器等。</p>
 <p>最后，在综合中，使用门控时钟和其他减少功耗的优化技术。</p>
 <p>这里要注意下门控时钟和增加使能控制的区别。增加使能仅仅是使得电路的信号不在翻转，但是时钟每个周期还会继续翻转。而门控时钟则是直接关掉时钟，这种方法效果更好。</p>
-<h2 id="RTL中考虑布线问题"><a class="header-anchor" href="#RTL中考虑布线问题">¶</a>RTL中考虑布线问题</h2>
+<h2 id="RTL中考虑布线问题"><a class="header-anchor" href="#RTL中考虑布线问题"></a>RTL中考虑布线问题</h2>
 <hr>
 <p>布线（routing），旨在根据门级网表的描述实现各个单元的连接。布线是否能够顺利布通的最关键因素是布局（placement）。但是，即使最好的布局工具，还是可能出现无法布通的情况。这种情况下就需要修改RTL级设计。</p>
 <p>因此，如果可以在RTL编码 阶段考虑代码可能对布线产生的影响，就可能避免最后出现无法布通的情况。</p>
@@ -1847,7 +1847,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
     <url>/2020/2020-02-15-SRAM_cell%E7%94%B5%E5%AD%A6%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90/</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><em>在SRAM中，读写操作是最基本的，为了保证读写功能可以正常实现，我们需要分开来分析测试读写操作的稳定性，本文便详细阐释了SRAM读写操作的电学稳定性。</em></p>
 <a id="more"></a>
-<h3 id="Read-and-Write-Operatioins"><a class="header-anchor" href="#Read-and-Write-Operatioins">¶</a><strong>Read and Write Operatioins</strong></h3>
+<h3 id="Read-and-Write-Operatioins"><a class="header-anchor" href="#Read-and-Write-Operatioins"></a><strong>Read and Write Operatioins</strong></h3>
 <hr>
 <p><img src="https://i.loli.net/2020/02/27/zami75tvbgGkSjd.png" alt="memory2.1.png"></p>
 <p>Fig.1 SRAM memory cell<br>
@@ -1882,7 +1882,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p>Fig.8 SRAM cell nodes during normal write operation</p>
 <p><img src="https://i.loli.net/2020/02/27/CHF6EyRiSsUorMx.png" alt="memory2.9.png"></p>
 <p>Fig.9 SRAM cell nodes during failure write operation</p>
-<h3 id="Sum"><a class="header-anchor" href="#Sum">¶</a><strong>Sum</strong></h3>
+<h3 id="Sum"><a class="header-anchor" href="#Sum"></a><strong>Sum</strong></h3>
 <hr>
 <p><strong>在SRAM cell 中，加强读操作和写操作稳定性的设计方法是一个矛盾的关系</strong>。例如，在表1中促使读操作和写操作更稳定的方法。所以，<strong>很难同时提高读和写操作的稳定性</strong>。在所有的130nm之前的传统制造工艺中，在SRAM cell中有更大的电压工作空间，可以同时保证稳定性，不会出问题。在更近的制造工艺中，随着MOSFETs中Vth变化(variation)，电压工作空间(operation margin)减小，SRAM cell中MOSFET电流随着Vth变化而波动(fluctuated)。</p>
 <p>除此之外，Vth variations会破坏在读和写操作期间MOSFET电流的平衡。因此，在SRAM cell设计阶段，最大化SRAM cell的operatingmargin，包括读和写的margin是必不可少的。Vth是MOSFET的一个很好的参数表征，它几乎完全可以指示晶体管的性能。</p>
@@ -1905,7 +1905,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p><em>02.SRAM的读写过程；</em></p>
 <p><em>03.执行读操作时最基本的电学稳定**特性，静态噪声裕量(SNM)</em></p>
 <a id="more"></a>
-<h3 id="SRAM-CELL"><a class="header-anchor" href="#SRAM-CELL">¶</a>SRAM CELL</h3>
+<h3 id="SRAM-CELL"><a class="header-anchor" href="#SRAM-CELL"></a>SRAM CELL</h3>
 <hr>
 <p>Fig.1 SRAM memory cell</p>
 <p>SRAM cell由一个基本的触发器（flip-flop）单元构成，即<strong>两个交叉耦合（cross coupled）的反相器</strong>，于flip-flop的存储结点存储逻辑值“0”或“1”。</p>
@@ -1916,7 +1916,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p><strong>两个反相器(load MOSFET(LD0)-driver MOSFET(DR0), LD1-DR)；</strong></p>
 <p><strong>两个导通管(access MOSFET AC0, AC1)连接到一对bit line(BT,BB)上，同时，导通管的栅端(gate)连接到word line(WL)；</strong></p>
 <p>为构成一个flip-flop，<strong>其中一个反相器的输入和输出端需要分别连接到另一个反相器的输出和输入端，也即是交叉耦合</strong>。</p>
-<h3 id="Basic-Operation-of-SRAM-Cell"><a class="header-anchor" href="#Basic-Operation-of-SRAM-Cell">¶</a>Basic Operation of SRAM Cell</h3>
+<h3 id="Basic-Operation-of-SRAM-Cell"><a class="header-anchor" href="#Basic-Operation-of-SRAM-Cell"></a>Basic Operation of SRAM Cell</h3>
 <hr>
 <p>Memory的基本排列构造（array structure）如下图2.2所示，整个memory由nxm位memory cell组成。</p>
 <p><img src="https://i.loli.net/2020/02/27/WFMs2twxDJ1IjO9.png" alt="memory1.2.png"></p>
@@ -1931,7 +1931,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p>通过打开Column-select line for read(YSR)信号，由bit line构成的差分信号传输到灵敏放大器（sense amplifier）的输入端(ST/SB)，经放大后又由output FF锁存输出。如果存储的数据为“0”，与此相似，只不过将会是bit line BB的电压减少。</p>
 <p><strong>执行写操作，同样也需要打开word line，在打开word line之前，将bit line电压平衡到VDD，由数据输入端过来的输入数据Din经由write amplifier（WA）传输至bit line</strong>。不同于读操作的是此时column 的选择由column-select signal for write (YSW)来控制。</p>
 <p>Bit line电压变化后，使存储节点（N1，N2）的电压翻转，从而写入数据。最后，写操作完成时word line关闭。</p>
-<h3 id="Electrical-Stability-at-Read-Operation-Static-Noise-Margin-and-β-Ratio"><a class="header-anchor" href="#Electrical-Stability-at-Read-Operation-Static-Noise-Margin-and-β-Ratio">¶</a>Electrical Stability at Read Operation:Static Noise Margin and β Ratio</h3>
+<h3 id="Electrical-Stability-at-Read-Operation-Static-Noise-Margin-and-β-Ratio"><a class="header-anchor" href="#Electrical-Stability-at-Read-Operation-Static-Noise-Margin-and-β-Ratio"></a>Electrical Stability at Read Operation:Static Noise Margin and β Ratio</h3>
 <hr>
 <p><strong>在正常读取数据模式下</strong>，假设node N0处于低电平，node N1处于高电平，字线被激活后，读电流（read current）由BT至N0流动，因此N0的电压会上升ΔVN（图2.4）。</p>
 <p><strong>不正常读取操作时</strong>，ΔVN大于DR1的阈值电压（Vth），DR1打开随之N1的电压减小，又导致N0的电压增大，最后致使cell翻转。</p>
@@ -2068,7 +2068,7 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 <p><strong>不可综合</strong>：function、for、fork-join、while</p>
 <a id="more"></a>
 <h1>常见可综合语法与硬件电路的关系</h1>
-<h2 id="if-else相关语句的硬件结构映射及优化"><a class="header-anchor" href="#if-else相关语句的硬件结构映射及优化">¶</a>if-else相关语句的硬件结构映射及优化</h2>
+<h2 id="if-else相关语句的硬件结构映射及优化"><a class="header-anchor" href="#if-else相关语句的硬件结构映射及优化"></a>if-else相关语句的硬件结构映射及优化</h2>
 <p>对应的硬件结构是多路选择器（Multiplexing Hardware）</p>
 <ul>
 <li>需要根据输入约束，小心设计：先“加”后“选”，先“选”后“加”</li>
@@ -2085,9 +2085,9 @@ Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 1
 </li>
 </ul>
 <p><img src="https://i.loli.net/2020/02/27/9tMhjpIADVRfw5W.png" alt="RTL1.2.png"></p>
-<h2 id="case相关语句的硬件结构映射及优化"><a class="header-anchor" href="#case相关语句的硬件结构映射及优化">¶</a>case相关语句的硬件结构映射及优化</h2>
+<h2 id="case相关语句的硬件结构映射及优化"><a class="header-anchor" href="#case相关语句的硬件结构映射及优化"></a>case相关语句的硬件结构映射及优化</h2>
 <p>对应的硬件结构是无优先级的判断结构，与单if语句的区别在于各条件互斥，多用于指令译码电路</p>
-<h2 id="慎用latch"><a class="header-anchor" href="#慎用latch">¶</a>慎用latch</h2>
+<h2 id="慎用latch"><a class="header-anchor" href="#慎用latch"></a>慎用latch</h2>
 <ul>
 <li>
 <p>综合器很难解释latch，因此，除非特殊用途，一般避免引入latch。</p>
@@ -2113,29 +2113,29 @@ latch由电平触发，非同步控制。DFF由时钟边沿触发，同步控制
 <p>Parallel-case：告诉DC，所有条件互斥，且并行，无优先权</p>
 </li>
 </ul>
-<h2 id="逻辑复制，均衡负载"><a class="header-anchor" href="#逻辑复制，均衡负载">¶</a>逻辑复制，均衡负载</h2>
+<h2 id="逻辑复制，均衡负载"><a class="header-anchor" href="#逻辑复制，均衡负载"></a>逻辑复制，均衡负载</h2>
 <p>通过逻辑复制，降低关键信号的扇出，进而降低该信号的传播延迟，提高电路性能。</p>
 <p><img src="https://i.loli.net/2020/02/27/pB7qAltnWrg6vK3.png" alt="RTL1.4.png"></p>
-<h2 id="资源共享，减小面积"><a class="header-anchor" href="#资源共享，减小面积">¶</a>资源共享，减小面积</h2>
+<h2 id="资源共享，减小面积"><a class="header-anchor" href="#资源共享，减小面积"></a>资源共享，减小面积</h2>
 <p><img src="https://i.loli.net/2020/02/27/FzgvMmDeUKl6BiT.png" alt="RTL1.5.png"></p>
-<h2 id="资源顺序重排，降低传播延时"><a class="header-anchor" href="#资源顺序重排，降低传播延时">¶</a>资源顺序重排，降低传播延时</h2>
+<h2 id="资源顺序重排，降低传播延时"><a class="header-anchor" href="#资源顺序重排，降低传播延时"></a>资源顺序重排，降低传播延时</h2>
 <p><img src="https://i.loli.net/2020/02/27/lXg6WIJ89CjOSPH.png" alt="RTL1.6.png"></p>
-<h2 id="同步复位与异步复位"><a class="header-anchor" href="#同步复位与异步复位">¶</a>同步复位与异步复位</h2>
-<h2 id="少用“：？”赋值语句"><a class="header-anchor" href="#少用“：？”赋值语句">¶</a>少用“：？”赋值语句</h2>
+<h2 id="同步复位与异步复位"><a class="header-anchor" href="#同步复位与异步复位"></a>同步复位与异步复位</h2>
+<h2 id="少用“：？”赋值语句"><a class="header-anchor" href="#少用“：？”赋值语句"></a>少用“：？”赋值语句</h2>
 <p>使用always用于逻辑运算，关于assign，仅用于信号连接，难以阅读，且多层嵌套后很难被综合其解释</p>
 <h1>可综合风格</h1>
-<h2 id="完整的always敏感信号列表"><a class="header-anchor" href="#完整的always敏感信号列表">¶</a>完整的always敏感信号列表</h2>
+<h2 id="完整的always敏感信号列表"><a class="header-anchor" href="#完整的always敏感信号列表"></a>完整的always敏感信号列表</h2>
 <p>所有的组合逻辑或锁存的always结构必须有敏感信号列表。这个敏感信号列表必须包含所有的输入信号</p>
 <p><em>原因：综合过程将产生一个取决于除开敏感信号列表中所有其他值的结构，将可能在行为仿真和门级仿真间产生潜在的适配。</em></p>
-<h2 id="每个always敏感信号列表对应一个时钟"><a class="header-anchor" href="#每个always敏感信号列表对应一个时钟">¶</a>每个always敏感信号列表对应一个时钟</h2>
+<h2 id="每个always敏感信号列表对应一个时钟"><a class="header-anchor" href="#每个always敏感信号列表对应一个时钟"></a>每个always敏感信号列表对应一个时钟</h2>
 <p>在综合过程中，每个Verilog always敏感信号列表只能对应一个时钟。</p>
 <p><em>原因：这是将每一个过程限制在单一寄存器类型的要求。</em></p>
-<h2 id="在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。"><a class="header-anchor" href="#在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。">¶</a>在时序电路中必须使用非阻塞赋值（&lt;=），组合逻辑电路必须使用阻塞赋值（=）。</h2>
+<h2 id="在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。"><a class="header-anchor" href="#在时序电路中必须使用非阻塞赋值（-），组合逻辑电路必须使用阻塞赋值（-）。"></a>在时序电路中必须使用非阻塞赋值（&lt;=），组合逻辑电路必须使用阻塞赋值（=）。</h2>
 <h1>模块划分</h1>
-<h2 id="分开异步逻辑与同步逻辑"><a class="header-anchor" href="#分开异步逻辑与同步逻辑">¶</a>分开异步逻辑与同步逻辑</h2>
+<h2 id="分开异步逻辑与同步逻辑"><a class="header-anchor" href="#分开异步逻辑与同步逻辑"></a>分开异步逻辑与同步逻辑</h2>
 <p>建议分开异步逻辑与同步逻辑</p>
 <p><em>原因：避免综合时的问题，简化约束和编码难度。</em></p>
-<h2 id="分开控制逻辑和存储器"><a class="header-anchor" href="#分开控制逻辑和存储器">¶</a>分开控制逻辑和存储器</h2>
+<h2 id="分开控制逻辑和存储器"><a class="header-anchor" href="#分开控制逻辑和存储器"></a>分开控制逻辑和存储器</h2>
 <p>建议控制逻辑和存储器逻辑分成独立的模块</p>
 <p><em>原因：便于高层的存储器模块的使用和便于重新描述为不同的存储器类型。</em></p>
 <blockquote>
@@ -2237,7 +2237,7 @@ NMH = VDD - VIH , NML = VIL<br>
 <p>官方的定义是非交互地命令行文本编辑器。而我觉得描述成“行内文本插入、删除、替换的小工具“更容易理解。</p>
 <p>说到”行内“，即以一行文本为单位进行处理。sed的工作模式如下图，读入一行文本到内部的buffer，执行处理文本命令，输出到屏幕。然后读入下一行文本，进行下一轮处理。</p>
 <a id="more"></a>
-<h2 id="sed使用方法"><a class="header-anchor" href="#sed使用方法">¶</a>sed使用方法</h2>
+<h2 id="sed使用方法"><a class="header-anchor" href="#sed使用方法"></a>sed使用方法</h2>
 <p>sed使用格式：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed -option &#39;cmd&#39; file</span><br></pre></td></tr></table></figure>
 <p>其中，-option是sed的一些选项，'cmd’是处理文本的命令，如插入、删掉、替换等，file是待处理的文件。</p>
@@ -2248,11 +2248,11 @@ NMH = VDD - VIH , NML = VIL<br>
 <li>X是执行的命令，如a（append）、d（delete）、i（insert）、s（search and replace）等。</li>
 <li>options是指某些命令后可以带额外的参数。</li>
 </ul>
-<h2 id="sed基本用法示例"><a class="header-anchor" href="#sed基本用法示例">¶</a>sed基本用法示例</h2>
-<h6 id="示例一："><a class="header-anchor" href="#示例一：">¶</a>示例一：</h6>
+<h2 id="sed基本用法示例"><a class="header-anchor" href="#sed基本用法示例"></a>sed基本用法示例</h2>
+<h6 id="示例一："><a class="header-anchor" href="#示例一："></a>示例一：</h6>
 <p>第一行插入日期</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed &#39;1i &#x2F;&#x2F;2019-2-13&#39; rtl.v</span><br></pre></td></tr></table></figure>
-<h6 id="示例二："><a class="header-anchor" href="#示例二：">¶</a>示例二：</h6>
+<h6 id="示例二："><a class="header-anchor" href="#示例二："></a>示例二：</h6>
 <p>删除`timescale 1ns/100ps行</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed &#39;&#x2F;\x60timescale&#x2F;d&#39;</span><br></pre></td></tr></table></figure>
 <p>注：</p>
@@ -2260,13 +2260,13 @@ NMH = VDD - VIH , NML = VIL<br>
 <li>`用ASCII码0x60转义。</li>
 <li>/xxx/是用正则的方式来指定要处理哪些行，也可以理解成包含xxx的行。</li>
 </ol>
-<h6 id="示例三："><a class="header-anchor" href="#示例三：">¶</a>示例三：</h6>
+<h6 id="示例三："><a class="header-anchor" href="#示例三："></a>示例三：</h6>
 <p>endmodule后面加// xxx</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed &#39;&#x2F;endmodule&#x2F;a &#x2F;&#x2F; xxx&#39; rtl.v</span><br></pre></td></tr></table></figure>
-<h6 id="示例四："><a class="header-anchor" href="#示例四：">¶</a>示例四：</h6>
+<h6 id="示例四："><a class="header-anchor" href="#示例四："></a>示例四：</h6>
 <p>把output wire修改成output reg</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed &#39;&#x2F;output&#x2F;s&#x2F;wire&#x2F;reg&#x2F;&#39; rtl.v</span><br></pre></td></tr></table></figure>
-<h6 id="示例五："><a class="header-anchor" href="#示例五：">¶</a>示例五：</h6>
+<h6 id="示例五："><a class="header-anchor" href="#示例五："></a>示例五：</h6>
 <p>看看analog verilog model文件中有哪些module</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed -n &#39;&#x2F;^module&#x2F;p&#39; ana_v.v</span><br></pre></td></tr></table></figure>
 <p>注：</p>
@@ -2274,7 +2274,7 @@ NMH = VDD - VIH , NML = VIL<br>
 <li>-n是取消默认的打印，即仅打印匹配的行。</li>
 <li>p是打印命令。</li>
 </ol>
-<h6 id="示例六："><a class="header-anchor" href="#示例六：">¶</a>示例六：</h6>
+<h6 id="示例六："><a class="header-anchor" href="#示例六："></a>示例六：</h6>
 <p>把逗号分隔的端口或者变量分成多行书写</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed &#39;s&#x2F;,&#x2F;,\n&#x2F;g&#39; rtl.v</span><br></pre></td></tr></table></figure>
 <p>注：</p>
@@ -2282,17 +2282,17 @@ NMH = VDD - VIH , NML = VIL<br>
 <li>\n是回车符，用来换行</li>
 <li>g是指行内替换多次，如果不加g则替换一次。</li>
 </ol>
-<h6 id="示例七："><a class="header-anchor" href="#示例七：">¶</a>示例七：</h6>
+<h6 id="示例七："><a class="header-anchor" href="#示例七："></a>示例七：</h6>
 <p>统计rtl的行数</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed -n &#39;$&#x3D;&#39; rtl.v</span><br></pre></td></tr></table></figure>
-<h6 id="示例八："><a class="header-anchor" href="#示例八：">¶</a>示例八：</h6>
+<h6 id="示例八："><a class="header-anchor" href="#示例八："></a>示例八：</h6>
 <p>把//aa的下一行中的assign加上延时</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed &#39;&#x2F;\&#x2F;\&#x2F;aa&#x2F;&#123;n;s&#x2F;assign&#x2F;assign #1&#x2F;&#125;&#39; rtl.v</span><br></pre></td></tr></table></figure>
 <p>注：</p>
 <ol>
 <li>n是跳转到下一行，再执行后面的命令。</li>
 </ol>
-<h2 id="sed高级用法示例"><a class="header-anchor" href="#sed高级用法示例">¶</a>sed高级用法示例</h2>
+<h2 id="sed高级用法示例"><a class="header-anchor" href="#sed高级用法示例"></a>sed高级用法示例</h2>
 <p>sed内部有两个存储空间，模式空间（pattern space）和保持空间（hold space）。模式空间就是上面提到的“行buffer”，而保持空间可以理解为另一个buffer，可以暂存任何临时数据。你可以想像成CPU的两个寄存器，通过类似汇编的指令来操作。</p>
 <ul>
 <li>g 将hold space中的内容拷贝到pattern space中</li>
@@ -2303,7 +2303,7 @@ NMH = VDD - VIH , NML = VIL<br>
 <li>D 删除multiline pattern中的第一行</li>
 <li>x 交换保持空间和模式空间的内容</li>
 </ul>
-<h6 id="示例九："><a class="header-anchor" href="#示例九：">¶</a>示例九：</h6>
+<h6 id="示例九："><a class="header-anchor" href="#示例九："></a>示例九：</h6>
 <p>删除rtl中的多行注释/* … */</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat -n script</span><br><span class="line"></span><br><span class="line">     1	&#x2F;\&#x2F;\*&#x2F;!&#123;p;d&#125;</span><br><span class="line">     2	:a</span><br><span class="line">     3	&#x2F;\*\&#x2F;&#x2F;!&#123;N;ba&#125;</span><br><span class="line">     4	s&#x2F;\&#x2F;\*.*\*\&#x2F;&#x2F;&#x2F;</span><br><span class="line">     5	p</span><br><span class="line"></span><br><span class="line">sed -nf script rtl.v</span><br></pre></td></tr></table></figure>
 <p>注：</p>
@@ -2316,7 +2316,7 @@ NMH = VDD - VIH , NML = VIL<br>
 <li>由于sed正则没有非贪婪模式，不然就可以直接全部读到pattern space再用正则。</li>
 <li>-f选项是指sed命令写在脚本里，好处是不需要考虑shell的转义，写多个命令时比较方便。</li>
 </ol>
-<h6 id="示例十："><a class="header-anchor" href="#示例十：">¶</a>示例十：</h6>
+<h6 id="示例十："><a class="header-anchor" href="#示例十："></a>示例十：</h6>
 <p>交换rtl中的相邻两行</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sed -n &#39;&#123;h;n;G;p&#125;&#39; rtl.v</span><br></pre></td></tr></table></figure>
 <p>注：</p>

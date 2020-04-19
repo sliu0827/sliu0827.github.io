@@ -164,7 +164,7 @@
 <p><em>02.SRAM的读写过程；</em></p>
 <p><em>03.执行读操作时最基本的电学稳定**特性，静态噪声裕量(SNM)</em></p>
 <a id="more"></a>
-<h3 id="SRAM-CELL"><a class="header-anchor" href="#SRAM-CELL">¶</a>SRAM CELL</h3>
+<h3 id="SRAM-CELL"><a class="header-anchor" href="#SRAM-CELL"></a>SRAM CELL</h3>
 <hr>
 <p>Fig.1 SRAM memory cell</p>
 <p>SRAM cell由一个基本的触发器（flip-flop）单元构成，即<strong>两个交叉耦合（cross coupled）的反相器</strong>，于flip-flop的存储结点存储逻辑值“0”或“1”。</p>
@@ -175,7 +175,7 @@
 <p><strong>两个反相器(load MOSFET(LD0)-driver MOSFET(DR0), LD1-DR)；</strong></p>
 <p><strong>两个导通管(access MOSFET AC0, AC1)连接到一对bit line(BT,BB)上，同时，导通管的栅端(gate)连接到word line(WL)；</strong></p>
 <p>为构成一个flip-flop，<strong>其中一个反相器的输入和输出端需要分别连接到另一个反相器的输出和输入端，也即是交叉耦合</strong>。</p>
-<h3 id="Basic-Operation-of-SRAM-Cell"><a class="header-anchor" href="#Basic-Operation-of-SRAM-Cell">¶</a>Basic Operation of SRAM Cell</h3>
+<h3 id="Basic-Operation-of-SRAM-Cell"><a class="header-anchor" href="#Basic-Operation-of-SRAM-Cell"></a>Basic Operation of SRAM Cell</h3>
 <hr>
 <p>Memory的基本排列构造（array structure）如下图2.2所示，整个memory由nxm位memory cell组成。</p>
 <p><img src="https://i.loli.net/2020/02/27/WFMs2twxDJ1IjO9.png" alt="memory1.2.png"></p>
@@ -190,7 +190,7 @@
 <p>通过打开Column-select line for read(YSR)信号，由bit line构成的差分信号传输到灵敏放大器（sense amplifier）的输入端(ST/SB)，经放大后又由output FF锁存输出。如果存储的数据为“0”，与此相似，只不过将会是bit line BB的电压减少。</p>
 <p><strong>执行写操作，同样也需要打开word line，在打开word line之前，将bit line电压平衡到VDD，由数据输入端过来的输入数据Din经由write amplifier（WA）传输至bit line</strong>。不同于读操作的是此时column 的选择由column-select signal for write (YSW)来控制。</p>
 <p>Bit line电压变化后，使存储节点（N1，N2）的电压翻转，从而写入数据。最后，写操作完成时word line关闭。</p>
-<h3 id="Electrical-Stability-at-Read-Operation-Static-Noise-Margin-and-β-Ratio"><a class="header-anchor" href="#Electrical-Stability-at-Read-Operation-Static-Noise-Margin-and-β-Ratio">¶</a>Electrical Stability at Read Operation:Static Noise Margin and β Ratio</h3>
+<h3 id="Electrical-Stability-at-Read-Operation-Static-Noise-Margin-and-β-Ratio"><a class="header-anchor" href="#Electrical-Stability-at-Read-Operation-Static-Noise-Margin-and-β-Ratio"></a>Electrical Stability at Read Operation:Static Noise Margin and β Ratio</h3>
 <hr>
 <p><strong>在正常读取数据模式下</strong>，假设node N0处于低电平，node N1处于高电平，字线被激活后，读电流（read current）由BT至N0流动，因此N0的电压会上升ΔVN（图2.4）。</p>
 <p><strong>不正常读取操作时</strong>，ΔVN大于DR1的阈值电压（Vth），DR1打开随之N1的电压减小，又导致N0的电压增大，最后致使cell翻转。</p>

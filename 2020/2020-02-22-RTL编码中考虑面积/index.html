@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="http://cn.fontriver.com/c_fonts//css?family=Times New Roman:300,300italic,400,400italic,700,700italic|normal italic:300,300italic,400,400italic,700,700italic|Cinzel Decorative:300,300italic,400,400italic,700,700italic|思源宋体:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
   <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
@@ -280,7 +280,7 @@
         <p>减少设计面积，意味着成本降低、功耗降低。特别是对于FPGA的设计，直接决定着FPGA的选型。</p>
 <p>为了减少设计面积，首先得估算设计使用资源的数量，例如触发器、加法器、乘法器等。其中，触发器的数量由功能决定，很难减少，其面积也比较好估计。因此，RTL设计中的组合逻辑，对应的各种操作符在使用的时候应该加以重视。例如，加减法、乘除法以及条件语句中的比较运算。</p>
 <a id="more"></a> 
-<h2 id="RTL编码中考虑面积"><a class="header-anchor" href="#RTL编码中考虑面积">¶</a>RTL编码中考虑面积</h2>
+<h2 id="RTL编码中考虑面积"><a class="header-anchor" href="#RTL编码中考虑面积"></a>RTL编码中考虑面积</h2>
 <p>如以下实例中，替换判断语句后，实现了1bit逻辑门省掉了一个6bit的比较器。</p>
 <p>对于一些定值的数据，类似操作都可以如此考虑RTL设计来节省面积。</p>
 <p><img src="https://i.loli.net/2020/02/27/RuKsTDMYajIzV5g.png" alt="RTL3.1.png"></p>
@@ -292,7 +292,7 @@
 <p>除了操作符以外，我们仍需注意多比特数据的使用，其会占用乘倍的资源，应该分析信号的所有比特位是否都需要参与操作，如果不是，咋可以只对需要的部分进行操作。</p>
 <p>例如：实现加32的操作</p>
 <p><code>addr &lt;= addr + 32;</code> 更换为 <code>{ addr[7:5] &lt;= addr[7:5] + 1; addr[4:0] &lt;= addr[4:0] + 0}</code></p>
-<h2 id="RTL编码中考虑功耗"><a class="header-anchor" href="#RTL编码中考虑功耗">¶</a>RTL编码中考虑功耗</h2>
+<h2 id="RTL编码中考虑功耗"><a class="header-anchor" href="#RTL编码中考虑功耗"></a>RTL编码中考虑功耗</h2>
 <hr>
 <p>动态功耗的计算公式可以表述为：</p>
 <p><img src="https://i.loli.net/2020/02/27/snAGku5yjdZ2D8w.png" alt="RTL3.2.png"></p>
@@ -308,7 +308,7 @@
 <p>然后再RTL编码中，注意消耗功率较多的电路，如状态机、译码器、多路选择器等。</p>
 <p>最后，在综合中，使用门控时钟和其他减少功耗的优化技术。</p>
 <p>这里要注意下门控时钟和增加使能控制的区别。增加使能仅仅是使得电路的信号不在翻转，但是时钟每个周期还会继续翻转。而门控时钟则是直接关掉时钟，这种方法效果更好。</p>
-<h2 id="RTL中考虑布线问题"><a class="header-anchor" href="#RTL中考虑布线问题">¶</a>RTL中考虑布线问题</h2>
+<h2 id="RTL中考虑布线问题"><a class="header-anchor" href="#RTL中考虑布线问题"></a>RTL中考虑布线问题</h2>
 <hr>
 <p>布线（routing），旨在根据门级网表的描述实现各个单元的连接。布线是否能够顺利布通的最关键因素是布局（placement）。但是，即使最好的布局工具，还是可能出现无法布通的情况。这种情况下就需要修改RTL级设计。</p>
 <p>因此，如果可以在RTL编码 阶段考虑代码可能对布线产生的影响，就可能避免最后出现无法布通的情况。</p>
@@ -459,7 +459,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RTL编码中考虑面积"><span class="nav-number">1.</span> <span class="nav-text">¶RTL编码中考虑面积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTL编码中考虑功耗"><span class="nav-number">2.</span> <span class="nav-text">¶RTL编码中考虑功耗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTL中考虑布线问题"><span class="nav-number">3.</span> <span class="nav-text">¶RTL中考虑布线问题</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RTL编码中考虑面积"><span class="nav-number">1.</span> <span class="nav-text">RTL编码中考虑面积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTL编码中考虑功耗"><span class="nav-number">2.</span> <span class="nav-text">RTL编码中考虑功耗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RTL中考虑布线问题"><span class="nav-number">3.</span> <span class="nav-text">RTL中考虑布线问题</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

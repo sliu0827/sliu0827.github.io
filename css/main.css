@@ -186,28 +186,28 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Times New Roman', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: 'Cinzel Decorative', 'Times New Roman', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-weight: bold;
   line-height: 1.5;
   margin: 20px 0 15px;
 }
 h1 {
-  font-size: 1.5em;
+  font-size: 1.175em;
 }
 h2 {
-  font-size: 1.375em;
+  font-size: 1.05em;
 }
 h3 {
-  font-size: 1.25em;
+  font-size: 0.925em;
 }
 h4 {
-  font-size: 1.125em;
+  font-size: 0.8em;
 }
 h5 {
-  font-size: 1em;
+  font-size: 0.675em;
 }
 h6 {
-  font-size: 0.875em;
+  font-size: 0.55em;
 }
 p {
   margin: 0 0 20px 0;
@@ -1201,7 +1201,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #527eff;
+  background: #fff4ff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1521,7 +1521,7 @@ pre .javascript .function {
   }
 }
 .post-body {
-  font-family: 'Times New Roman', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: '思源宋体', 'Times New Roman', "PingFang SC", "Microsoft YaHei", sans-serif;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
@@ -1823,7 +1823,7 @@ pre .javascript .function {
 }
 .posts-expand .post-meta {
   color: #999;
-  font-family: 'Times New Roman', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: '思源宋体', 'Times New Roman', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 0.75em;
   margin: 3px 0 60px 0;
   text-align: center;
@@ -2309,6 +2309,7 @@ hr {
   background: var(--content-bg-color);
 }
 .header-inner {
+  color: #66b2ff;
   align-items: center;
   display: flex;
   padding: 20px 0;
@@ -2592,7 +2593,7 @@ body {
   background-color: #f2f2f2;
 }
 .posts-expand .post-title {
-  color: #333;
+  color: #8b7355;
   font-weight: 700;
   line-height: 1.7;
   margin: 0;
@@ -2601,4 +2602,24 @@ body {
   margin: 0;
   color: #999;
   font-size: 12px;
+}
+@media (min-width: 992px) {
+  .post-body {
+    text-align: justify;
+  }
+}
+@media (max-width: 991px) {
+  .post-body {
+    text-align: justify;
+  }
+}
+.post-body h1,
+.post-body h2 {
+  color: #00bfff;
+}
+.post-body hr {
+  margin: 0px 0 0px 0;
+  height: 1px;
+  background-color: #666;
+  text-align: center;
 }
