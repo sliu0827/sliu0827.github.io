@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.sliu.info/about/index.html</loc>
+    <loc>https://www.sliu.info/links/index.html</loc>
     
-    <lastmod>2020-04-19T04:23:32.365Z</lastmod>
+    <lastmod>2020-04-19T04:34:28.109Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://www.sliu.info/links/index.html</loc>
+    <loc>https://www.sliu.info/2020/2020-02-12-SRAM%E5%9F%BA%E7%A1%80/</loc>
     
-    <lastmod>2020-04-19T04:22:22.793Z</lastmod>
+    <lastmod>2020-04-19T04:31:37.074Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.sliu.info/about/index.html</loc>
+    
+    <lastmod>2020-04-19T04:23:32.365Z</lastmod>
     
   </url>
   
@@ -201,13 +208,6 @@
     <loc>https://www.sliu.info/2020/2020-02-18-RTL%E7%BC%96%E7%A0%81%E4%B8%AD%E8%80%83%E8%99%91%E5%BB%B6%E6%97%B6/</loc>
     
     <lastmod>2020-02-28T16:07:14.031Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.sliu.info/2020/2020-02-12-SRAM%E5%9F%BA%E7%A1%80/</loc>
-    
-    <lastmod>2020-02-28T16:07:14.030Z</lastmod>
     
   </url>
   
