@@ -276,87 +276,94 @@
       
         <p>随着设计变得越来越大，要产生一个完整的激励来测试设计的功能也变得越来越困难。随机-约束，两个词组合在一起就构成了目前动态仿真验证的主流方法。</p>
 <a id="more"></a>
-
 <p>随机约束测试（CRT，Constrained-Random Test）即能够产生你感兴趣的、你想不到的的测试向量，通过回归测试、替换随机种子的方式来提高单位测试用例的覆盖率收集效率。</p>
 <p>面向DUT的随机激励产生过程中，为了符合协议、满足测试需求，我们需要添加一些“约束”，从而系统地组织随机变量。同时，采用类来作为载体来容纳这些变量和它们之间的约束，类的成员变量均可声明为“随机”属性，用rand或者randc来表示。</p>
-<h2 id="随机变量"><a href="#随机变量" class="headerlink" title="随机变量"></a>随机变量</h2><hr>
-<h3 id="修饰符rand-randc"><a href="#修饰符rand-randc" class="headerlink" title="修饰符rand/randc"></a>修饰符rand/randc</h3><ul>
-<li><p>rand修饰符，表示在可生成的范围内，每个值的可能性是相同的</p>
+<h2 id="随机变量"><a class="header-anchor" href="#随机变量">¶</a>随机变量</h2>
+<hr>
+<h3 id="修饰符rand-randc"><a class="header-anchor" href="#修饰符rand-randc">¶</a>修饰符rand/randc</h3>
+<ul>
+<li>
+<p>rand修饰符，表示在可生成的范围内，每个值的可能性是相同的</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">rand</span> <span class="keyword">bit</span> [<span class="number">7</span>:<span class="number">0</span>] y;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>randc修饰符，其值会随机并且遍历其可取值范围。</p>
+<li>
+<p>randc修饰符，其值会随机并且遍历其可取值范围。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">randc</span> <span class="keyword">bit</span> [<span class="number">1</span>:<span class="number">0</span>] y;</span><br></pre></td></tr></table></figure>
-
 <p><img src="https://i.loli.net/2020/04/16/GMmdreoPKTt5N6u.png" alt="SV随机约束5.1.png"></p>
 </li>
 </ul>
-<h3 id="使用范围"><a href="#使用范围" class="headerlink" title="使用范围"></a>使用范围</h3><ul>
+<h3 id="使用范围"><a class="header-anchor" href="#使用范围">¶</a>使用范围</h3>
+<ul>
 <li>任何类中的整形（bit/byte/int）变量都可以声明为rand/randc；</li>
 <li>定长数组、动态数组、关联数组和队列都可以声明为rand/randc，可以对动态数组和队列的长度加以约束；</li>
 <li>指向对象的句柄成员，也可以声明为rand(不能被声明为randc)，随机时该句柄指向对象中的随机变量也会一并被随机；</li>
 <li>非组合型结构体可以声明为rand，非组合型的成员可以声明为rand/randc；</li>
 </ul>
-<h2 id="随机约束"><a href="#随机约束" class="headerlink" title="随机约束"></a>随机约束</h2><hr>
+<h2 id="随机约束"><a class="header-anchor" href="#随机约束">¶</a>随机约束</h2>
+<hr>
 <p>没有约束的随机变量会包含许多无效的和非法的值，这会使得有效激励的产生变得低效。因此，需要使用约束块来定义随机变量的约束关系。</p>
-<h3 id="约束块方法"><a href="#约束块方法" class="headerlink" title="约束块方法"></a>约束块方法</h3><ul>
-<li><p>成员集合，约束块支持整形通过set操作符来设置他们的可取值范围</p>
+<h3 id="约束块方法"><a class="header-anchor" href="#约束块方法">¶</a>约束块方法</h3>
+<ul>
+<li>
+<p>成员集合，约束块支持整形通过set操作符来设置他们的可取值范围</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">rand</span> <span class="keyword">integer</span> x, y, z;</span><br><span class="line"><span class="keyword">constraint</span> c1 &#123;x <span class="keyword">inside</span> &#123;<span class="number">3</span>, <span class="number">5</span>, [<span class="number">9</span>:<span class="number">15</span>], [<span class="number">24</span>:<span class="number">32</span>], [y:<span class="number">2</span>*y], z&#125;;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">rand</span> <span class="keyword">integer</span> a, b, c;</span><br><span class="line"><span class="keyword">constraint</span> c2 &#123;a <span class="keyword">inside</span> &#123;b, c&#125;;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">integer</span> fives[<span class="number">4</span>] = '&#123; <span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>, <span class="number">20</span> &#125;;</span><br><span class="line"><span class="keyword">rand</span> <span class="keyword">integer</span> v;</span><br><span class="line"><span class="keyword">constraint</span> c3 &#123; v <span class="keyword">inside</span> &#123;fives&#125;; &#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>权重分布，可支持设置可取值的同时为其设置随机时的权重</p>
+<li>
+<p>权重分布，可支持设置可取值的同时为其设置随机时的权重</p>
 <p>使用:=操作符，表示每个值的固定权重值；使用:/操作符，表示权重会平均分配到每一个值。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//x在100,101,102,200和300的权重是1-1-1-2-5。</span></span><br><span class="line">x <span class="keyword">dist</span> &#123; [<span class="number">100</span>:<span class="number">102</span>] := <span class="number">1</span>, <span class="number">200</span> := <span class="number">2</span>, <span class="number">300</span> := <span class="number">5</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//x在100,101,102,200和300的权重是1/3-1/3-1/3-2-5。</span></span><br><span class="line">x <span class="keyword">dist</span> &#123; [<span class="number">100</span>:<span class="number">102</span>] :/ <span class="number">1</span>, <span class="number">200</span> := <span class="number">2</span>, <span class="number">300</span> := <span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>唯一标识，unique可以用来约束一组变量，使其在随机后变量之间不会有相同的数值</p>
+<li>
+<p>唯一标识，unique可以用来约束一组变量，使其在随机后变量之间不会有相同的数值</p>
 </li>
-<li><p>条件约束，可以使用if-else或者-&gt;操作符来表示条件约束</p>
+<li>
+<p>条件约束，可以使用if-else或者-&gt;操作符来表示条件约束</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constraint</span> c1&#123;</span><br><span class="line">    mode == little -&gt; len &lt; <span class="number">10</span>;</span><br><span class="line">    mode == big -&gt; len &gt; <span class="number">100</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bit</span> [<span class="number">3</span>:<span class="number">0</span>] a, b;</span><br><span class="line"><span class="keyword">constraint</span> c2 &#123; (a == <span class="number">0</span>) -&gt; (b == <span class="number">1</span>); &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">constraint</span> c3&#123;</span><br><span class="line">    <span class="keyword">if</span> (mode == little)</span><br><span class="line">        len &lt; <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (mode == big)</span><br><span class="line">        len &gt; <span class="number">100</span>;&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>迭代约束，foreach可以用来迭代约束数组中的元素，这些数组可以是定长数组、动态数组、关联数组或者队列；</p>
+<li>
+<p>迭代约束，foreach可以用来迭代约束数组中的元素，这些数组可以是定长数组、动态数组、关联数组或者队列；</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> C;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">byte</span> A[] ;</span><br><span class="line">  <span class="keyword">constraint</span> C1 &#123; <span class="keyword">foreach</span> (A[i]) A[i] <span class="keyword">inside</span> </span><br><span class="line">                  &#123;<span class="number">2</span>,<span class="number">4</span>,<span class="number">8</span>,<span class="number">16</span>&#125;;&#125;</span><br><span class="line">  <span class="keyword">constraint</span> C2 &#123; <span class="keyword">foreach</span> (A[j]) A[j] &gt; <span class="number">2</span> * j; &#125;</span><br><span class="line"><span class="keyword">endclass</span></span><br></pre></td></tr></table></figure>
-
 <p>对于某些数组，例如动态数组，也可以使用缩减的方法做迭代约束。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> C;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">bit</span> [<span class="number">7</span>:<span class="number">0</span>] A[] ;</span><br><span class="line">  <span class="keyword">constraint</span> c1 &#123; A<span class="variable">.size</span>() == <span class="number">5</span>; &#125;</span><br><span class="line">  <span class="keyword">constraint</span> c2 &#123; A<span class="variable">.sum</span>() &lt; <span class="number">1000</span>; &#125;</span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//A[0] + A[1] + A[2] + A[3] + A[4] &lt; 1000</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>函数调用，可在约束块中调用函数来描述约束。例如，计算一个合并数组中的“1”的数量：</p>
+<li>
+<p>函数调用，可在约束块中调用函数来描述约束。例如，计算一个合并数组中的“1”的数量：</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="keyword">int</span> count_ones ( <span class="keyword">bit</span> [<span class="number">9</span>:<span class="number">0</span>] w );</span><br><span class="line">  <span class="keyword">for</span>( count_ones = <span class="number">0</span>; w != <span class="number">0</span>; w = w &gt;&gt; <span class="number">1</span> )</span><br><span class="line">  count_ones += w &amp; <span class="number">1'b1</span>;</span><br><span class="line"><span class="keyword">endfunction</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//可以在约束块中调用该函数来描述约束</span></span><br><span class="line"><span class="keyword">constraint</span> C1 &#123; length == count_ones( v ) ; &#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>软约束，没有soft描述时默认为硬约束，当约束冲突时，硬约束可以“覆盖”软约束，并且不会导致随机数产生的失败。</p>
+<li>
+<p>软约束，没有soft描述时默认为硬约束，当约束冲突时，硬约束可以“覆盖”软约束，并且不会导致随机数产生的失败。</p>
 </li>
 </ul>
-<h2 id="约束控制"><a href="#约束控制" class="headerlink" title="约束控制"></a>约束控制</h2><hr>
-<h3 id="随机方法randomize"><a href="#随机方法randomize" class="headerlink" title="随机方法randomize()"></a>随机方法randomize()</h3><p>在类中声明的随机变量，需要伴随着<strong>SV类的内建方法randomize()</strong>的调用。</p>
+<h2 id="约束控制"><a class="header-anchor" href="#约束控制">¶</a>约束控制</h2>
+<hr>
+<h3 id="随机方法randomize"><a class="header-anchor" href="#随机方法randomize">¶</a>随机方法randomize()</h3>
+<p>在类中声明的随机变量，需要伴随着**SV类的内建方法randomize()**的调用。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">virtual</span> <span class="keyword">function</span> <span class="keyword">int</span> randomize();</span><br></pre></td></tr></table></figure>
-
 <p>如果随机化成功则返回1，如果失败则返回0。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> SimpleSum;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">bit</span> [<span class="number">7</span>:<span class="number">0</span>] x, y, z;</span><br><span class="line">  <span class="keyword">constraint</span> c &#123;z == x + y;&#125;</span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line">SimpleSum p = <span class="keyword">new</span>;</span><br><span class="line"><span class="keyword">int</span> success = p<span class="variable">.randomize</span>();</span><br><span class="line"><span class="keyword">if</span> (success == <span class="number">1</span> ) ...</span><br></pre></td></tr></table></figure>
-
 <p><strong>内嵌约束</strong>：在调用类方法randomize()时可以伴随着with来添加额外的约束。</p>
 <p>内嵌约束可能存在指向模糊的问题。例如以下：</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> C1;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">integer</span> x;</span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"><span class="keyword">class</span> C2;</span><br><span class="line">  <span class="keyword">integer</span> x;</span><br><span class="line">  <span class="keyword">integer</span> y;</span><br><span class="line">  <span class="keyword">task</span> doit(C1 f, <span class="keyword">integer</span> x, <span class="keyword">integer</span> z);</span><br><span class="line">    <span class="keyword">int</span> result;</span><br><span class="line">    result = f<span class="variable">.randomize</span>() <span class="keyword">with</span> &#123;x &lt; y + z;&#125;;</span><br><span class="line">  <span class="keyword">endtask</span></span><br><span class="line"><span class="keyword">endclass</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="内嵌约束指向模糊问题"><a href="#内嵌约束指向模糊问题" class="headerlink" title="内嵌约束指向模糊问题"></a>内嵌约束指向模糊问题</h3><p><strong>解决指向模糊的问题，可以在随机时在with后面添加指定对象的成员变量</strong>，不在其中的则是该对象以外的变量。</p>
+<h3 id="内嵌约束指向模糊问题"><a class="header-anchor" href="#内嵌约束指向模糊问题">¶</a>内嵌约束指向模糊问题</h3>
+<p><strong>解决指向模糊的问题，可以在随机时在with后面添加指定对象的成员变量</strong>，不在其中的则是该对象以外的变量。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> C;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">integer</span> x;</span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"><span class="keyword">function</span> <span class="keyword">int</span> F(C obj, <span class="keyword">integer</span> y);</span><br><span class="line">  F = obj<span class="variable">.randomize</span>() <span class="keyword">with</span> (x) &#123; x &lt; y; &#125;;</span><br><span class="line"><span class="keyword">endfunction</span></span><br></pre></td></tr></table></figure>
-
 <p><strong>可以通过local::的域索引方式来明确随机变量的指向</strong>，即local::指向的变量会在包含randomize()方法的对象中。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> C;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">integer</span> x;</span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line"><span class="keyword">function</span> <span class="keyword">int</span> F(C obj, <span class="keyword">integer</span> x);</span><br><span class="line">  F = obj<span class="variable">.randomize</span>() <span class="keyword">with</span> &#123; x &lt; <span class="keyword">local</span>::x; &#125;;</span><br><span class="line"><span class="keyword">endfunction</span></span><br><span class="line"><span class="comment">//第一个x指向对象c中的成员变量x，第二个x指向c对象以外的域</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="随机控制"><a href="#随机控制" class="headerlink" title="随机控制"></a>随机控制</h2><hr>
+<h2 id="随机控制"><a class="header-anchor" href="#随机控制">¶</a>随机控制</h2>
+<hr>
 <p><strong>随机变量的控制</strong></p>
 <p>rand_mode可以用来使能或者禁止随机变量。</p>
 <p>可以就单个随机变量调用其rand_mode，或者对整个对象调用rand_mode来控制其中所有的随机变量。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span> object[<span class="variable">.random_variable</span>]::rand_mode( <span class="keyword">bit</span> on_off );</span><br><span class="line"><span class="keyword">function</span> <span class="keyword">int</span> object<span class="variable">.random_variable</span>::rand_mode();</span><br></pre></td></tr></table></figure>
-
 <p><strong>约束块的控制</strong></p>
 <p>通过约束控制函数constraint_mode来使能或者关闭某些约束块。</p>
 <p>一些约束块或者某个类的约束块集合也可以单个控制或者集体控制。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span> object[<span class="variable">.constraint_identifier</span>]::constraint_mode(<span class="keyword">bit</span> on_off );</span><br><span class="line"><span class="keyword">function</span> <span class="keyword">int</span> object<span class="variable">.constraint_identifier</span>::constraint_mode();</span><br></pre></td></tr></table></figure>
-
 <p><strong>内嵌变量控制</strong></p>
 <p>在使用类的随机化函数randomize()时，如果伴有参数，那么只会随机化这些变量，而其余变量无论是否之前被声明为rand/randc，都将不会参与到随机化当中。</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> CA;</span><br><span class="line">  <span class="keyword">rand</span> <span class="keyword">byte</span> x, y;</span><br><span class="line">  <span class="keyword">byte</span> v, w;</span><br><span class="line">  <span class="keyword">constraint</span> c1 &#123; x &lt; v &amp;&amp; y &gt; w； &#125;;</span><br><span class="line"><span class="keyword">endclass</span></span><br><span class="line">CA a = <span class="keyword">new</span>;</span><br><span class="line">a<span class="variable">.randomize</span>(); <span class="comment">// random variables: x, y </span></span><br><span class="line">a<span class="variable">.randomize</span>( x ); <span class="comment">// random variables: x </span></span><br><span class="line">a<span class="variable">.randomize</span>( v, w ); <span class="comment">// random variables: v, w</span></span><br><span class="line">a<span class="variable">.randomize</span>( w, x ); <span class="comment">// random variables: w, x</span></span><br></pre></td></tr></table></figure>
-
 <hr>
-<p><em>Reference</em>： </p>
+<p><em>Reference</em>：</p>
 <p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
 
     </div>
@@ -499,7 +506,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#随机变量"><span class="nav-number">1.</span> <span class="nav-text">随机变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修饰符rand-randc"><span class="nav-number">1.1.</span> <span class="nav-text">修饰符rand&#x2F;randc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用范围"><span class="nav-number">1.2.</span> <span class="nav-text">使用范围</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机约束"><span class="nav-number">2.</span> <span class="nav-text">随机约束</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#约束块方法"><span class="nav-number">2.1.</span> <span class="nav-text">约束块方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#约束控制"><span class="nav-number">3.</span> <span class="nav-text">约束控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#随机方法randomize"><span class="nav-number">3.1.</span> <span class="nav-text">随机方法randomize()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内嵌约束指向模糊问题"><span class="nav-number">3.2.</span> <span class="nav-text">内嵌约束指向模糊问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机控制"><span class="nav-number">4.</span> <span class="nav-text">随机控制</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#随机变量"><span class="nav-number">1.</span> <span class="nav-text">¶随机变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修饰符rand-randc"><span class="nav-number">1.1.</span> <span class="nav-text">¶修饰符rand&#x2F;randc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用范围"><span class="nav-number">1.2.</span> <span class="nav-text">¶使用范围</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机约束"><span class="nav-number">2.</span> <span class="nav-text">¶随机约束</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#约束块方法"><span class="nav-number">2.1.</span> <span class="nav-text">¶约束块方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#约束控制"><span class="nav-number">3.</span> <span class="nav-text">¶约束控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#随机方法randomize"><span class="nav-number">3.1.</span> <span class="nav-text">¶随机方法randomize()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内嵌约束指向模糊问题"><span class="nav-number">3.2.</span> <span class="nav-text">¶内嵌约束指向模糊问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机控制"><span class="nav-number">4.</span> <span class="nav-text">¶随机控制</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

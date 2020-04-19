@@ -24,12 +24,12 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="CMOS设计指标设计指标：  成本：用复杂性和面积来表示 完整性和稳定性：用静态（即稳态）特性来表示 性能：由动态（即瞬态）响应决定 能量效率：由能耗和功耗决定">
+  <meta name="description" content="CMOS设计指标 设计指标：  成本：用复杂性和面积来表示 完整性和稳定性：用静态（即稳态）特性来表示 性能：由动态（即瞬态）响应决定 能量效率：由能耗和功耗决定">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CMOS反相器介绍">
 <meta property="og:url" content="https://www.sliu.info/2020/2020-02-08-CMOS%E5%8F%8D%E7%9B%B8%E5%99%A8%E4%BB%8B%E7%BB%8D/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="CMOS设计指标设计指标：  成本：用复杂性和面积来表示 完整性和稳定性：用静态（即稳态）特性来表示 性能：由动态（即瞬态）响应决定 能量效率：由能耗和功耗决定">
+<meta property="og:description" content="CMOS设计指标 设计指标：  成本：用复杂性和面积来表示 完整性和稳定性：用静态（即稳态）特性来表示 性能：由动态（即瞬态）响应决定 能量效率：由能耗和功耗决定">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/02/27/Vx1z9HeK3aXd67o.png">
 <meta property="og:image" content="https://i.loli.net/2020/02/27/1vcobZewWzkRTu3.png">
@@ -260,7 +260,7 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 834</span>
+		  </span>本文字数: 836</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
@@ -277,7 +277,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="CMOS设计指标"><a href="#CMOS设计指标" class="headerlink" title="CMOS设计指标"></a>CMOS设计指标</h1><p><strong>设计指标：</strong></p>
+        <h1>CMOS设计指标</h1>
+<p><strong>设计指标：</strong></p>
 <ul>
 <li>成本：用复杂性和面积来表示</li>
 <li>完整性和稳定性：用静态（即稳态）特性来表示</li>
@@ -285,8 +286,8 @@
 <li>能量效率：由能耗和功耗决定</li>
 </ul>
 <a id="more"></a>
-
-<h1 id="静态CMOS反相器"><a href="#静态CMOS反相器" class="headerlink" title="静态CMOS反相器"></a>静态CMOS反相器</h1><p><strong>特性：</strong></p>
+<h1>静态CMOS反相器</h1>
+<p><strong>特性：</strong></p>
 <ul>
 <li>输出高电平和低电平分别为VDD和GND。没有阈值损失，通过PMOS传高电平VDD，通过NMOS传低电平GND。</li>
 <li>无比逻辑。晶体管的尺寸可采用最小尺寸。</li>
@@ -297,28 +298,46 @@
 <p><strong>电压传输特性（VTC）：</strong></p>
 <p><img src="https://i.loli.net/2020/02/27/Vx1z9HeK3aXd67o.png" alt="CMOS1.1.png"></p>
 <ul>
-<li>PMOS的静态特性曲线可由镜像平移得到，观察两种MOS管的VTC曲线可得到CMOS反相器的传输特性<br><img src="https://i.loli.net/2020/02/27/1vcobZewWzkRTu3.png" alt="CMOS1.2.png"></li>
+<li>PMOS的静态特性曲线可由镜像平移得到，观察两种MOS管的VTC曲线可得到CMOS反相器的传输特性<br>
+<img src="https://i.loli.net/2020/02/27/1vcobZewWzkRTu3.png" alt="CMOS1.2.png"></li>
 <li>瞬态特性，主要由CL决定。CL主要包括NMOS和PMOS的漏扩散电容、连线电容和扇出门的输入电容。</li>
-<li>低到高，门的响应时间由通过RP充电电容CL决定，传播延时正比于时间常数RPCL：<br>快速门设计方法：减小输出电容；减小晶体管导通电阻（加大器件的W/L）</li>
+<li>低到高，门的响应时间由通过RP充电电容CL决定，传播延时正比于时间常数RPCL：<br>
+快速门设计方法：减小输出电容；减小晶体管导通电阻（加大器件的W/L）</li>
 <li>高到低，门的响应时间由电容CL通过电阻Rn对地放电决定，传播延时正比于时间常数RnCL</li>
 </ul>
-<h1 id="CMOS反相器稳定性的评估——静态特性"><a href="#CMOS反相器稳定性的评估——静态特性" class="headerlink" title="CMOS反相器稳定性的评估——静态特性"></a>CMOS反相器稳定性的评估——静态特性</h1><p><strong>开关阈值：VM定义为Vin=Vout的点。</strong></p>
+<h1>CMOS反相器稳定性的评估——静态特性</h1>
+<p><strong>开关阈值：VM定义为Vin=Vout的点。</strong></p>
 <p>一般希望开关阈值VM处于电压摆幅的中点（VDD/2）附近，这样可使高噪声容限和低噪声容限具有相近的值。</p>
 <ul>
-<li><p>设计技术：<br>为使得噪声容限最大并得到对称的特性，建议使PMOS比NMOS部分宽以均衡晶体管的驱动强度。<br><img src="https://i.loli.net/2020/02/27/d63gQvVMnLyRUAG.png" alt="CMOS1.3.png"></p>
+<li>
+<p>设计技术：<br>
+为使得噪声容限最大并得到对称的特性，建议使PMOS比NMOS部分宽以均衡晶体管的驱动强度。<br>
+<img src="https://i.loli.net/2020/02/27/d63gQvVMnLyRUAG.png" alt="CMOS1.3.png"></p>
 </li>
-<li><p>VM对器件比值的变化不敏感<br>设计中使PMOS管的宽度小于完全对称时所要求的值是可以接受的</p>
+<li>
+<p>VM对器件比值的变化不敏感<br>
+设计中使PMOS管的宽度小于完全对称时所要求的值是可以接受的</p>
 </li>
-<li><p>改变Wp和Wn比值的影响使VTC的过渡区平移<br>增加PMOS或NMOS宽度分别使VM移向VDD或GND。这种不对称设计在某些设计中使所期望的。</p>
+<li>
+<p>改变Wp和Wn比值的影响使VTC的过渡区平移<br>
+增加PMOS或NMOS宽度分别使VM移向VDD或GND。这种不对称设计在某些设计中使所期望的。</p>
 </li>
 </ul>
 <p><strong>噪声容限</strong></p>
 <ul>
-<li><p>对VTC曲线做逐段近似简化，得出VIH和VIL，推导出高电平噪声容限和低电平噪声容限：<br>NMH = VDD - VIH , NML = VIL<br><img src="https://i.loli.net/2020/02/27/17zsQ6Tu9HjbrhB.png" alt="CMOS1.4.png"></p>
+<li>
+<p>对VTC曲线做逐段近似简化，得出VIH和VIL，推导出高电平噪声容限和低电平噪声容限：<br>
+NMH = VDD - VIH , NML = VIL<br>
+<img src="https://i.loli.net/2020/02/27/17zsQ6Tu9HjbrhB.png" alt="CMOS1.4.png"></p>
 </li>
-<li><p>器件参数的变化<br>静态CMOS反相器对这些变化不敏感，可以在一个很宽的工作条件下工作。</p>
+<li>
+<p>器件参数的变化<br>
+静态CMOS反相器对这些变化不敏感，可以在一个很宽的工作条件下工作。</p>
 </li>
-<li><p>降低电源电压（在接近100mV的时候，门的特性变差）<br>不加区分的降低电源电压虽然对减少能耗有正面影响，但会使门的延时加大；<br>一旦电源电压和本征电压（阈值电压）变得可以比拟，DC特性对器件参数的变化会变得更加敏感；降低电源电压意味着减小信号摆幅，可以帮助减小内部噪声，但它使设计对并不减小的外部噪声源更加敏感</p>
+<li>
+<p>降低电源电压（在接近100mV的时候，门的特性变差）<br>
+不加区分的降低电源电压虽然对减少能耗有正面影响，但会使门的延时加大；<br>
+一旦电源电压和本征电压（阈值电压）变得可以比拟，DC特性对器件参数的变化会变得更加敏感；降低电源电压意味着减小信号摆幅，可以帮助减小内部噪声，但它使设计对并不减小的外部噪声源更加敏感</p>
 </li>
 </ul>
 <p>参考资料：</p>
@@ -466,7 +485,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CMOS设计指标"><span class="nav-number">1.</span> <span class="nav-text">CMOS设计指标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#静态CMOS反相器"><span class="nav-number">2.</span> <span class="nav-text">静态CMOS反相器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CMOS反相器稳定性的评估——静态特性"><span class="nav-number">3.</span> <span class="nav-text">CMOS反相器稳定性的评估——静态特性</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">CMOS设计指标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">静态CMOS反相器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">CMOS反相器稳定性的评估——静态特性</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

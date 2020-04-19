@@ -24,12 +24,12 @@
     var CONFIG = {"hostname":"www.sliu.info","root":"/","scheme":"Mist","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="RTL级设计的评判标准时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配  指导原则：面积与速度互换 、乒乓操作、 流水线设计">
+  <meta name="description" content="RTL级设计的评判标准 时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配 指导原则：面积与速度互换 、乒乓操作、 流水线设计">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RTL设计指导原则">
 <meta property="og:url" content="https://www.sliu.info/2020/2020-02-28-RTL-%E8%AE%BE%E8%AE%A1%E6%8C%87%E5%AF%BC%E5%8E%9F%E5%88%99/index.html">
 <meta property="og:site_name" content="Shuang&#39;Blog">
-<meta property="og:description" content="RTL级设计的评判标准时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配  指导原则：面积与速度互换 、乒乓操作、 流水线设计">
+<meta property="og:description" content="RTL级设计的评判标准 时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配 指导原则：面积与速度互换 、乒乓操作、 流水线设计">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/02/28/iu39eUqEYCwoOlV.png">
 <meta property="og:image" content="https://i.loli.net/2020/02/28/AaFQlTdCLjXwqEn.png">
@@ -281,18 +281,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="RTL级设计的评判标准"><a href="#RTL级设计的评判标准" class="headerlink" title="RTL级设计的评判标准"></a>RTL级设计的评判标准</h1><p>时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配</p>
-<p> <strong>指导原则：面积与速度互换 、乒乓操作、 流水线设计</strong></p>
+        <h1>RTL级设计的评判标准</h1>
+<p>时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计、是否与所用EDA工具匹配</p>
+<p><strong>指导原则：面积与速度互换 、乒乓操作、 流水线设计</strong></p>
  <a id="more"></a>
-
-<h1 id="面积与速度互换"><a href="#面积与速度互换" class="headerlink" title="面积与速度互换"></a>面积与速度互换</h1><p><strong>面积：</strong>一个设计所消耗的目标器件的硬件资源数量或者ASIC芯片的面积</p>
-<p><strong>速度：</strong>设计在芯片上稳定运行时所能够达到的最高频率，这个频率是有设计的时序状况决定</p>
+<h1>面积与速度互换</h1>
+<p>**面积：**一个设计所消耗的目标器件的硬件资源数量或者ASIC芯片的面积</p>
+<p>**速度：**设计在芯片上稳定运行时所能够达到的最高频率，这个频率是有设计的时序状况决定</p>
 <p><em>时钟周期、PAD to PAD Time、Clock Setup Time、Clock Hold Time、Clock-to-Output Delay</em></p>
-<h1 id="面积与速度的平衡互换原则"><a href="#面积与速度的平衡互换原则" class="headerlink" title="面积与速度的平衡互换原则"></a>面积与速度的平衡互换原则</h1><p><strong>设计面积小与运行频率高是对立统一的矛盾体。</strong>科学的设计目标是：</p>
+<h1>面积与速度的平衡互换原则</h1>
+<p>**设计面积小与运行频率高是对立统一的矛盾体。**科学的设计目标是：</p>
 <ul>
-<li><p>在满足设计时序要去（包含对设计最高频率的要求）的前提下，占用最小的芯片面积；</p>
+<li>
+<p>在满足设计时序要去（包含对设计最高频率的要求）的前提下，占用最小的芯片面积；</p>
 </li>
-<li><p>在所规定的面积下，使设计的时序余量更大，频率更高</p>
+<li>
+<p>在所规定的面积下，使设计的时序余量更大，频率更高</p>
 </li>
 </ul>
 <p><strong>设计如果时序余量较大，所能跑的频率远远高于设计要求：</strong></p>
@@ -301,16 +305,21 @@
 </ul>
 <p><strong>设计的时序要求很高，普通方法达不到设计频率：</strong></p>
 <ul>
-<li><p>可以通过将数据流串并转换；</p>
+<li>
+<p>可以通过将数据流串并转换；</p>
 </li>
-<li><p>并行复制多个操作模块；</p>
+<li>
+<p>并行复制多个操作模块；</p>
 </li>
-<li><p>对整个设计采取乒乓操作和串并转换的细想进行处理；</p>
+<li>
+<p>对整个设计采取乒乓操作和串并转换的细想进行处理；</p>
 </li>
-<li><p>在芯片输出模块处，在对数进行“并串转换”</p>
+<li>
+<p>在芯片输出模块处，在对数进行“并串转换”</p>
 </li>
 </ul>
-<h1 id="乒乓操作"><a href="#乒乓操作" class="headerlink" title="乒乓操作"></a>乒乓操作</h1><p>“乒乓操作”是一个常常应用于数据流控制的处理技巧</p>
+<h1>乒乓操作</h1>
+<p>“乒乓操作”是一个常常应用于数据流控制的处理技巧</p>
 <p><em>数据缓冲模块可以为常用的存储的单元：双口RAM 单口RAM FIFO</em></p>
 <p><img src="https://i.loli.net/2020/02/28/iu39eUqEYCwoOlV.png" alt="RTL4.1.png"></p>
 <blockquote>
@@ -321,13 +330,14 @@
 </blockquote>
 <p><strong>特点：</strong></p>
 <p><img src="https://i.loli.net/2020/02/28/AaFQlTdCLjXwqEn.png" alt="RTL4.2.png"></p>
-<p>乒乓操作的最大特点是<strong>通过“输入数据选择单元”和“输出数据选择单元”按节拍、相互配合的切换，将经过缓冲的数据流没有停顿地送到“数据流运算处理模块”进行运算与处理。</strong>把乒乓操作模块当做一个整体，站在这个模块的两端看数据，输入数据流和输出数据流都是连续不断的，没有任何停顿，因此非常适合对数据流进行流水线式处理。所以乒乓操作<strong>常常应用于流水线式算法，完成数据的无缝缓冲与处理。</strong></p>
+<p>乒乓操作的最大特点是<strong>通过“输入数据选择单元”和“输出数据选择单元”按节拍、相互配合的切换，将经过缓冲的数据流没有停顿地送到“数据流运算处理模块”进行运算与处理。<strong>把乒乓操作模块当做一个整体，站在这个模块的两端看数据，输入数据流和输出数据流都是连续不断的，没有任何停顿，因此非常适合对数据流进行流水线式处理。所以乒乓操作</strong>常常应用于流水线式算法，完成数据的无缝缓冲与处理。</strong></p>
 <p>乒乓操作的第二个优点是可以<strong>节约缓冲区空间</strong>。另外，巧妙运用乒乓操作还可以达到用低速模块处理高速数据流的效果。如视频中实例展示，通过乒乓操作实现低速模块处理高速数据的实质是：通过DPRAM这种缓存单元实现了数据流的串并转换，并行用“数据预处理模块1”和“数据预处理模块2”处理分流的数据，<strong>是面积与速度互换原则的体现！</strong></p>
 <p>通过乒乓操作实现低速模块处理高速数据的实质如下图所示。</p>
 <p><img src="https://i.loli.net/2020/02/28/kX3Fbt2cgxhCAdO.png" alt="RTL4.3.png"></p>
 <p>通过DPRAM这种缓存单元实现了数据流的串并转换，并行用“数据预处理模块1”和“数据预处理模块2”处理分流的数据，是面积与速度互换原则的体现。</p>
-<h1 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h1><p><strong>流水线的参数设计中，系统时钟取决于最慢的流水线级的延时。</strong></p>
-<p>最长的组合逻辑链 –&gt; 最大的td值 –&gt; 系统时钟频率上限 –&gt; 系统速度上限</p>
+<h1>流水线</h1>
+<p><strong>流水线的参数设计中，系统时钟取决于最慢的流水线级的延时。</strong></p>
+<p>最长的组合逻辑链 --&gt; 最大的td值 --&gt; 系统时钟频率上限 --&gt; 系统速度上限</p>
 <p><strong>组合逻辑链的并行闲置：</strong></p>
 <p><img src="https://i.loli.net/2020/02/28/M4oCi1VAQPHOXlk.png" alt="RTL4.4.png"></p>
 <p><strong>组合逻辑链的串行闲置：</strong></p>
@@ -336,7 +346,7 @@
 <p>组合逻辑的延时等于加法器，求绝对值，求对数的延时之和。如若插入两级寄存器之后，组合逻辑的延时等于三者绝对值的最大值，且每个时刻三部分都在运行。对比发现，流水线的工作方式可以充分提高电路运行的频率，理想情况下 ，本例中，运行频率可以提升至原来的三倍。</p>
 <p><img src="https://i.loli.net/2020/02/28/6wUtXksvzRYJ49c.png" alt="RTL4.6.png"></p>
 <p>四级流水线结构</p>
-<p> <img src="https://i.loli.net/2020/02/28/ybFXMzDqeUkifY9.png" alt="RTL4.7.png"></p>
+<p><img src="https://i.loli.net/2020/02/28/ybFXMzDqeUkifY9.png" alt="RTL4.7.png"></p>
 <p>四级流水线比较</p>
 <p><img src="https://i.loli.net/2020/02/28/CLSYxu5qfyWVw7h.png" alt="RTL4.8.png"></p>
 <blockquote>
@@ -501,7 +511,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RTL级设计的评判标准"><span class="nav-number">1.</span> <span class="nav-text">RTL级设计的评判标准</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#面积与速度互换"><span class="nav-number">2.</span> <span class="nav-text">面积与速度互换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#面积与速度的平衡互换原则"><span class="nav-number">3.</span> <span class="nav-text">面积与速度的平衡互换原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#乒乓操作"><span class="nav-number">4.</span> <span class="nav-text">乒乓操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流水线"><span class="nav-number">5.</span> <span class="nav-text">流水线</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">RTL级设计的评判标准</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">面积与速度互换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">面积与速度的平衡互换原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">乒乓操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">5.</span> <span class="nav-text">流水线</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

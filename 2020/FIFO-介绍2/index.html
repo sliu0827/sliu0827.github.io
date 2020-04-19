@@ -277,11 +277,10 @@
       
         <p>如何对FIFO最小深度计算和FIFO空满标志判断的漏洞分析。</p>
 <a id="more"></a>
-
-
-
-<h2 id="FIFO-深度计算"><a href="#FIFO-深度计算" class="headerlink" title="FIFO 深度计算"></a>FIFO 深度计算</h2><hr>
-<h3 id="例题分析"><a href="#例题分析" class="headerlink" title="例题分析"></a>例题分析</h3><p>例题：假设FIFO的写时钟为100MHZ，读时钟为80MHZ。在FIFO输入侧，每100个写时钟，写入80个数据；读数据侧，假定每个时钟读走一个数据。</p>
+<h2 id="FIFO-深度计算"><a class="header-anchor" href="#FIFO-深度计算">¶</a>FIFO 深度计算</h2>
+<hr>
+<h3 id="例题分析"><a class="header-anchor" href="#例题分析">¶</a>例题分析</h3>
+<p>例题：假设FIFO的写时钟为100MHZ，读时钟为80MHZ。在FIFO输入侧，每100个写时钟，写入80个数据；读数据侧，假定每个时钟读走一个数据。</p>
 <p><em>请问FIFO深度设置为多少可以保证FIFO不会上溢出和下溢出？</em></p>
 <p><strong>分析清楚数据轻载和重载时数据的传输任务</strong></p>
 <p><img src="https://i.loli.net/2020/03/26/4XNaLU5bHIoDgn3.png" alt="FIFO4.1.png"></p>
@@ -291,14 +290,12 @@
 <p>假设写入时为最坏情况（背靠背），即在160*（1/100）微秒内写入160个数据。</p>
 <p>写入所需要的时间是:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Time:burst_cycle * t_wclk &#x3D; burst_cycle&#x2F;f_wclk &#x3D; 160&#x2F;100</span><br></pre></td></tr></table></figure>
-
 <p>该时间段内能读出的数据：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_num_read &#x3D; Time&#x2F;t_read &#x3D; Time&#x2F;(1&#x2F;f_read) &#x3D; Time * f_read &#x3D; (160&#x2F;100) * 80</span><br></pre></td></tr></table></figure>
-
 <p>FIFO应该设置的深度值：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depth &#x3D; burst - data_num_read &#x3D; 160 - (160&#x2F;100) * 80 &#x3D; 32</span><br></pre></td></tr></table></figure>
-
-<h3 id="问题一般化"><a href="#问题一般化" class="headerlink" title="问题一般化"></a>问题一般化</h3><p>参数为：</p>
+<h3 id="问题一般化"><a class="header-anchor" href="#问题一般化">¶</a>问题一般化</h3>
+<p>参数为：</p>
 <ul>
 <li>写时钟频率：WCLK；</li>
 <li>读时钟频率：RCLK；</li>
@@ -307,13 +304,13 @@
 </ul>
 <p>FIFO的最小深度应为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depth &#x3D; burst_length - burst_length&#x2F;wclk * (rclk * (X&#x2F;Y))</span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>burst_length / WCLK 表示burst持续时间；</p>
 <p>RCLK *（X/Y）表示读的实际速度，两者乘积为读数据量；</p>
 <p>burst_length 表示写入数据量。</p>
 </blockquote>
-<h2 id="FIFO空满标志的判断方法是否存在漏洞？"><a href="#FIFO空满标志的判断方法是否存在漏洞？" class="headerlink" title="FIFO空满标志的判断方法是否存在漏洞？"></a>FIFO空满标志的判断方法是否存在漏洞？</h2><hr>
+<h2 id="FIFO空满标志的判断方法是否存在漏洞？"><a class="header-anchor" href="#FIFO空满标志的判断方法是否存在漏洞？">¶</a>FIFO空满标志的判断方法是否存在漏洞？</h2>
+<hr>
 <p>判断方法回顾：</p>
 <ul>
 <li>rptr同步到wclk时钟域后，在wclk时钟域与wprt进行比较，生成FULL标志；</li>
@@ -324,16 +321,19 @@
 <p>判断满状态时，假设将读指针rptr 数据“3”通过电平同步器同步至写时钟域。经过两个wclk时钟周期后，数据到达写时钟域，经wptr比较后相等生成FULL信号。<strong>即在该时刻，FIFO认为已满，且满时的读指针为“3”。实际上，该时刻读指针已经为“5”，FIFO并不是真的满状态。</strong></p>
 <p><strong>结论：</strong></p>
 <ul>
-<li><p>对于FULL信号的生成机制，同步后的读地址一定是小于或者等于当前的读地址，所以此时判断FIFO为满不一定为真满，更保守；</p>
+<li>
+<p>对于FULL信号的生成机制，同步后的读地址一定是小于或者等于当前的读地址，所以此时判断FIFO为满不一定为真满，更保守；</p>
 </li>
-<li><p>对于EMPTY信号的生成机制，同样成立，判断为空时不一定为真的空状态；</p>
+<li>
+<p>对于EMPTY信号的生成机制，同样成立，判断为空时不一定为真的空状态；</p>
 </li>
-<li><p>异步FIFO通过比较读写地址来进行空满判断，读写地址的同步机制使得FIFO的空满状态仍然留有余量，存在一定的冗余空间。</p>
+<li>
+<p>异步FIFO通过比较读写地址来进行空满判断，读写地址的同步机制使得FIFO的空满状态仍然留有余量，存在一定的冗余空间。</p>
 </li>
 </ul>
 <hr>
-<p><em>Reference</em>： </p>
-<p>1.<a href="https://www.sliu.info/2020/FIFO-介绍1/">FIFO 介绍1</a></p>
+<p><em>Reference</em>：</p>
+<p>1.<a href="https://www.sliu.info/2020/FIFO-%E4%BB%8B%E7%BB%8D1/">FIFO 介绍1</a></p>
 <p>2.<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
 <p>3.<a href="http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf" target="_blank" rel="noopener">Simulation and Synthesis Techniques for Asynchronous FIFO Design</a></p>
 
@@ -477,7 +477,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FIFO-深度计算"><span class="nav-number">1.</span> <span class="nav-text">FIFO 深度计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例题分析"><span class="nav-number">1.1.</span> <span class="nav-text">例题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一般化"><span class="nav-number">1.2.</span> <span class="nav-text">问题一般化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FIFO空满标志的判断方法是否存在漏洞？"><span class="nav-number">2.</span> <span class="nav-text">FIFO空满标志的判断方法是否存在漏洞？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FIFO-深度计算"><span class="nav-number">1.</span> <span class="nav-text">¶FIFO 深度计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例题分析"><span class="nav-number">1.1.</span> <span class="nav-text">¶例题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题一般化"><span class="nav-number">1.2.</span> <span class="nav-text">¶问题一般化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FIFO空满标志的判断方法是否存在漏洞？"><span class="nav-number">2.</span> <span class="nav-text">¶FIFO空满标志的判断方法是否存在漏洞？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

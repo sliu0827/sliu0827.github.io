@@ -267,7 +267,7 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 845</span>
+		  </span>本文字数: 849</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
@@ -286,24 +286,25 @@
       
         <p>主要分析单周期时序路径下setup/hold time check</p>
 <a id="more"></a>
-
-<h1 id="单周期路径下setup-time-check"><a href="#单周期路径下setup-time-check" class="headerlink" title="单周期路径下setup time check"></a>单周期路径下setup time check</h1><h2 id="Input-to-Flip-flop-Path"><a href="#Input-to-Flip-flop-Path" class="headerlink" title="Input to Flip-flop Path"></a>Input to Flip-flop Path</h2><p> 时序报告：</p>
+<h1>单周期路径下setup time check</h1>
+<h2 id="Input-to-Flip-flop-Path"><a class="header-anchor" href="#Input-to-Flip-flop-Path">¶</a>Input to Flip-flop Path</h2>
+<p>时序报告：</p>
 <p><img src="https://i.loli.net/2020/02/29/dFhK1PumQM674z5.png" alt="STA3.1.png"></p>
 <p>input port clocked by VIRTUAL_CLKM，可以认为是由一个在设计外面的imaginary（virtual）flip-flop驱动的input port。另外，从该clock pin到达input port INA的max delay 可以被定义为一个确定的数值，在报告中为input external delay。通过以下SDC commands可以实现上述操作：</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create_clock -name VIRTUAL_CLKM -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125;</span><br><span class="line"></span><br><span class="line">set_input_delay -<span class="keyword">clock</span> VIRTUAL_CLKM -max <span class="number">2.55</span> [get_ports INA]</span><br></pre></td></tr></table></figure>
-
 <p>同时可以注意到DUA中经过input port INA，和其连接的第一个cell UINV1，可以通过specifying the driving cell of the input port INA计算delay：</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_driving_cell -lib_cell BUFF -library lib013lwc [get_ports INA]</span><br></pre></td></tr></table></figure>
-
-<h3 id="Setup-check-for-the-path-through-input-port"><a href="#Setup-check-for-the-path-through-input-port" class="headerlink" title="Setup check for the path through input port"></a>Setup check for the path through input port</h3><p><img src="https://i.loli.net/2020/02/29/uyT9sEJf4aIpPFv.png" alt="STA3.2.png"></p>
-<h2 id="Flip-flop-to-Output-Path"><a href="#Flip-flop-to-Output-Path" class="headerlink" title="Flip-flop to Output Path"></a>Flip-flop to Output Path</h2><p>类似于input port 约束，output port 也可以受virtual clock，internal clock of the design，input clock port，output clock port约束。下面是output pin ROUT constraint with respect to a virtual clock。如下：</p>
+<h3 id="Setup-check-for-the-path-through-input-port"><a class="header-anchor" href="#Setup-check-for-the-path-through-input-port">¶</a>Setup check for the path through input port</h3>
+<p><img src="https://i.loli.net/2020/02/29/uyT9sEJf4aIpPFv.png" alt="STA3.2.png"></p>
+<h2 id="Flip-flop-to-Output-Path"><a class="header-anchor" href="#Flip-flop-to-Output-Path">¶</a>Flip-flop to Output Path</h2>
+<p>类似于input port 约束，output port 也可以受virtual clock，internal clock of the design，input clock port，output clock port约束。下面是output pin ROUT constraint with respect to a virtual clock。如下：</p>
  <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set_output_delay -<span class="keyword">clock</span> VIRTUAL_CLKP -max <span class="number">5.1</span> [get_ports ROUT]</span><br><span class="line">set_load <span class="number">0.02</span> [get_ports ROUT]</span><br></pre></td></tr></table></figure>
-
 <blockquote>
-<p>To determine the delay of the last cell connected to the output port correctly,one needs to specify the load on this port. </p>
+<p>To determine the delay of the last cell connected to the output port correctly,one needs to specify the load on this port.</p>
 <p>The output load is specified above using the <em>set_load</em> command.</p>
 </blockquote>
-<h3 id="Setup-check-for-path-through-output-port"><a href="#Setup-check-for-path-through-output-port" class="headerlink" title="Setup check for path through output port"></a>Setup check for path through output port</h3><p><img src="https://i.loli.net/2020/02/29/WNVHDpCyTtdJ3u5.png" alt="STA3.3.png"></p>
+<h3 id="Setup-check-for-path-through-output-port"><a class="header-anchor" href="#Setup-check-for-path-through-output-port">¶</a>Setup check for path through output port</h3>
+<p><img src="https://i.loli.net/2020/02/29/WNVHDpCyTtdJ3u5.png" alt="STA3.3.png"></p>
 <p>时序报告：</p>
 <p><img src="https://i.loli.net/2020/02/29/ONaM34jEuR7lVfG.png" alt="STA3.4.png"></p>
 <blockquote>
@@ -311,29 +312,32 @@
 </blockquote>
 <p>因为 output external delay应该对应于virtual flip-flop的launch path中，但此处路径已在ROUT终止，因此将其放于capture path中，表现为负值。</p>
 <p>总结：</p>
-<p><code>slack = （Tcapture + Tcycle - Tuncertainty - Tsetup - Toutput_dealy）- （Tlaunch + Tck2q + Tdp）</code></p>
-<h2 id="Input-to-Output-Path"><a href="#Input-to-Output-Path" class="headerlink" title="Input to Output Path"></a>Input to Output Path</h2><p>和先前input path、output path类似，使用Virtual clocks来约束input&amp;output ports。通过以下指令进行约束：</p>
+<p><code> slack = （Tcapture + Tcycle - Tuncertainty - Tsetup - Toutput_dealy）- （Tlaunch + Tck2q + Tdp）</code></p>
+<h2 id="Input-to-Output-Path"><a class="header-anchor" href="#Input-to-Output-Path">¶</a>Input to Output Path</h2>
+<p>和先前input path、output path类似，使用Virtual clocks来约束input&amp;output ports。通过以下指令进行约束：</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set_input_delay -<span class="keyword">clock</span> VIRTUAL_CLKM -max <span class="number">3.6</span> [get_ports INB]</span><br><span class="line">set_output_delay -<span class="keyword">clock</span> VIRTUAL_CLKM -max <span class="number">5.8</span> [get_ports POUT]</span><br></pre></td></tr></table></figure>
-
-<h3 id="Combinational-path-from-input-to-output-port"><a href="#Combinational-path-from-input-to-output-port" class="headerlink" title="Combinational path from input to output port"></a>Combinational path from input to output port</h3><p><img src="https://i.loli.net/2020/02/29/HSAJg9DBMGdphuV.png" alt="STA3.5.png"></p>
+<h3 id="Combinational-path-from-input-to-output-port"><a class="header-anchor" href="#Combinational-path-from-input-to-output-port">¶</a>Combinational path from input to output port</h3>
+<p><img src="https://i.loli.net/2020/02/29/HSAJg9DBMGdphuV.png" alt="STA3.5.png"></p>
 <p>时序报告：</p>
 <p><img src="https://i.loli.net/2020/02/29/FJOdvztUEQjZYoC.png" alt="STA3.6.png"></p>
-<h1 id="单周期路径下hold-time-check"><a href="#单周期路径下hold-time-check" class="headerlink" title="单周期路径下hold time check"></a>单周期路径下hold time check</h1><p>Hold timing check确保使flip-flop能够捕获其原始的正确数据，保证前一级flip-flop输出值变化不会经过capture flip-flop，覆盖输出数据 。</p>
+<h1>单周期路径下hold time check</h1>
+<p>Hold timing check确保使flip-flop能够捕获其原始的正确数据，保证前一级flip-flop输出值变化不会经过capture flip-flop，覆盖输出数据 。</p>
 <p>Hold time 要求flip-flop在时钟的有效沿之后的指定时间段内，被锁存的数据应保持稳定。</p>
 <p><img src="https://i.loli.net/2020/02/29/QYsN1Fc2GlKyOdi.png" alt="STA3.7.png"></p>
-<p> hold timing check 和setup timing check 有如下差别：</p>
+<p>hold timing check 和setup timing check 有如下差别：</p>
 <blockquote>
 <p>The hold check is from one active edge of the clock in the launch flip-flop to the same clock edge at the capture flip-flop.</p>
-<p>Thus, a hold check is independent of the clock period. </p>
+<p>Thus, a hold check is independent of the clock period.</p>
 <p>The hold check is carried out on each active edge of the clock of the capture flip-flop.</p>
 </blockquote>
-<p> <img src="https://i.loli.net/2020/02/29/npwRDSoOLria3CF.png" alt="STA3.8.png"></p>
-<p> <img src="https://i.loli.net/2020/02/29/uQOK72X1WxaHctR.png" alt="STA3.9.png"> </p>
+<p><img src="https://i.loli.net/2020/02/29/npwRDSoOLria3CF.png" alt="STA3.8.png"></p>
+<p><img src="https://i.loli.net/2020/02/29/uQOK72X1WxaHctR.png" alt="STA3.9.png"></p>
 <p>The hold check can be mathematically expressed as:</p>
 <p><img src="https://i.loli.net/2020/02/29/iHVeXdlkhg1fFEW.png" alt="STA3.10.png"></p>
 <p><code>Slack = (Tlaunch + Tck2q + Tdp) - (Tcapture + Thold)</code></p>
 <p>Hold time check 对capture flip-flop上数据引脚的路径施加了下限或最小值限制。需要确定到捕获触发器D引脚的最快路径。 这意味着将始终使用最短路径来验证hold checks。 因此，通常在fast timing corner 中执行hold checks。</p>
-<h2 id="Hold-time-check-和setup-time-check-之间的关系"><a href="#Hold-time-check-和setup-time-check-之间的关系" class="headerlink" title="Hold time check 和setup time check 之间的关系"></a>Hold time check 和setup time check 之间的关系</h2><p>如下图所示，hold timing check 确保:</p>
+<h2 id="Hold-time-check-和setup-time-check-之间的关系"><a class="header-anchor" href="#Hold-time-check-和setup-time-check-之间的关系">¶</a>Hold time check 和setup time check 之间的关系</h2>
+<p>如下图所示，hold timing check 确保:</p>
 <ul>
 <li><em>Data from the subsequent launch edge must not be captured by the setup receiving edge.</em></li>
 <li><em>Data from the setup launch edge must not be captured by the preceding receiving edge.</em></li>
@@ -342,13 +346,13 @@
 <p><img src="https://i.loli.net/2020/02/29/lRH74hbNPJdvOsn.png" alt="STA3.11.png"></p>
 <blockquote>
 <p>UFF0 ：launch flip-flop，UFF1：capture flip-flop</p>
-<p>Setup check：setup launch edge –&gt; setup receiving edge </p>
+<p>Setup check：setup launch edge --&gt; setup receiving edge</p>
 </blockquote>
 <p><strong>The subsequent launch edge must not propagate data so fast that the setup receiving edge does not have time to capture its data reliably.</strong></p>
-<p><strong>The setup launch edge must not propagate data so fast that the preceding receiving edge does not get a chance to capture its data.</strong> </p>
+<p><strong>The setup launch edge must not propagate data so fast that the preceding receiving edge does not get a chance to capture its data.</strong></p>
 <p>While setup violations can cause the operating frequency of the design to be lowered, the hold violations can kill a design, that is, make the design inoperable at any frequency. Thus it is very important to understand the hold timing checks and resolve any violations.</p>
 <hr>
-<p><em>Reference</em>： </p>
+<p><em>Reference</em>：</p>
 <p>1.<a href="https://link.springer.com/content/pdf/bfm%3A978-0-387-93820-2%2F1.pdf" target="_blank" rel="noopener">Static Timing Analysis for Nanometer Designs A Practical Approach</a></p>
 <p>2.<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
 
@@ -492,7 +496,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单周期路径下setup-time-check"><span class="nav-number">1.</span> <span class="nav-text">单周期路径下setup time check</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Input-to-Flip-flop-Path"><span class="nav-number">1.1.</span> <span class="nav-text">Input to Flip-flop Path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Setup-check-for-the-path-through-input-port"><span class="nav-number">1.1.1.</span> <span class="nav-text">Setup check for the path through input port</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flip-flop-to-Output-Path"><span class="nav-number">1.2.</span> <span class="nav-text">Flip-flop to Output Path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Setup-check-for-path-through-output-port"><span class="nav-number">1.2.1.</span> <span class="nav-text">Setup check for path through output port</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Input-to-Output-Path"><span class="nav-number">1.3.</span> <span class="nav-text">Input to Output Path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Combinational-path-from-input-to-output-port"><span class="nav-number">1.3.1.</span> <span class="nav-text">Combinational path from input to output port</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#单周期路径下hold-time-check"><span class="nav-number">2.</span> <span class="nav-text">单周期路径下hold time check</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hold-time-check-和setup-time-check-之间的关系"><span class="nav-number">2.1.</span> <span class="nav-text">Hold time check 和setup time check 之间的关系</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">单周期路径下setup time check</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Input-to-Flip-flop-Path"><span class="nav-number">1.1.</span> <span class="nav-text">¶Input to Flip-flop Path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Setup-check-for-the-path-through-input-port"><span class="nav-number">1.1.1.</span> <span class="nav-text">¶Setup check for the path through input port</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flip-flop-to-Output-Path"><span class="nav-number">1.2.</span> <span class="nav-text">¶Flip-flop to Output Path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Setup-check-for-path-through-output-port"><span class="nav-number">1.2.1.</span> <span class="nav-text">¶Setup check for path through output port</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Input-to-Output-Path"><span class="nav-number">1.3.</span> <span class="nav-text">¶Input to Output Path</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Combinational-path-from-input-to-output-port"><span class="nav-number">1.3.1.</span> <span class="nav-text">¶Combinational path from input to output port</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">单周期路径下hold time check</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hold-time-check-和setup-time-check-之间的关系"><span class="nav-number">2.1.</span> <span class="nav-text">¶Hold time check 和setup time check 之间的关系</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

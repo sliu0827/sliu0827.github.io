@@ -282,52 +282,58 @@
       
         <p>多时钟交互路径如何检查建立时间和保持时间。</p>
 <a id="more"></a>
-
-<h2 id="Integer-Multiples"><a href="#Integer-Multiples" class="headerlink" title="Integer Multiples"></a>Integer Multiples</h2><p>设计中经常会定义出现成整数倍数关系的时钟。这样的例子中，我们在相关的时钟（related clocks）中找出公共的时钟周期来进行STA分析。</p>
+<h2 id="Integer-Multiples"><a class="header-anchor" href="#Integer-Multiples">¶</a>Integer Multiples</h2>
+<p>设计中经常会定义出现成整数倍数关系的时钟。这样的例子中，我们在相关的时钟（related clocks）中找出公共的时钟周期来进行STA分析。</p>
 <blockquote>
 <p>two clocks are related if they have a data path between their domains</p>
 </blockquote>
 <p>Here is an example that shows four related clocks:</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create_clock -name CLKM -period <span class="number">20</span> -waveform &#123;<span class="number">0</span> <span class="number">10</span>&#125; [get_ports CLKM]</span><br><span class="line">create_clock -name CLKQ -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125;</span><br><span class="line">create_clock -name CLKP -period <span class="number">5</span> -waveform &#123;<span class="number">0</span> <span class="number">2.5</span>&#125; [get_ports CLKP]</span><br></pre></td></tr></table></figure>
-
 <p>当分析CLKP和CLKM时钟域时，公共的时钟基本周期为20ns，如下图所示。</p>
 <p><em>Integer multiple clocks</em></p>
 <p><img src="https://i.loli.net/2020/03/03/NMK1kfpQEFdYScy.png" alt="STA5.1.png"></p>
 <blockquote>
-<p>Expanding clock ‘CLKP’ to base period of 20.00 (old period was 5.00, added 6 edges).<br>Expanding clock ‘CLKQ’ to base period of 20.00 (old period was 10.00, added 2 edges).</p>
+<p>Expanding clock ‘CLKP’ to base period of 20.00 (old period was 5.00, added 6 edges).<br>
+Expanding clock ‘CLKQ’ to base period of 20.00 (old period was 10.00, added 2 edges).</p>
 </blockquote>
 <p>简单分析可知，在 CLKP 15ns时刻出发至CLKM 20ns时刻捕获进行setup time check 最为严苛。而在CLKP&amp;CLKM 0ns时刻进行hold time check最为合理。时序报告这里不再贴出。</p>
-<h2 id="Non-Integer-Multiples"><a href="#Non-Integer-Multiples" class="headerlink" title="Non-Integer Multiples"></a>Non-Integer Multiples</h2><p>考虑数据路径中两个clock domains的频率不成倍数关系时，例如，the launch<br>clock is divide-by-8 of a common clock and the capture clock is divide-by-5<br>of the common clock ，如下图所示。</p>
+<h2 id="Non-Integer-Multiples"><a class="header-anchor" href="#Non-Integer-Multiples">¶</a>Non-Integer Multiples</h2>
+<p>考虑数据路径中两个clock domains的频率不成倍数关系时，例如，the launch<br>
+clock is divide-by-8 of a common clock and the capture clock is divide-by-5<br>
+of the common clock ，如下图所示。</p>
 <p><em>Non-integer multiple clocks</em></p>
 <p><img src="https://i.loli.net/2020/03/03/zXHKlTM8Gd9qije.png" alt="STA5.2.png"></p>
 <p>时钟定义指令如下：</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create_clock -name CLKM -period <span class="number">8</span> -waveform &#123;<span class="number">0</span> <span class="number">4</span>&#125; [get_ports CLKM]</span><br><span class="line">create_clock -name CLKQ -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125;</span><br><span class="line">create_clock -name CLKP -period <span class="number">5</span> -waveform &#123;<span class="number">0</span> <span class="number">2.5</span>&#125; [get_ports CLKP]</span><br></pre></td></tr></table></figure>
-
-<p>STA分析时需寻找related clock的common period。例如，common period 分别有CLKQ&amp;CLKP：10ns，CLKM&amp;CLKQ：40ns，CLKM&amp;CLKP：40ns。 </p>
+<p>STA分析时需寻找related clock的common period。例如，common period 分别有CLKQ&amp;CLKP：10ns，CLKM&amp;CLKQ：40ns，CLKM&amp;CLKP：40ns。</p>
 <p>下面考虑CLKM clock domain 和CLKP clock domain，公共的周期为40ns。</p>
 <blockquote>
-<p>Expanding clock ‘CLKM’ to base period of 40.00 (old period was 8.00, added 8 edges).<br>Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 14 edges).</p>
+<p>Expanding clock ‘CLKM’ to base period of 40.00 (old period was 8.00, added 8 edges).<br>
+Expanding clock ‘CLKP’ to base period of 40.00 (old period was 5.00, added 14 edges).</p>
 </blockquote>
 <p><em>Setup and hold checks for non-integer multiple clocks</em></p>
 <p><img src="https://i.loli.net/2020/03/03/tLM8K6wW7mgebjo.png" alt="STA5.3.png"></p>
 <p>setup check 中必须要满足launch edge和capture edge 的clock最小时间要求。</p>
 <ul>
-<li><p>如果时序路径由CLKM 到CLKP，则在CLKM 24ns launch ，CLKP 25ns时capture最严苛；</p>
+<li>
+<p>如果时序路径由CLKM 到CLKP，则在CLKM 24ns launch ，CLKP 25ns时capture最严苛；</p>
 </li>
-<li><p>如果时序路径由CLKP到CLKM，在CLKP 15ns，CLKM 16ns 时最严苛。</p>
+<li>
+<p>如果时序路径由CLKP到CLKM，在CLKP 15ns，CLKM 16ns 时最严苛。</p>
 </li>
 </ul>
 <p>hold check中时钟是在0ns时刻检查最严苛。</p>
 <p>时序报告在此不一一列出。</p>
-<h2 id="Phase-Shifted"><a href="#Phase-Shifted" class="headerlink" title="Phase Shifted"></a>Phase Shifted</h2><p>下面两个时钟相差90度相移。</p>
+<h2 id="Phase-Shifted"><a class="header-anchor" href="#Phase-Shifted">¶</a>Phase Shifted</h2>
+<p>下面两个时钟相差90度相移。</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create_clock -period <span class="number">2.0</span> -waveform &#123;<span class="number">0</span> <span class="number">1.0</span>&#125; [get_ports CKM]</span><br><span class="line">create_clock -period <span class="number">2.0</span> -waveform &#123;<span class="number">0.5</span> <span class="number">1.5</span>&#125; [get_ports CKM90]</span><br></pre></td></tr></table></figure>
-
 <p><em>Phase-shifted clocks</em></p>
 <p><img src="https://i.loli.net/2020/03/03/LOBXpFRM8dQa3Zb.png" alt="STA5.4.png"></p>
 <p>对于setup time 而言，数据在CKM 0ns建立，于CKM90 0.5ns时进行建立时间检查。</p>
 <p>对于hold check而言，我们得在建立时间检查中capture edge 的前一个周期时刻点进行检查。例如在launch 2ns时刻，此时于2.5ns时刻进行setup check，因此在前一个capture edge 0.5ns时刻进行hold check。</p>
 <p>因此该例中对于hold check 是十分有利的，因为hold time check中，数据捕获路径clock的时刻早于数据建立clock的时间。</p>
-<h2 id="Half-Cycle-Paths"><a href="#Half-Cycle-Paths" class="headerlink" title="Half-Cycle Paths"></a>Half-Cycle Paths</h2><p>设计中同时存在negative-edge triggered flip-flops(active clock edge is falling edge)和positive-edge triggered flip-flops (active clock edge is rising edge)时，就可能属于half-cycle paths。</p>
+<h2 id="Half-Cycle-Paths"><a class="header-anchor" href="#Half-Cycle-Paths">¶</a>Half-Cycle Paths</h2>
+<p>设计中同时存在negative-edge triggered flip-flops(active clock edge is falling edge)和positive-edge triggered flip-flops (active clock edge is rising edge)时，就可能属于half-cycle paths。</p>
 <blockquote>
 <p>A half-cycle path could be from a rising edge flip-flop to a falling edge flip-flop, or vice versa.</p>
 </blockquote>
@@ -339,7 +345,8 @@
 <p><img src="https://i.loli.net/2020/03/03/ZbQUXJrzFI4VmjA.png" alt="STA5.6.png"></p>
 <p><em>the hold timing path</em></p>
 <p><img src="https://i.loli.net/2020/03/03/7ERZPQrKIxYAbwM.png" alt="STA5.7.png"></p>
-<h2 id="False-Path"><a href="#False-Path" class="headerlink" title="False Path"></a>False Path</h2><p>电路中某些timing paths有可能是不存在或者在设计中没有实际作用的。这些路径我们可以设置为false paths，使得STA在分析过程中忽略掉。</p>
+<h2 id="False-Path"><a class="header-anchor" href="#False-Path">¶</a>False Path</h2>
+<p>电路中某些timing paths有可能是不存在或者在设计中没有实际作用的。这些路径我们可以设置为false paths，使得STA在分析过程中忽略掉。</p>
 <p>False paths的例子：</p>
 <ul>
 <li>from one clock domain to another clock domain;</li>
@@ -350,19 +357,16 @@
 </ul>
 <p>A false path is set using the set_false_path specification. Here are some examples.</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">set_false_path -from [get_clocks SCAN_CLK] \</span><br><span class="line">-to [get_clocks CORE_CLK]</span><br><span class="line"><span class="comment"># Any path starting from the SCAN_CLK domain to the</span></span><br><span class="line"><span class="comment"># CORE_CLK domain is a false path.</span></span><br><span class="line">set_false_path -through [get_pins UMUX0/S]</span><br><span class="line"><span class="comment"># Any path going through this pin is false.</span></span><br><span class="line">set_false_path \</span><br><span class="line">-through [get_pins SAD_CORE/RSTN]]</span><br><span class="line"><span class="comment"># The false path specifications can also be specified to,</span></span><br><span class="line"><span class="comment"># through, or from a module pin instance.</span></span><br><span class="line">set_false_path -to [get_ports TEST_REG*]</span><br><span class="line"><span class="comment"># All paths that end in port named TEST_REG* are false paths.</span></span><br><span class="line">set_false_path -through UINV/Z -through UAND0/Z</span><br><span class="line"><span class="comment"># Any path that goes through both of these pins</span></span><br><span class="line"><span class="comment"># in this order is false.</span></span><br></pre></td></tr></table></figure>
-
 <p><em>Few recommendations on setting false paths are given below.</em></p>
-<p> To set a false path between two clock domains, use:</p>
+<p>To set a false path between two clock domains, use:</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set_false_path -from [get_clocks clockA] \</span><br><span class="line">-to [get_clocks clockB]</span><br></pre></td></tr></table></figure>
-
 <p>instead of:</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set_false_path -from [get_pins &#123;regA_*&#125;/CP] \</span><br><span class="line">-to [get_pins &#123;regB_*&#125;/D]</span><br></pre></td></tr></table></figure>
-
 <p><strong>The second form is much slower.</strong></p>
 <p><strong>Another recommendation is to minimize the usage of -through options, as it adds unnecessary runtime complexity.</strong> The -through option should only be used where it is absolutely necessary and there is no alternate way to specify the false path.</p>
 <p><strong>From an optimization perspective, another guideline is to not use a false path when a multicycle path is the real intent.</strong> If a signal is sampled at a known or predictable time, no matter how far out, a multicycle path specification should be used so that the path has some constraint and gets optimized to meet the multicycle constraint.</p>
 <hr>
-<p><em>Reference</em>： </p>
+<p><em>Reference</em>：</p>
 <p>1.<a href="https://link.springer.com/content/pdf/bfm%3A978-0-387-93820-2%2F1.pdf" target="_blank" rel="noopener">Static Timing Analysis for Nanometer Designs A Practical Approach</a></p>
 <p>2.<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
 
@@ -506,7 +510,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Integer-Multiples"><span class="nav-number">1.</span> <span class="nav-text">Integer Multiples</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Non-Integer-Multiples"><span class="nav-number">2.</span> <span class="nav-text">Non-Integer Multiples</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Phase-Shifted"><span class="nav-number">3.</span> <span class="nav-text">Phase Shifted</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Half-Cycle-Paths"><span class="nav-number">4.</span> <span class="nav-text">Half-Cycle Paths</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#False-Path"><span class="nav-number">5.</span> <span class="nav-text">False Path</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Integer-Multiples"><span class="nav-number">1.</span> <span class="nav-text">¶Integer Multiples</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Non-Integer-Multiples"><span class="nav-number">2.</span> <span class="nav-text">¶Non-Integer Multiples</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Phase-Shifted"><span class="nav-number">3.</span> <span class="nav-text">¶Phase Shifted</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Half-Cycle-Paths"><span class="nav-number">4.</span> <span class="nav-text">¶Half-Cycle Paths</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#False-Path"><span class="nav-number">5.</span> <span class="nav-text">¶False Path</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

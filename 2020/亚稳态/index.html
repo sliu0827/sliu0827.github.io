@@ -287,24 +287,29 @@
       
         <p>亚稳态的概念，常见的三种同步器，电平同步器、边沿检查同步器和脉冲同步器。</p>
 <a id="more"></a>
-
-<h2 id="同步电路和域异步电路"><a href="#同步电路和域异步电路" class="headerlink" title="同步电路和域异步电路"></a>同步电路和域异步电路</h2><p><strong>同步电路的定义</strong></p>
+<h2 id="同步电路和域异步电路"><a class="header-anchor" href="#同步电路和域异步电路">¶</a>同步电路和域异步电路</h2>
+<p><strong>同步电路的定义</strong></p>
 <p>电路中的所有受时钟控制的单元（例如flip-flop，register），全部由一个统一的全局时钟控制</p>
 <p><img src="https://i.loli.net/2020/03/06/BcNd6LzaCu5XhEY.png" alt="亚稳态1.1.png"></p>
 <p><strong>同步电路设计的优点</strong></p>
 <ul>
-<li><p>在同步设计中，EDA工具可以保证电路系统的时序收敛，有效避免了电路设计中竞争冒险现象；</p>
+<li>
+<p>在同步设计中，EDA工具可以保证电路系统的时序收敛，有效避免了电路设计中竞争冒险现象；</p>
 </li>
-<li><p>由于触发器只有在时钟边缘才改变取值，很大限度地减少了整个电路受毛刺和噪声影响的可能。 </p>
+<li>
+<p>由于触发器只有在时钟边缘才改变取值，很大限度地减少了整个电路受毛刺和噪声影响的可能。</p>
 </li>
 </ul>
 <p><strong>同步电路设计的缺点</strong></p>
 <ul>
-<li><p>时钟偏斜（clock skew）</p>
+<li>
+<p>时钟偏斜（clock skew）</p>
 </li>
-<li><p>时钟抖动（clock jitter）</p>
+<li>
+<p>时钟抖动（clock jitter）</p>
 </li>
-<li><p>时钟树综合，需要加入大量的延迟单元，使得电路的面积和功耗大大增加。</p>
+<li>
+<p>时钟树综合，需要加入大量的延迟单元，使得电路的面积和功耗大大增加。</p>
 </li>
 </ul>
 <p><strong>全局异步电路的定义</strong></p>
@@ -326,14 +331,14 @@
 <li>在大规模集成电路设计中应该避免采用异步电路设计</li>
 </ul>
 <p>同步时钟异步时钟的差别在于，同步时钟来源于统一锁相环PLL生成，这些时钟的相位和倍数都是可控的，如果来源于不同的PLL，即使两个时钟的频率相同也属于异步时钟。</p>
-<h2 id="亚稳态相关概念和原理"><a href="#亚稳态相关概念和原理" class="headerlink" title="亚稳态相关概念和原理"></a>亚稳态相关概念和原理</h2><ul>
+<h2 id="亚稳态相关概念和原理"><a class="header-anchor" href="#亚稳态相关概念和原理">¶</a>亚稳态相关概念和原理</h2>
+<ul>
 <li>亚稳态是指触发器无法在某个规定时间段内达到一个可确认的状态；</li>
 <li>当一个触发器进入亚稳态时，既无法预测该单元的输出电平，也无法预测何时输出才能稳定在某个正确的电平上；</li>
 <li>在此期间，触发器输出一些中间级电平，或者可能处于振荡状态，并且这种无用的输出电平可以沿信号通道上的各个触发器级联式传播下去</li>
 </ul>
 <p>亚稳态不能从根本上消除，但可以通过采取一定的措施使其对电路的影响降低。下面的公式用于表征亚稳态的影响：</p>
 <img src="https://i.loli.net/2020/03/06/ecyjG7C4lENb3Uv.png" alt="亚稳态1.3png.png" style="zoom: 50%;" />
-
 <p>故障间隔平均时间MTBF越大，亚稳态的影响越小</p>
 <blockquote>
 <p>tmet -寄存器从时钟上升沿触发后的时序余量时间</p>
@@ -348,7 +353,8 @@
 </blockquote>
 <p>由于Tcq和Tsu都由器件本身的工艺和工作环境决定，如果在时钟频率fclk和数据变化率固定的情况下，要增大Tmet值，那么设计者要做的只能是<strong>减小T_data值</strong>。</p>
 <p><strong>最大程度的减小T_data，只能是不再两个寄存器之间添加任何逻辑。</strong></p>
-<h2 id="同步策略—双锁存器电平同步器"><a href="#同步策略—双锁存器电平同步器" class="headerlink" title="同步策略—双锁存器电平同步器"></a>同步策略—双锁存器电平同步器</h2><p>一个信号在过渡到另一个时钟域时，如果仅仅用一个触发器将其锁存，那么用一个触发器进行采样的结果可能是亚稳态。</p>
+<h2 id="同步策略—双锁存器电平同步器"><a class="header-anchor" href="#同步策略—双锁存器电平同步器">¶</a>同步策略—双锁存器电平同步器</h2>
+<p>一个信号在过渡到另一个时钟域时，如果仅仅用一个触发器将其锁存，那么用一个触发器进行采样的结果可能是亚稳态。</p>
 <p>双锁存器法，即在一个信号进入另一个时钟域之前，将信号用两个锁存器连续锁存两次，最后得到的采样结果可以消除亚稳态问题。</p>
 <p><em>亚稳态现象</em></p>
 <p><img src="https://i.loli.net/2020/03/06/bWxNAZf7ywGIV5F.png" alt="亚稳态1.5.png"></p>
@@ -357,7 +363,6 @@
 <p><em>亚稳态的解决及RTL实现</em></p>
 <p><img src="https://i.loli.net/2020/03/06/bKAWFl5EOhNT9Bk.png" alt="亚稳态1.7.png"></p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span>  synchronizer (   </span><br><span class="line">              bclk,          	<span class="comment">//目的时钟，与aclk异步的时钟</span></span><br><span class="line">              reset_b,        	<span class="comment">//全局异步复位信号</span></span><br><span class="line">              adat,         	<span class="comment">//异步输入信号，工作在aclk</span></span><br><span class="line">              bdat,         	<span class="comment">//同步器输出</span></span><br><span class="line">         );</span><br><span class="line"><span class="keyword">input</span>     bclk;</span><br><span class="line"><span class="keyword">input</span>     reset_b;</span><br><span class="line"><span class="keyword">input</span>     adapt;</span><br><span class="line"><span class="keyword">output</span>    bdat;</span><br><span class="line"><span class="keyword">wire</span>     bdat;</span><br><span class="line"><span class="keyword">reg</span>      bdat1;</span><br><span class="line"><span class="keyword">reg</span>      bdat2;</span><br><span class="line"><span class="keyword">always</span> @ (<span class="keyword">posedge</span> bclk <span class="keyword">or</span> <span class="keyword">negedge</span> reset_b)</span><br><span class="line"><span class="keyword">if</span> (reset_b)</span><br><span class="line">    &#123;bdat2,bdat1&#125; &lt;= <span class="number">2</span> ' b0;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    &#123;bdat2,bdat1&#125; &lt;= &#123;bdat1,adat&#125;;</span><br><span class="line"><span class="keyword">assign</span> bdat = bdat2;</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
-
 <p>优点是结构简单，易实现，但是增加了两级触发器延时。而且当快时钟域转到慢时钟域时，易造成慢时钟采样丢失（还未来得及采样，数据就变化了）。<strong>故常用于慢时钟转到快时钟域。</strong></p>
 <p>使用条件：（慢时钟域–&gt;快时钟域）</p>
 <ul>
@@ -370,13 +375,16 @@
 <li>三级或者更多级虽然能将亚稳态出现概率降得更低，但影响电路效率；</li>
 <li>增加寄存器进行同步的方法只是不断降低亚稳态出现的概率</li>
 </ul>
-<h2 id="亚稳态—单bit信号的跨时钟域传输"><a href="#亚稳态—单bit信号的跨时钟域传输" class="headerlink" title="亚稳态—单bit信号的跨时钟域传输"></a>亚稳态—单bit信号的跨时钟域传输</h2><h3 id="慢时钟域–-gt-快时钟域"><a href="#慢时钟域–-gt-快时钟域" class="headerlink" title="慢时钟域–&gt;快时钟域"></a>慢时钟域–&gt;快时钟域</h3><p>由慢时钟到快时钟域的传输，主要采用边沿检测同步器电路，可以检测输入信号的上升沿或下降沿。</p>
+<h2 id="亚稳态—单bit信号的跨时钟域传输"><a class="header-anchor" href="#亚稳态—单bit信号的跨时钟域传输">¶</a>亚稳态—单bit信号的跨时钟域传输</h2>
+<h3 id="慢时钟域–-快时钟域"><a class="header-anchor" href="#慢时钟域–-快时钟域">¶</a>慢时钟域–&gt;快时钟域</h3>
+<p>由慢时钟到快时钟域的传输，主要采用边沿检测同步器电路，可以检测输入信号的上升沿或下降沿。</p>
 <p><img src="https://i.loli.net/2020/03/06/Rpl7SFvCEr3ayjK.png" alt="亚稳态1.8.png"></p>
 <p>边沿检查电路实现的电路功能实际上是将慢时钟下一个周期的脉冲，搬移并缩小为快时钟下一个周期宽的脉冲。</p>
 <p><img src="https://i.loli.net/2020/03/06/pt4owY1VFjacNmA.png" alt="亚稳态1.9.png"></p>
 <p>适用条件：</p>
 <p>输入数据的宽度必须比一个接收时钟周期加上一个同步触发器的hold时间要长，最安全的就是两个同步周期宽度。<em>慢时钟域的脉冲足够保持到被快时钟的同步器拿到</em></p>
-<h3 id="快时钟域–-gt-慢时钟域"><a href="#快时钟域–-gt-慢时钟域" class="headerlink" title="快时钟域–&gt;慢时钟域"></a>快时钟域–&gt;慢时钟域</h3><p>通常采用脉冲同步器，基本功能是：从某个时钟域取出一个单时钟宽度脉冲，然后在新的时钟域中建立另一个单时钟宽度的脉冲。</p>
+<h3 id="快时钟域–-慢时钟域"><a class="header-anchor" href="#快时钟域–-慢时钟域">¶</a>快时钟域–&gt;慢时钟域</h3>
+<p>通常采用脉冲同步器，基本功能是：从某个时钟域取出一个单时钟宽度脉冲，然后在新的时钟域中建立另一个单时钟宽度的脉冲。</p>
 <p><img src="https://i.loli.net/2020/03/06/XuUxinRSgDtKPyW.png" alt="亚稳态1.10.png"></p>
 <p>使用慢时钟直接去采集快时钟域下input信号采集不到，因此使用toggle 电路子啊快时钟域下对输入信号有效标定，获得toggle信号。随后，使用同步器同步toggle信号，在慢时钟域下最终获得两个有效的单周期脉冲output。</p>
 <p><img src="https://i.loli.net/2020/03/06/FuXNlkeiyL9YPAK.png" alt="亚稳态1.11.png"></p>
@@ -387,9 +395,10 @@
 <li>当输入脉冲时钟周期大于两个同步器时钟周期时，这个问题更加严重；</li>
 <li>这种情况下，如果输入脉冲相邻太近，则同步器就不能检测到每个脉冲。</li>
 </ul>
-<h2 id="三种同步器对比"><a href="#三种同步器对比" class="headerlink" title="三种同步器对比"></a>三种同步器对比</h2><p><img src="https://i.loli.net/2020/03/06/XGbjk4R79xuEYsJ.png" alt="亚稳态1.12.png"></p>
+<h2 id="三种同步器对比"><a class="header-anchor" href="#三种同步器对比">¶</a>三种同步器对比</h2>
+<p><img src="https://i.loli.net/2020/03/06/XGbjk4R79xuEYsJ.png" alt="亚稳态1.12.png"></p>
 <hr>
-<p><em>Reference</em>： </p>
+<p><em>Reference</em>：</p>
 <p>1.<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
 <p>2.SOC设计方法与实现_郭炜_中文课件</p>
 
@@ -533,7 +542,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#同步电路和域异步电路"><span class="nav-number">1.</span> <span class="nav-text">同步电路和域异步电路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#亚稳态相关概念和原理"><span class="nav-number">2.</span> <span class="nav-text">亚稳态相关概念和原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步策略—双锁存器电平同步器"><span class="nav-number">3.</span> <span class="nav-text">同步策略—双锁存器电平同步器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#亚稳态—单bit信号的跨时钟域传输"><span class="nav-number">4.</span> <span class="nav-text">亚稳态—单bit信号的跨时钟域传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#慢时钟域–-gt-快时钟域"><span class="nav-number">4.1.</span> <span class="nav-text">慢时钟域–&gt;快时钟域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快时钟域–-gt-慢时钟域"><span class="nav-number">4.2.</span> <span class="nav-text">快时钟域–&gt;慢时钟域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三种同步器对比"><span class="nav-number">5.</span> <span class="nav-text">三种同步器对比</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#同步电路和域异步电路"><span class="nav-number">1.</span> <span class="nav-text">¶同步电路和域异步电路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#亚稳态相关概念和原理"><span class="nav-number">2.</span> <span class="nav-text">¶亚稳态相关概念和原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步策略—双锁存器电平同步器"><span class="nav-number">3.</span> <span class="nav-text">¶同步策略—双锁存器电平同步器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#亚稳态—单bit信号的跨时钟域传输"><span class="nav-number">4.</span> <span class="nav-text">¶亚稳态—单bit信号的跨时钟域传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#慢时钟域–-快时钟域"><span class="nav-number">4.1.</span> <span class="nav-text">¶慢时钟域–&gt;快时钟域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快时钟域–-慢时钟域"><span class="nav-number">4.2.</span> <span class="nav-text">¶快时钟域–&gt;慢时钟域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三种同步器对比"><span class="nav-number">5.</span> <span class="nav-text">¶三种同步器对比</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -276,13 +276,15 @@
       
         <p>SystemVerilog中语法基本类型的简单介绍</p>
 <a id="more"></a>
-
-<h2 id="数据类型中四值-amp-二值逻辑的区分"><a href="#数据类型中四值-amp-二值逻辑的区分" class="headerlink" title="数据类型中四值&amp;二值逻辑的区分"></a>数据类型中四值&amp;二值逻辑的区分</h2><hr>
+<h2 id="数据类型中四值-二值逻辑的区分"><a class="header-anchor" href="#数据类型中四值-二值逻辑的区分">¶</a>数据类型中四值&amp;二值逻辑的区分</h2>
+<hr>
 <p><strong>verilog中数据类型均为四值逻辑</strong>，包括变量类型（variables）和线网类型（nets）。</p>
 <ul>
-<li><p>variables类型包括例如reg、integer和time等，用来存储组合或者时序逻辑的值；</p>
+<li>
+<p>variables类型包括例如reg、integer和time等，用来存储组合或者时序逻辑的值；</p>
 </li>
-<li><p>nets类型包括例如wire、wor和wand等，主要用于生成连线实现模块间连接以及提供特殊的线网逻辑解决方案等。</p>
+<li>
+<p>nets类型包括例如wire、wor和wand等，主要用于生成连线实现模块间连接以及提供特殊的线网逻辑解决方案等。</p>
 </li>
 </ul>
 <p><strong>SystemVerilog将数据类型分为四值逻辑（logic）和二值逻辑（bit）。</strong></p>
@@ -290,7 +292,8 @@
 <li>四值逻辑硬件信号中变量或者线网类型，统一可以用logic声明。logic默认为变量类型（variable），也可以显示声明为线网型（nets）；</li>
 <li>二值数据类型，用来对于比RTL更高抽象级的模型建模，这些模型中Z和X很少被使用。包括，bit(1-bit)/byte(8-bit)/shortint(16-bit)/int(32-bit)/longint(64-bit)。</li>
 </ul>
-<h2 id="自定义类型"><a href="#自定义类型" class="headerlink" title="自定义类型"></a>自定义类型</h2><hr>
+<h2 id="自定义类型"><a class="header-anchor" href="#自定义类型">¶</a>自定义类型</h2>
+<hr>
 <p>SV中通过自定义类型使得代码自身的可读性更好，也使得用户可以构建更高抽象层的数据类型。常见的包括：</p>
 <ul>
 <li>typedef,创建用户自定义类型；</li>
@@ -298,7 +301,8 @@
 <li>struct，创建结构体类型。</li>
 </ul>
 <p>typedef又可以对enum，struct实现自定义枚举或结构体类型。</p>
-<h2 id="字符串类型"><a href="#字符串类型" class="headerlink" title="字符串类型"></a>字符串类型</h2><hr>
+<h2 id="字符串类型"><a class="header-anchor" href="#字符串类型">¶</a>字符串类型</h2>
+<hr>
 <p>SV引入了string类型来容纳可变长度的字符串，同时包括一些字符串内建的方法，例如返回字符串长度str.len(),返回地i个字符串str.getc(i)等等。</p>
 <p>SV字符串类型有以下特点：</p>
 <ul>
@@ -306,11 +310,11 @@
 <li>不同于c函数，没有空字符，长度为N，则索引为0~N-1；</li>
 <li>内存是动态分配的</li>
 </ul>
-<h2 id="接口（interface）"><a href="#接口（interface）" class="headerlink" title="接口（interface）"></a>接口（interface）</h2><hr>
+<h2 id="接口（interface）"><a class="header-anchor" href="#接口（interface）">¶</a>接口（interface）</h2>
+<hr>
 <p>verilog中模块之间的通信需要例化端口和连线来完成，大型的设计中大量的端口让设计冗长和容易出错。因此，SV在Verilog基础上扩展了接口（interface）。</p>
 <p>接口提供了一种新型的对抽象级建模的方式，可以使简化建模和验证大型设计。</p>
 <img src="https://i.loli.net/2020/04/11/iFX7IP4tlkGZsMh.png" alt="SV语法基本类型2.1.png" style="zoom:80%;" />
-
 <p><strong>优势：</strong></p>
 <ul>
 <li>允许多个信号被整合到一起表示一个单一的抽象端口；</li>
@@ -325,7 +329,7 @@
 <li>接口一般将相关的信号集合在一起，设计中会包含多各接口实例。</li>
 </ul>
 <hr>
-<p><em>Reference</em>： </p>
+<p><em>Reference</em>：</p>
 <p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
 
     </div>
@@ -468,7 +472,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型中四值-amp-二值逻辑的区分"><span class="nav-number">1.</span> <span class="nav-text">数据类型中四值&amp;二值逻辑的区分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义类型"><span class="nav-number">2.</span> <span class="nav-text">自定义类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串类型"><span class="nav-number">3.</span> <span class="nav-text">字符串类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口（interface）"><span class="nav-number">4.</span> <span class="nav-text">接口（interface）</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型中四值-二值逻辑的区分"><span class="nav-number">1.</span> <span class="nav-text">¶数据类型中四值&amp;二值逻辑的区分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义类型"><span class="nav-number">2.</span> <span class="nav-text">¶自定义类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串类型"><span class="nav-number">3.</span> <span class="nav-text">¶字符串类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口（interface）"><span class="nav-number">4.</span> <span class="nav-text">¶接口（interface）</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

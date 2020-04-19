@@ -260,7 +260,7 @@
 		  <!-- 添加time count 2020.02.26 -->
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i>
-		  </span>本文字数: 618</span>
+		  </span>本文字数: 619</span>
 	
 		  <span class="post-meta-divider">|</span>
 		  <span title="post.wordcount">
@@ -279,8 +279,8 @@
       
         <p>简单地对<em>寄存器到寄存器路径</em>建立时间的报告进行了分析</p>
 <a id="more"></a>
-
-<h2 id="理想的时钟网络"><a href="#理想的时钟网络" class="headerlink" title="理想的时钟网络"></a>理想的时钟网络</h2><p><img src="https://i.loli.net/2020/02/29/ec9qmofu2OEhbXv.png" alt="STA2.1.png"> </p>
+<h2 id="理想的时钟网络"><a class="header-anchor" href="#理想的时钟网络">¶</a>理想的时钟网络</h2>
+<p><img src="https://i.loli.net/2020/02/29/ec9qmofu2OEhbXv.png" alt="STA2.1.png"></p>
 <p>可以先分析出下面几个问题：</p>
 <blockquote>
 <p>1.what are the start point and the end point of this path？</p>
@@ -288,17 +288,20 @@
 <p>3.Path Type？</p>
 <p>4.Constrain？</p>
 </blockquote>
-<p> 分析可知，</p>
+<p>分析可知，</p>
 <ul>
-<li><p>Start point: the launch flip-flop UFF0;End point: the capture flip-flop UFF1</p>
+<li>
+<p>Start point: the launch flip-flop UFF0;End point: the capture flip-flop UFF1</p>
 </li>
-<li><p>Path group:归属于CLKM</p>
+<li>
+<p>Path group:归属于CLKM</p>
 </li>
-<li><p>Path Type ：max，意味着报告中所有路径区最大延时，对应setup time check</p>
+<li>
+<p>Path Type ：max，意味着报告中所有路径区最大延时，对应setup time check</p>
 </li>
-<li><p>Constraints:</p>
+<li>
+<p>Constraints:</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  create_clock -name CLKM -period <span class="number">10</span> -waveform &#123;<span class="number">0</span> <span class="number">5</span>&#125; [get_ports CLKM]</span><br><span class="line">  set_clock_uncertainty -setup <span class="number">0.3</span> [all_clocks]</span><br><span class="line">  set_clock_transition -rise <span class="number">0.2</span> [all_clocks]</span><br><span class="line">set_clock_transition -fall <span class="number">0.15</span> [all_clocks]</span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>设置 clock uncertainty可以加紧约束</p>
 </blockquote>
@@ -306,30 +309,37 @@
 </ul>
 <p>总结报告，对于flip-flop path：</p>
 <ul>
-<li><p>launch path： 时钟由源点出发，经过Tlaunch = 0，经过flip-flop CLK2Q 延时Tck2q = 0.16，经过组合逻辑延时Tdp=0.04+0.05，最终到达时序路径终点UFF1/D，Data arrival time = 0.26；</p>
+<li>
+<p>launch path： 时钟由源点出发，经过Tlaunch = 0，经过flip-flop CLK2Q 延时Tck2q = 0.16，经过组合逻辑延时Tdp=0.04+0.05，最终到达时序路径终点UFF1/D，Data arrival time = 0.26；</p>
 </li>
-<li><p>Capture path：时钟源点加上一个时钟周期，经过理想的时钟网络，最终到达终点UFF1/CK。data required time 还需要减掉 clock uncertainty 和 library setup time，得到data required time = 9.66；</p>
+<li>
+<p>Capture path：时钟源点加上一个时钟周期，经过理想的时钟网络，最终到达终点UFF1/CK。data required time 还需要减掉 clock uncertainty 和 library setup time，得到data required time = 9.66；</p>
 </li>
-<li><p>Slack = data required time - data arrival time，slack 大于0则满足约束，具体公式总结如下图所示。</p>
+<li>
+<p>Slack = data required time - data arrival time，slack 大于0则满足约束，具体公式总结如下图所示。</p>
 </li>
 </ul>
 <p><img src="https://i.loli.net/2020/02/29/UavV19MIKOT32cR.png" alt="STA2.2.png"></p>
-<h2 id="时钟网络有一个确定的延时值"><a href="#时钟网络有一个确定的延时值" class="headerlink" title="时钟网络有一个确定的延时值"></a>时钟网络有一个确定的延时值</h2><p>上面报告中clock network delay是一个理想的值（marked as ideal），这意味着clock trees被认为是理想的，即clock path上所有的buffer delay都为0。显然，当时钟树被建立之后，clock paths会先显示真实的delays（marked as propagated），如下图所示。</p>
-<p><img src="https://i.loli.net/2020/02/29/efwkadL7CAlOmNx.png" alt="STA2.3.png"> </p>
+<h2 id="时钟网络有一个确定的延时值"><a class="header-anchor" href="#时钟网络有一个确定的延时值">¶</a>时钟网络有一个确定的延时值</h2>
+<p>上面报告中clock network delay是一个理想的值（marked as ideal），这意味着clock trees被认为是理想的，即clock path上所有的buffer delay都为0。显然，当时钟树被建立之后，clock paths会先显示真实的delays（marked as propagated），如下图所示。</p>
+<p><img src="https://i.loli.net/2020/02/29/efwkadL7CAlOmNx.png" alt="STA2.3.png"></p>
 <p><strong>后一个时钟为0.12比前一个触发器的时钟要晚到一点，差值012-0.11=0.01称之为时钟的<em>偏斜</em>。</strong></p>
-<p><strong>另外时序报告中标有“r”和“f”，分别代表clock或数据信号的rising and falling edge。</strong>因为是建立时间检查，所以通常取上升或下降沿延迟中的最大延迟值。 </p>
-<h3 id="两种类型的clock-latencies"><a href="#两种类型的clock-latencies" class="headerlink" title="两种类型的clock latencies"></a>两种类型的clock latencies</h3><p><em>clock source latency &amp; clock network latency</em></p>
+<p>**另外时序报告中标有“r”和“f”，分别代表clock或数据信号的rising and falling edge。**因为是建立时间检查，所以通常取上升或下降沿延迟中的最大延迟值。</p>
+<h3 id="两种类型的clock-latencies"><a class="header-anchor" href="#两种类型的clock-latencies">¶</a>两种类型的clock latencies</h3>
+<p><em>clock source latency &amp; clock network latency</em></p>
 <ul>
-<li><p>Clock source latency：也称insertion delay，是由时钟源传播至当前分析时钟定义点所花费的时间。</p>
+<li>
+<p>Clock source latency：也称insertion delay，是由时钟源传播至当前分析时钟定义点所花费的时间。</p>
 <p>Source latency 不会影响内部设计的时序分析，因为它被同时加到launch clock 和capture clock。</p>
 <figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set_clock_latency -<span class="keyword">source</span> -rise <span class="number">0.7</span> [get_clocks CLKM]</span><br><span class="line"></span><br><span class="line">set_clock_latency -<span class="keyword">source</span> -fall <span class="number">0.65</span> [get_clocks CLKM]</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>Clock network latency：如果不使用 -source 命令，命令定义的则为clock network latency，是由DUA中时钟定义点到flip-flop clock pin的时间。</p>
+<li>
+<p>Clock network latency：如果不使用 -source 命令，命令定义的则为clock network latency，是由DUA中时钟定义点到flip-flop clock pin的时间。</p>
 </li>
 </ul>
 <p><img src="https://i.loli.net/2020/02/29/xhVU1BYlvqLASFe.png" alt="STA2.4.png"></p>
 <hr>
-<p><em>Reference</em>： </p>
+<p><em>Reference</em>：</p>
 <p>1.<a href="https://link.springer.com/content/pdf/bfm%3A978-0-387-93820-2%2F1.pdf" target="_blank" rel="noopener">Static Timing Analysis for Nanometer Designs A Practical Approach</a></p>
 <p>2.<a href="https://www.icourse163.org/course/SWJTU-1207492806?tid=1207824209" target="_blank" rel="noopener">芯动力—硬件加速设计方法</a></p>
 
@@ -473,7 +483,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#理想的时钟网络"><span class="nav-number">1.</span> <span class="nav-text">理想的时钟网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时钟网络有一个确定的延时值"><span class="nav-number">2.</span> <span class="nav-text">时钟网络有一个确定的延时值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#两种类型的clock-latencies"><span class="nav-number">2.1.</span> <span class="nav-text">两种类型的clock latencies</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#理想的时钟网络"><span class="nav-number">1.</span> <span class="nav-text">¶理想的时钟网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时钟网络有一个确定的延时值"><span class="nav-number">2.</span> <span class="nav-text">¶时钟网络有一个确定的延时值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#两种类型的clock-latencies"><span class="nav-number">2.1.</span> <span class="nav-text">¶两种类型的clock latencies</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
