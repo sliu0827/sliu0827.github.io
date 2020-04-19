@@ -1201,7 +1201,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ff13ff;
+  background: #ffdfd2;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2618,7 +2618,7 @@ body {
   color: #00bfff;
 }
 .post-body hr {
-  margin: 0px 0 0px 0;
+  margin: 0px 0 10px 0;
   height: 1px;
   background-color: #666;
   text-align: center;
