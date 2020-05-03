@@ -55,8 +55,8 @@
 <p>覆盖率选项可以在covergroup、coverpoint或者cross中分别设置。</p>
 <p>例如使用weight来表示比重；per_instance设置为1，将会记录每个covergroup实例的覆盖率数据；使用comment对covergroup/coverpoint/cross做进一步的说明，方便在覆盖率数据分析时阅读理解。</p>
 <p>覆盖率选项以及预定义覆盖率方法做如下归纳：</p>
-<p><img src="https://i.loli.net/2020/05/03/3eFpBCDxiObN9Xt.png" alt="覆盖率7.2.png"></p>
-<p><img src="https://i.loli.net/2020/05/03/KVrcvIU9dC2YPab.png" alt="覆盖率7.3.png"></p>
+<img src="https://i.loli.net/2020/05/03/3eFpBCDxiObN9Xt.png" alt="覆盖率7.2.png" style="zoom:80%;" />
+<img src="https://i.loli.net/2020/05/03/KVrcvIU9dC2YPab.png" alt="覆盖率7.3.png" style="zoom:80%;" />
 <hr>
 <p><em>Reference</em>：</p>
 <p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
