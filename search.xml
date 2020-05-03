@@ -10,7 +10,47 @@
 <p>是否所有设计的功能在验证计划中都已经验证？</p>
 <p>代码中的某些部分是否从未执行过？</p>
 </blockquote>
-<p>因此，引入覆盖率来作为衡量验证过程的重要数据。</p>
+<p>因此，引入覆盖率来作为验证过程的重要参考，用于衡量验证精度和完备性。</p>
+<h2 id="覆盖率的种类"><a class="header-anchor" href="#覆盖率的种类"></a>覆盖率的种类</h2>
+<hr>
+<p>fig7.1</p>
+<p>如上图所示，常见为两种分法：</p>
+<ul>
+<li>按照生成方式，分为隐性（implicit）和显性（Explicit）；</li>
+<li>按照来自功能描述,还是设计实现,分为specification或者implementation</li>
+</ul>
+<p>因此，组合之后主要有代码覆盖率、断言覆盖率以及功能覆盖率分别处于不同象限中。</p>
+<h2 id="代码覆盖率"><a class="header-anchor" href="#代码覆盖率"></a>代码覆盖率</h2>
+<hr>
+<p><strong>优势</strong>：由仿真工具自动收集，继而用来指出在测试程序中设计源代码哪些被激活触发，而哪些则一直处于非激活的状态。</p>
+<p><strong>局限</strong>：覆盖率100%并不意味着足够的功能覆盖率。</p>
+<p><strong>包括</strong>：</p>
+<ul>
+<li>跳转覆盖率（toggle），衡量寄存器跳转的次数（0–&gt;1,1–&gt;0）;</li>
+<li>行覆盖率（statement/line）,衡量代码行有没有被执行；</li>
+<li>分支覆盖率（branch），衡量条件语句（if/else,case,?:）分支执行情况；</li>
+<li>条件覆盖率（condition/expression），衡量一些布尔表达式中各个条件真伪判断的执行轨迹；</li>
+<li>状态机覆盖率（FSM），仿真工具可以自动识别状态机，因此可以状态机的执行情况，包括跳转次数、顺序等。</li>
+</ul>
+<h2 id="功能覆盖率"><a class="header-anchor" href="#功能覆盖率"></a>功能覆盖率</h2>
+<hr>
+<p>我们无法通过代码覆盖率来得知功能是否被实现了，因此需要显性地定义，将设计功能描述映射到与功能覆盖率中，从而量化功能验证。</p>
+<p><strong>覆盖组（covergroup）</strong></p>
+<p>覆盖组与类相似，可以多次例化。包含覆盖点（coverpoint）、选项（option）、形式参数（argument）和可选触发（trigger event）。</p>
+<p>覆盖组可以采集任何可见的变量，比如程序或模块变量、接口信号或者设计中的任何信号。</p>
+<p>更多地covergroup定义在类中，被称为嵌入式覆盖组声明，例如以下：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> xyz;</span><br><span class="line">  <span class="keyword">bit</span> [<span class="number">3</span>:<span class="number">0</span>] m_x;</span><br><span class="line">  <span class="keyword">int</span> m_y;</span><br><span class="line">  <span class="keyword">bit</span> m_z;</span><br><span class="line">  <span class="keyword">covergroup</span> cov1 @m_z; <span class="comment">// embedded covergroup</span></span><br><span class="line">    <span class="keyword">coverpoint</span> m_x;</span><br><span class="line">    <span class="keyword">coverpoint</span> m_y;</span><br><span class="line">  <span class="keyword">endgroup</span></span><br><span class="line">  <span class="keyword">function</span> <span class="keyword">new</span>(); cov1 = <span class="keyword">new</span>; <span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">endclass</span></span><br></pre></td></tr></table></figure>
+<p><strong>覆盖点（coverpoint）</strong></p>
+<p>覆盖组中可以包含多个覆盖点（coverpoint），coverpoint可以对应多个bin（仓）。</p>
+<p>下面的代码中 覆盖组cg包含多个覆盖点例如b、cx、e以及匿名覆盖点和交叉覆盖点。</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">covergroup</span> cg ( <span class="keyword">ref</span> <span class="keyword">int</span> x , <span class="keyword">ref</span> <span class="keyword">int</span> y, <span class="keyword">input</span> <span class="keyword">int</span> c);</span><br><span class="line">  <span class="keyword">coverpoint</span> x; <span class="comment">// 创建CP x</span></span><br><span class="line">  b: <span class="keyword">coverpoint</span> y; <span class="comment">// 创建CP b</span></span><br><span class="line">  cx: <span class="keyword">coverpoint</span> x; <span class="comment">// 创建CP cx</span></span><br><span class="line">  option<span class="variable">.weight</span> = c; </span><br><span class="line">  <span class="keyword">bit</span> [<span class="number">7</span>:<span class="number">0</span>] d: <span class="keyword">coverpoint</span> y[<span class="number">31</span>:<span class="number">24</span>]; <span class="comment">// 创建CP d</span></span><br><span class="line">  e: <span class="keyword">coverpoint</span> x &#123;</span><br><span class="line">    option<span class="variable">.weight</span> = <span class="number">2</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">cross</span> x, y &#123; <span class="comment">// 创建crossCP xXy</span></span><br><span class="line">    option<span class="variable">.weight</span> = c; </span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">endgroup</span></span><br></pre></td></tr></table></figure>
+<p><strong>仓（bin）</strong></p>
+<p>该关键字用于指定或对应所有感兴趣的数值或者取值范围。</p>
+<p>除了覆盖数值外，还可以覆盖数值的变化。</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">bit</span> [<span class="number">4</span>:<span class="number">1</span>] v_a;</span><br><span class="line"><span class="keyword">covergroup</span> cg @(<span class="keyword">posedge</span> clk);</span><br><span class="line">  <span class="keyword">coverpoint</span> v_a &#123;</span><br><span class="line">    <span class="keyword">bins</span> sa = (<span class="number">4</span> =&gt; <span class="number">5</span> =&gt; <span class="number">6</span>), ([<span class="number">7</span>:<span class="number">9</span>],<span class="number">10</span>=&gt;<span class="number">11</span>,<span class="number">12</span>);</span><br><span class="line">    <span class="keyword">bins</span> sb[] = (<span class="number">4</span>=&gt; <span class="number">5</span> =&gt; <span class="number">6</span>), ([<span class="number">7</span>:<span class="number">9</span>],<span class="number">10</span>=&gt;<span class="number">11</span>,<span class="number">12</span>);</span><br><span class="line">    <span class="keyword">bins</span> sc = (<span class="number">12</span> =&gt; <span class="number">3</span> [-&gt; <span class="number">1</span>]);</span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">endgroup</span></span><br></pre></td></tr></table></figure>
+<p><strong>交叉覆盖率（cross）</strong></p>
+<p>覆盖组中多个覆盖点或者变量之间可以另外定义交叉覆盖率（cover coverage）。</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="comment">//两个coverpoint交叉以后将生成256个交叉的bin</span></span><br><span class="line"><span class="keyword">bit</span> [<span class="number">3</span>:<span class="number">0</span>] a, b;</span><br><span class="line"><span class="keyword">covergroup</span> cov @(<span class="keyword">posedge</span> clk);</span><br><span class="line">  aXb : <span class="keyword">cross</span> a, b;</span><br><span class="line"><span class="keyword">endgroup</span></span><br></pre></td></tr></table></figure>
 <hr>
 <p><em>Reference</em>：</p>
 <p>1.路科验证V0系列课程，可参考《芯片验证漫游指南：从理论到UVM的验证全视界》</p>
